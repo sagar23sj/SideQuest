@@ -1,0 +1,19 @@
+# oapi-codegen configuration for generating Go server types from the shared
+# OpenAPI contract (openapi.yaml). This is the single source of truth; the
+# Kotlin (Android) and Swift (iOS) client models are generated from the same
+# openapi.yaml with their respective generators.
+#
+# To generate (run from backend/, requires the oapi-codegen tool installed):
+#   go tool oapi-codegen -config api/oapi-codegen.yaml api/openapi.yaml
+#
+# NOTE: codegen is NOT run as part of this scaffold task. Until it is, the
+# minimal Go types needed now live in internal/domain and are kept in sync with
+# this contract by hand.
+package: openapi
+output: internal/openapi/types.gen.go
+generate:
+  models: true
+  std-http-server: true
+  embedded-spec: true
+output-options:
+  skip-prune: false

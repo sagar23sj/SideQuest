@@ -1,0 +1,817 @@
+openapi: 3.0.3
+info:
+  title: Action Tracker API
+  version: 0.1.0
+  description: >
+    Single source of truth for the Action Tracker backend. Both clients
+    (Android/Kotlin and iOS/Swift) generate their models from this document,
+    and the Go server generates its types from it via oapi-codegen.
+
+    This 0.1.0 scaffold defines the shared entity schemas and the endpoints
+    that exist now (health, LLM proxy, transcription proxy) plus placeholders
+    for endpoints arriving in later tasks (auth/accounts=23, sync=24,
+    games=25, leaderboards=26). Provider API keys for LLM/STT are held
+    server-side and are never present in any request or response.
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local development
+
+tags:
+  - name: health
+  - name: llm
+  - name: transcription
+  - name: accounts
+  - name: sync
+  - name: leaderboards
+
+paths:
+  /healthz:
+    get:
+      tags: [health]
+      summary: Liveness/readiness probe
+      operationId: getHealthz
+      responses:
+        "200":
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Service degraded (database unreachable)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /llm/notification-text:
+    post:
+      tags: [llm]
+      summary: Generate reminder notification text (Req 7.1)
+      operationId: postLlmNotificationText
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ActionItemSummary"
+      responses:
+        "200":
+          description: Generated text
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [text]
+                properties:
+                  text:
+                    type: string
+        "503":
+          $ref: "#/components/responses/ProviderUnavailable"
+
+  /llm/suggest-actions:
+    post:
+      tags: [llm]
+      summary: Suggest next actions for an item (Req 7.2)
+      operationId: postLlmSuggestActions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [itemTitle]
+              properties:
+                itemTitle:
+                  type: string
+      responses:
+        "200":
+          description: Suggested actions
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [suggestions]
+                properties:
+                  suggestions:
+                    type: array
+                    items:
+                      type: string
+        "503":
+          $ref: "#/components/responses/ProviderUnavailable"
+
+  /llm/describe:
+    post:
+      tags: [llm]
+      summary: Generate a task description from shared content (Req 7.3)
+      operationId: postLlmDescribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        "200":
+          description: Generated description
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [description]
+                properties:
+                  description:
+                    type: string
+        "503":
+          $ref: "#/components/responses/ProviderUnavailable"
+
+  /llm/extract-actions:
+    post:
+      tags: [llm]
+      summary: Extract actionable items from a transcript (Req 10.5)
+      operationId: postLlmExtractActions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [transcript]
+              properties:
+                transcript:
+                  type: string
+      responses:
+        "200":
+          description: Extracted actions
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [actions]
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ExtractedAction"
+        "503":
+          $ref: "#/components/responses/ProviderUnavailable"
+
+  /transcription/transcribe:
+    post:
+      tags: [transcription]
+      summary: Transcribe recorded audio (Req 10.3)
+      operationId: postTranscribe
+      requestBody:
+        required: true
+        description: Raw audio bytes; Content-Type describes the encoding.
+        content:
+          audio/m4a:
+            schema:
+              type: string
+              format: binary
+          audio/mpeg:
+            schema:
+              type: string
+              format: binary
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: Transcript
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [transcript]
+                properties:
+                  transcript:
+                    type: string
+        "413":
+          description: Audio payload too large
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "503":
+          $ref: "#/components/responses/ProviderUnavailable"
+
+  /accounts:
+    post:
+      tags: [accounts]
+      summary: Create an account, optionally joining an organization (task 23; Req 13.1, 13.2)
+      description: >
+        Creates an account (Req 13.1) and, optionally, joins or creates an
+        organization in the same transaction (Req 13.2). Supply at most one of
+        joinOrgId / newOrgName. On success the response includes the new account
+        and an initial JWT token pair so the client is signed in immediately.
+
+        Errors are intentionally generic: a duplicate email returns 409 without
+        confirming which address is taken, and validation failures return 400
+        without field-level detail (no account enumeration).
+      operationId: postAccounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountRequest"
+      responses:
+        "201":
+          description: Account created and signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResult"
+        "400":
+          description: Invalid request body or details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: The account could not be created (e.g. email already in use)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/login:
+    post:
+      tags: [accounts]
+      summary: Authenticate a credential pair and issue tokens (Req 13.3)
+      description: >
+        Verifies an email/password pair and returns the account plus a fresh
+        JWT token pair. A failed login returns 401 with a single generic
+        message for both unknown-email and wrong-password cases.
+      operationId: postAuthLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authenticated; tokens issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResult"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/refresh:
+    post:
+      tags: [accounts]
+      summary: Exchange a refresh token for a new token pair (silent refresh)
+      description: >
+        Validates a refresh token and issues a fresh access + refresh pair.
+        Backs the client's silent-refresh flow when an access token expires.
+        An invalid or expired refresh token returns 401, routing the client to
+        re-authentication.
+      operationId: postAuthRefresh
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "200":
+          description: New token pair issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Refresh token invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # --- Placeholder endpoints implemented by later tasks ---
+
+  /sync/push:
+    post:
+      tags: [sync]
+      summary: Push local changes (task 24; Req 13.4, 14.4)
+      operationId: postSyncPush
+      responses:
+        "501":
+          description: Not implemented yet (task 24)
+
+  /sync/pull:
+    get:
+      tags: [sync]
+      summary: Pull changes since a sync token (task 24; Req 13.4, 14.4)
+      operationId: getSyncPull
+      parameters:
+        - name: since
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "501":
+          description: Not implemented yet (task 24)
+
+  /leaderboards:
+    get:
+      tags: [leaderboards]
+      summary: Get day/week/month leaderboards for an org (task 26; Req 12.x)
+      operationId: getLeaderboards
+      parameters:
+        - name: orgId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "501":
+          description: Not implemented yet (task 26)
+
+components:
+  responses:
+    ProviderUnavailable:
+      description: The requested feature is temporarily unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [status, message]
+          properties:
+            status:
+              type: integer
+            message:
+              type: string
+
+    HealthResponse:
+      type: object
+      required: [status, database]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        database:
+          type: string
+          enum: [ok, unavailable, not_configured]
+
+    SyncMeta:
+      type: object
+      description: Sync metadata embedded in every syncable entity.
+      required: [updatedAt, version, deleted]
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+          description: Server-authoritative after push ack.
+        version:
+          type: integer
+          format: int64
+          description: Increments per update; concurrency detection.
+        deleted:
+          type: boolean
+          description: Tombstone flag.
+
+    ActionStatus:
+      type: string
+      enum: [not_started, in_progress, completed]
+
+    ContentType:
+      type: string
+      enum: [link, text, image, video_ref]
+
+    # Timeframe is a tagged union (oneOf + discriminator on "kind").
+    Timeframe:
+      oneOf:
+        - $ref: "#/components/schemas/TimeframeToday"
+        - $ref: "#/components/schemas/TimeframeWithinADay"
+        - $ref: "#/components/schemas/TimeframeWithinAWeek"
+        - $ref: "#/components/schemas/TimeframeSpecificDate"
+      discriminator:
+        propertyName: kind
+        mapping:
+          today: "#/components/schemas/TimeframeToday"
+          within_a_day: "#/components/schemas/TimeframeWithinADay"
+          within_a_week: "#/components/schemas/TimeframeWithinAWeek"
+          specific_date: "#/components/schemas/TimeframeSpecificDate"
+
+    TimeframeToday:
+      type: object
+      required: [kind]
+      properties:
+        kind:
+          type: string
+          enum: [today]
+
+    TimeframeWithinADay:
+      type: object
+      required: [kind]
+      properties:
+        kind:
+          type: string
+          enum: [within_a_day]
+
+    TimeframeWithinAWeek:
+      type: object
+      required: [kind]
+      properties:
+        kind:
+          type: string
+          enum: [within_a_week]
+
+    TimeframeSpecificDate:
+      type: object
+      required: [kind, date]
+      properties:
+        kind:
+          type: string
+          enum: [specific_date]
+        date:
+          type: string
+          format: date
+          description: Must be the current date or later (Req 3.3).
+
+    LinkPreview:
+      type: object
+      required: [rawUrl, resolved]
+      properties:
+        title:
+          type: string
+          nullable: true
+        thumbnailUrl:
+          type: string
+          nullable: true
+        sourceName:
+          type: string
+          nullable: true
+        rawUrl:
+          type: string
+        resolved:
+          type: boolean
+          description: When false, clients display rawUrl.
+
+    WishlistFields:
+      type: object
+      required: [productName, purchased]
+      properties:
+        productName:
+          type: string
+        sourceLink:
+          type: string
+          nullable: true
+        purchased:
+          type: boolean
+
+    ActionItem:
+      type: object
+      required:
+        [id, accountId, bucketId, title, contentType, timeframe, status, createdAt, isWishlistItem, sync]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        bucketId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        contentType:
+          $ref: "#/components/schemas/ContentType"
+        sourceContent:
+          type: string
+          nullable: true
+        preview:
+          $ref: "#/components/schemas/LinkPreview"
+        timeframe:
+          $ref: "#/components/schemas/Timeframe"
+        status:
+          $ref: "#/components/schemas/ActionStatus"
+        createdAt:
+          type: string
+          format: date-time
+        isWishlistItem:
+          type: boolean
+        wishlist:
+          $ref: "#/components/schemas/WishlistFields"
+        sync:
+          $ref: "#/components/schemas/SyncMeta"
+
+    Bucket:
+      type: object
+      required:
+        [id, accountId, name, isShopping, notStartedColor, inProgressColor, completedColor, sync]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        isShopping:
+          type: boolean
+        notStartedColor:
+          type: string
+        inProgressColor:
+          type: string
+        completedColor:
+          type: string
+        sync:
+          $ref: "#/components/schemas/SyncMeta"
+
+    SubAction:
+      type: object
+      required: [id, text, order, completed]
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        order:
+          type: integer
+        completed:
+          type: boolean
+
+    ActionPlan:
+      type: object
+      required: [id, actionItemId, subActions, sync]
+      properties:
+        id:
+          type: string
+          format: uuid
+        actionItemId:
+          type: string
+          format: uuid
+        subActions:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubAction"
+        sync:
+          $ref: "#/components/schemas/SyncMeta"
+
+    VoiceJournalEntry:
+      type: object
+      required: [id, accountId, audioRef, transcriptionFailed, createdAt, extractedActionItemIds, sync]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        audioRef:
+          type: string
+        transcript:
+          type: string
+          nullable: true
+        transcriptionFailed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        extractedActionItemIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        sync:
+          $ref: "#/components/schemas/SyncMeta"
+
+    GameType:
+      type: string
+      enum: [spelling_bee, word_guess]
+
+    GameResult:
+      type: object
+      required: [id, accountId, orgId, gameType, date, score, completedAt, sync]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        gameType:
+          $ref: "#/components/schemas/GameType"
+        date:
+          type: string
+          format: date
+        score:
+          type: integer
+        completedAt:
+          type: string
+          format: date-time
+        sync:
+          $ref: "#/components/schemas/SyncMeta"
+
+    LeaderboardPeriod:
+      type: string
+      enum: [day, week, month]
+
+    LeaderboardEntry:
+      type: object
+      required: [accountId, displayName, totalScore, rank]
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        totalScore:
+          type: integer
+        rank:
+          type: integer
+
+    Leaderboard:
+      type: object
+      required: [orgId, period, periodKey, entries]
+      properties:
+        orgId:
+          type: string
+          format: uuid
+        period:
+          $ref: "#/components/schemas/LeaderboardPeriod"
+        periodKey:
+          type: string
+          description: e.g. 2025-06-14, 2025-W24, 2025-06
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeaderboardEntry"
+
+    Account:
+      type: object
+      required: [id, email, displayName, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        orgId:
+          type: string
+          format: uuid
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    Organization:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateAccountRequest:
+      type: object
+      required: [email, password, displayName]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 1024
+          description: Hashed server-side with argon2id; never stored in plaintext.
+        displayName:
+          type: string
+          maxLength: 100
+        joinOrgId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Join an existing organization (Req 13.2). Mutually exclusive with newOrgName.
+        newOrgName:
+          type: string
+          maxLength: 100
+          nullable: true
+          description: Create and join a new organization (Req 13.2). Mutually exclusive with joinOrgId.
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    RefreshRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+
+    TokenPair:
+      type: object
+      description: A signed JWT access token (short-lived) plus refresh token.
+      required: [accessToken, refreshToken, accessExpiresAt, refreshExpiresAt]
+      properties:
+        accessToken:
+          type: string
+          description: Short-lived bearer token for authenticated requests.
+        refreshToken:
+          type: string
+          description: Longer-lived token used to obtain a new pair via /auth/refresh.
+        accessExpiresAt:
+          type: string
+          format: date-time
+        refreshExpiresAt:
+          type: string
+          format: date-time
+
+    AuthResult:
+      type: object
+      description: The signed-in account plus its initial token pair.
+      required: [account, tokens]
+      properties:
+        account:
+          $ref: "#/components/schemas/Account"
+        tokens:
+          $ref: "#/components/schemas/TokenPair"
+
+    ActionItemSummary:
+      type: object
+      required: [title, bucketName, dueLabel]
+      properties:
+        title:
+          type: string
+        bucketName:
+          type: string
+        dueLabel:
+          type: string
+
+    ExtractedAction:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+        suggestedBucket:
+          type: string
+          nullable: true

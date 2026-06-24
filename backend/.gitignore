@@ -1,0 +1,12 @@
+# Build artifacts
+/server
+/bin/
+*.exe
+
+# Local env / secrets
+.env
+*.local
+
+# Test/coverage output
+coverage.out
+*.test

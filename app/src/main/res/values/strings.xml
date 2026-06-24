@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Action Tracker</string>
+
+    <!-- Share target / capture flow. -->
+    <string name="share_target_label">Save to Action Tracker</string>
+    <string name="capture_title">Save to a bucket</string>
+    <string name="capture_unsupported_title">Content type not supported</string>
+    <string name="capture_unsupported_message">Action Tracker can\'t save this kind of content. Try sharing a link, text, image, or video.</string>
+    <string name="capture_discard">Discard</string>
+    <string name="capture_close">Close</string>
+    <string name="capture_confirm">Save</string>
+    <string name="capture_select_bucket">Bucket</string>
+    <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
+    <string name="capture_select_timeframe">When do you want to act on this?</string>
+    <string name="capture_timeframe_today">Today</string>
+    <string name="capture_timeframe_within_a_day">Within a day</string>
+    <string name="capture_timeframe_within_a_week">Within a week</string>
+    <string name="capture_timeframe_specific_date">Specific date</string>
+    <string name="capture_pick_date">Pick a date</string>
+    <string name="capture_selected_bucket_desc">Bucket %1$s selected</string>
+    <string name="capture_loading">Preparing your shared content…</string>
+
+    <!-- Board screen. -->
+    <string name="board_title">Action Board</string>
+    <string name="board_loading">Loading your board…</string>
+    <string name="board_empty">No action items yet. Share content into Action Tracker to get started.</string>
+    <string name="board_completion_label">Completed</string>
+    <string name="board_completion_count_desc">%1$d action items completed</string>
+    <string name="board_change_status">Change status</string>
+    <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
+
+    <!-- Action_Item detail / Action_Plan screen. -->
+    <string name="plan_title">Action plan</string>
+    <string name="plan_empty">No steps yet. Add a sub-action to start planning this item.</string>
+    <string name="plan_progress_label">%1$d / %2$d completed</string>
+    <string name="plan_progress_desc">%1$d of %2$d sub-actions completed</string>
+    <string name="plan_add_sub_action_label">New step</string>
+    <string name="plan_add_sub_action">Add</string>
+    <string name="plan_parent_complete_prompt">All steps are done. Mark this item as completed?</string>
+    <string name="plan_mark_parent_complete">Mark completed</string>
+    <string name="plan_sub_action_toggle_desc">Mark step \"%1$s\" complete</string>
+    <string name="plan_move_up">Up</string>
+    <string name="plan_move_down">Down</string>
+    <string name="plan_move_up_desc">Move step \"%1$s\" up</string>
+    <string name="plan_move_down_desc">Move step \"%1$s\" down</string>
+
+    <!-- Action statuses (display labels). -->
+    <string name="status_not_started">Not started</string>
+    <string name="status_in_progress">In progress</string>
+    <string name="status_completed">Completed</string>
+    <string name="board_status_indicator_desc">Status: %1$s. Tap to change.</string>
+
+    <!-- Daily reminder settings (Req 6.1, 6.2, 6.3, 6.5). -->
+    <string name="reminder_settings_title">Daily reminders</string>
+    <string name="reminder_open_board_settings_desc">Open daily reminder settings</string>
+    <string name="reminder_open_board_settings_label">Reminders</string>
+    <string name="reminder_enable_label">Daily reminders</string>
+    <string name="reminder_enable_desc">Enable or disable daily reminder notifications</string>
+    <string name="reminder_time_label">Reminder time</string>
+    <string name="reminder_time_desc">Reminder time set to %1$02d:%2$02d</string>
+    <string name="reminder_disabled_hint">Turn on daily reminders to receive a notification at this time.</string>
+    <string name="reminder_permission_denied">Notifications are turned off, so reminders can\'t be delivered. Enable notifications in system settings to receive daily reminders.</string>
+    <string name="reminder_open_settings">Open notification settings</string>
+    <string name="reminder_back">Back</string>
+
+    <!-- Voice journaling (Req 10.1, 10.2, 10.4). -->
+    <string name="voice_journal_title">Voice journal</string>
+    <string name="voice_journal_hint">Tap record and speak. Your recording is saved when you stop.</string>
+    <string name="voice_journal_record">Record</string>
+    <string name="voice_journal_record_desc">Start voice journal recording</string>
+    <string name="voice_journal_stop">Stop</string>
+    <string name="voice_journal_stop_desc">Stop recording and save voice journal entry</string>
+    <string name="voice_journal_recording">Recording…</string>
+    <string name="voice_journal_saved">Recording saved.</string>
+    <string name="voice_journal_transcribing">Transcribing…</string>
+    <string name="voice_journal_transcription_failed">Transcription failed. Your recording was kept so you can try again later.</string>
+    <string name="voice_journal_permission_denied">Microphone access is turned off, so recording is unavailable. Enable the microphone permission in system settings to record voice journal entries.</string>
+    <string name="voice_journal_open_settings">Open app settings</string>
+    <string name="voice_journal_error_dismiss">Dismiss</string>
+</resources>
