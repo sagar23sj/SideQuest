@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.bucket.BucketCrudTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:24" hostname="INLPF5TK6XC" time="0.144">
+<testsuite name="com.actiontracker.domain.bucket.BucketCrudTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:28" hostname="INLPF5TK6XC" time="0.104">
   <properties/>
-  <testcase name="create: a bucket with a fresh name is Created" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.019"/>
-  <testcase name="create: the created bucket's name is trimmed" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.003"/>
-  <testcase name="create: a created bucket's name is no longer available for selection" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.0"/>
-  <testcase name="create: a colliding name is rejected as DuplicateName and leaves buckets unchanged" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.036"/>
-  <testcase name="rename: changing to a fresh name returns Renamed with the trimmed name" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.004"/>
-  <testcase name="rename: renaming a bucket to its own name is allowed (self is excluded)" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.0"/>
+  <testcase name="create: a bucket with a fresh name is Created" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.011"/>
+  <testcase name="create: the created bucket's name is trimmed" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
+  <testcase name="create: a created bucket's name is no longer available for selection" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
+  <testcase name="create: a colliding name is rejected as DuplicateName and leaves buckets unchanged" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.015"/>
+  <testcase name="rename: changing to a fresh name returns Renamed with the trimmed name" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.002"/>
+  <testcase name="rename: renaming a bucket to its own name is allowed (self is excluded)" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
   <testcase name="rename: changing only the casing of a bucket's own name is allowed" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
   <testcase name="rename: colliding with another bucket's name is rejected as DuplicateName" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
-  <testcase name="delete empty bucket: deleting items of an empty bucket yields no item changes" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.066"/>
-  <testcase name="delete empty bucket: with no items at all the outcome is empty and unchanged" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.002"/>
+  <testcase name="delete empty bucket: deleting items of an empty bucket yields no item changes" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.055"/>
+  <testcase name="delete empty bucket: with no items at all the outcome is empty and unchanged" classname="com.actiontracker.domain.bucket.BucketCrudTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

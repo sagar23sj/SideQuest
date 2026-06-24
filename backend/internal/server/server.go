@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/actiontracker/backend/internal/auth"
 	"github.com/actiontracker/backend/internal/provider"
 )
 
@@ -29,6 +30,8 @@ type Server struct {
 	transcription provider.TranscriptionProvider
 	accounts      AccountService
 	tokens        TokenIssuer
+	sync          SyncStore
+	leaderboards  LeaderboardStore
 
 	addr                string
 	readHeaderTimeout   time.Duration
@@ -74,6 +77,16 @@ func WithAccountService(a AccountService) Option {
 // WithTokenIssuer injects the JWT token issuer used for login/refresh.
 func WithTokenIssuer(t TokenIssuer) Option {
 	return func(s *Server) { s.tokens = t }
+}
+
+// WithSyncStore injects the offline-first sync persistence (Req 13.4, 14.4).
+func WithSyncStore(st SyncStore) Option {
+	return func(s *Server) { s.sync = st }
+}
+
+// WithLeaderboardStore injects the leaderboard read store (Req 12.x).
+func WithLeaderboardStore(st LeaderboardStore) Option {
+	return func(s *Server) { s.leaderboards = st }
 }
 
 // WithReadHeaderTimeout sets the header read timeout.
@@ -180,6 +193,28 @@ func (s *Server) routes() http.Handler {
 
 	// Feature endpoints (sync=24, games=25, leaderboards=26) are added by
 	// later tasks. Their routes are intentionally not registered here yet.
+
+	// Offline-first sync (task 24; Req 13.4, 14.4). Both endpoints require a
+	// valid access token; the authenticated account id (never a body field)
+	// scopes all reads/writes. Registered only when both a sync store and a
+	// token verifier are wired.
+	if s.sync != nil && s.tokens != nil {
+		requireAccount := auth.RequireAccount(s.tokens, func(w http.ResponseWriter, status int, message string) {
+			writeError(w, s.logger, status, message)
+		})
+		mux.Handle("POST /sync/push", requireAccount(http.HandlerFunc(s.handleSyncPush)))
+		mux.Handle("GET /sync/pull", requireAccount(http.HandlerFunc(s.handleSyncPull)))
+	}
+
+	// Organization leaderboards (task 26; Req 12.x, 13.5). Authenticated; a
+	// user with no org gets a join prompt. Registered only when a store and a
+	// token verifier are wired.
+	if s.leaderboards != nil && s.tokens != nil {
+		requireAccount := auth.RequireAccount(s.tokens, func(w http.ResponseWriter, status int, message string) {
+			writeError(w, s.logger, status, message)
+		})
+		mux.Handle("GET /leaderboards", requireAccount(http.HandlerFunc(s.handleLeaderboards)))
+	}
 
 	return mux
 }

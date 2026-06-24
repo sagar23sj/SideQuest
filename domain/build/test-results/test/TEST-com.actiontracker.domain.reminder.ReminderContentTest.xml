@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.reminder.ReminderContentTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:26" hostname="INLPF5TK6XC" time="0.026">
+<testsuite name="com.actiontracker.domain.reminder.ReminderContentTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:29" hostname="INLPF5TK6XC" time="0.042">
   <properties/>
-  <testcase name="empty due-set yields the review-upcoming reminder" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.004"/>
-  <testcase name="review-upcoming text is the fixed, non-empty prompt" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.005"/>
-  <testcase name="non-empty due-set yields a DueItems plan carrying the supplied summaries" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.005"/>
-  <testcase name="a single due item still yields DueItems, not the review-upcoming prompt" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.0"/>
+  <testcase name="empty due-set yields the review-upcoming reminder" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.005"/>
+  <testcase name="review-upcoming text is the fixed, non-empty prompt" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.014"/>
+  <testcase name="non-empty due-set yields a DueItems plan carrying the supplied summaries" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.011"/>
+  <testcase name="a single due item still yields DueItems, not the review-upcoming prompt" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.001"/>
   <testcase name="defaultDueText is non-empty for any non-negative count" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.005"/>
   <testcase name="defaultDueText uses the singular form for a single item and plural otherwise" classname="com.actiontracker.domain.reminder.ReminderContentTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>

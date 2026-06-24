@@ -5,8 +5,13 @@ later, iOS/Swift) talk to it over the REST/JSON contract defined in
 [`api/openapi.yaml`](api/openapi.yaml) — the single source of truth from which
 both client models and server types are generated.
 
-This module is the **scaffold** delivered by task 22. Feature endpoints arrive
-in later tasks: accounts (23), sync (24), games (25), leaderboards (26).
+This module began as the **scaffold** from task 22. Implemented feature areas:
+accounts + auth (23), offline-first sync server (24: `/sync/push`, `/sync/pull`
+with last-writer-wins + tombstones), the games engine (25: deterministic puzzle
+generation, Word_Guess feedback, Spelling_Bee acceptance, scoring + replay
+guard), and leaderboards (26: day/week/month aggregation, ranking, period
+isolation, `/leaderboards`). Each piece of shared pure logic is validated with
+the design's Correctness Properties via `testing/quick`.
 
 ## Layout
 
@@ -18,8 +23,13 @@ backend/
     db/              # pgx pool wrapper (functional options, injectable)
     domain/          # pure domain entities mirroring the OpenAPI schema
     provider/        # LLM + Transcription provider interfaces + HTTP adapters
+    games/           # server-authoritative game logic (puzzles, scoring)
+    leaderboard/     # period aggregation + ranking (pure logic)
+    sync/            # offline-first sync repository (push/pull, LWW)
+    accounts/        # account creation + org join + auth
+    auth/            # JWT issue/verify + bearer middleware
     server/          # net/http ServeMux routing, timeouts, graceful shutdown,
-                     #   /healthz, and the LLM/transcription proxy handlers
+                     #   /healthz, proxy handlers, accounts/sync/leaderboards
   api/
     openapi.yaml     # shared OpenAPI 3 contract (source of truth)
     oapi-codegen.yaml# config for generating Go server types from openapi.yaml
@@ -63,7 +73,8 @@ migrate -path migrations -database "$AT_DATABASE_DSN" up
 
 The initial schema in `migrations/0001_init.*.sql` mirrors the domain entities
 but carries a **REVIEW REQUIRED** header — a human DBA must validate
-indexes/types/volumes before production use.
+indexes/types/volumes before production use. `migrations/0002_sync.*.sql` adds
+the monotonic per-row sync sequence (`sync_seq`) backing `/sync/pull`.
 
 ## OpenAPI code generation (not run as part of this task)
 

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.board.BoardAggregationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:24" hostname="INLPF5TK6XC" time="0.146">
+<testsuite name="com.actiontracker.domain.board.BoardAggregationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:27" hostname="INLPF5TK6XC" time="0.122">
   <properties/>
-  <testcase name="statusColor resolves each status to the bucket's configured color" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.021"/>
-  <testcase name="buildBoard groups items by bucket with no loss" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.098"/>
+  <testcase name="statusColor resolves each status to the bucket's configured color" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.024"/>
+  <testcase name="buildBoard groups items by bucket with no loss" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.076"/>
   <testcase name="buildBoard includes buckets with no items as empty groups" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
   <testcase name="buildBoard surfaces items whose bucket is unknown so none are lost" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
   <testcase name="buildBoard sorts items ascending by createdAt within a group" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
   <testcase name="buildBoard uses a stable sort for equal createdAt" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
   <testcase name="buildBoard resolves each item's status color from its bucket" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.002"/>
-  <testcase name="buildBoard counts completed items across all groups" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
-  <testcase name="buildBoard on empty inputs yields no groups and zero completion count" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.001"/>
+  <testcase name="buildBoard counts completed items across all groups" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.0"/>
+  <testcase name="buildBoard on empty inputs yields no groups and zero completion count" classname="com.actiontracker.domain.board.BoardAggregationTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

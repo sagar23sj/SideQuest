@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:24" hostname="INLPF5TK6XC" time="0.073">
+<testsuite name="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:28" hostname="INLPF5TK6XC" time="0.065">
   <properties/>
-  <testcase name="Property 10: each board item's color equals its bucket's color for its current status" classname="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" time="0.032"/>
-  <testcase name="Property 10: color tracks the new status immediately after a status change" classname="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" time="0.039"/>
+  <testcase name="Property 10: each board item's color equals its bucket's color for its current status" classname="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" time="0.022"/>
+  <testcase name="Property 10: color tracks the new status immediately after a status change" classname="com.actiontracker.domain.board.StatusIndicatorColorPropertyTest" time="0.042"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

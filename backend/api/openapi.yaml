@@ -324,31 +324,102 @@ paths:
     post:
       tags: [sync]
       summary: Push local changes (task 24; Req 13.4, 14.4)
+      description: >
+        Merge the authenticated account's local changes using deterministic
+        last-writer-wins. The account is taken from the access token, never the
+        body. Deletes are represented as tombstones (sync.deleted = true).
       operationId: postSyncPush
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [changes]
+              properties:
+                changes:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ActionItem"
+                lastSyncToken:
+                  type: integer
+                  format: int64
       responses:
-        "501":
-          description: Not implemented yet (task 24)
+        "200":
+          description: Changes merged.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [applied, newSyncToken]
+                properties:
+                  applied:
+                    type: integer
+                  newSyncToken:
+                    type: integer
+                    format: int64
+        "401":
+          description: Authentication required.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /sync/pull:
     get:
       tags: [sync]
       summary: Pull changes since a sync token (task 24; Req 13.4, 14.4)
+      description: >
+        Return the authenticated account's changes whose sync token is greater
+        than `since` (omit for a full sync), including tombstones so deletes
+        propagate.
       operationId: getSyncPull
+      security:
+        - bearerAuth: []
       parameters:
         - name: since
           in: query
           required: false
           schema:
-            type: string
+            type: integer
+            format: int64
+            minimum: 0
       responses:
-        "501":
-          description: Not implemented yet (task 24)
+        "200":
+          description: Changes since the token.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [changes, newSyncToken]
+                properties:
+                  changes:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ActionItem"
+                  newSyncToken:
+                    type: integer
+                    format: int64
+        "401":
+          description: Authentication required.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /leaderboards:
     get:
       tags: [leaderboards]
       summary: Get day/week/month leaderboards for an org (task 26; Req 12.x)
+      description: >
+        Return the day, week, and month leaderboards for an organization and
+        game type. Requires authentication; a signed-in user with no
+        organization receives 409 with a prompt to join one (Req 13.5).
       operationId: getLeaderboards
+      security:
+        - bearerAuth: []
       parameters:
         - name: orgId
           in: query
@@ -356,11 +427,44 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: gameType
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [spelling_bee, word_guess]
       responses:
-        "501":
-          description: Not implemented yet (task 26)
+        "200":
+          description: The day/week/month leaderboards for the org.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [boards]
+                properties:
+                  boards:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Leaderboard"
+        "401":
+          description: Authentication required.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: The user is not a member of any organization.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   responses:
     ProviderUnavailable:
       description: The requested feature is temporarily unavailable.

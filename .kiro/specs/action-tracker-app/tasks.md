@@ -293,7 +293,7 @@ Tasks marked with `*` are optional (test hardening, backend-heavy work, and iOS-
   - Set up the LLM Proxy and Transcription Proxy adapters (pluggable provider), keeping provider keys server-side
   - _Requirements: 13.1, 7.1, 7.2, 7.3, 10.3, 10.5_
 
-- [ ] 23. Implement accounts and organizations
+- [x] 23. Implement accounts and organizations
   - [x] 23.1 Implement account creation, org join, and data association
     - Account creation; optional org join at signup; associate Action_Items, Buckets, Voice_Journal_Entries, and Game results with the current account; store auth tokens in EncryptedSharedPreferences with silent refresh
     - _Requirements: 13.1, 13.2, 13.3_
@@ -302,74 +302,75 @@ Tasks marked with `*` are optional (test hardening, backend-heavy work, and iOS-
     - **Property 29: Data created while signed in is associated with the current account**
     - **Validates: Requirements 13.3**
 
-  - [ ] 23.3 Write example test for signup flow
+  - [x] 23.3 Write example test for signup flow
     - Account creation and org join during signup
     - _Requirements: 13.1, 13.2_
 
-- [ ] 24. Implement offline-first sync (push/pull, tombstones, LWW)
-  - [-] 24.1 Implement deterministic last-writer-wins conflict resolution (pure logic)
+- [-] 24. Implement offline-first sync (push/pull, tombstones, LWW)
+  - [x] 24.1 Implement deterministic last-writer-wins conflict resolution (pure logic)
     - Merge two concurrent versions by greater `updatedAt`; deterministic and order-independent; record the loser to a conflict log
     - _Requirements: 14.4_
 
-  - [ ] 24.2 Write property test for conflict resolution
+  - [x] 24.2 Write property test for conflict resolution
     - **Property 32: Conflict resolution is deterministic last-writer-wins**
     - **Validates: Requirements 14.4**
 
-  - [ ] 24.3 Implement sync push/pull endpoints and client sync jobs
+  - [-] 24.3 Implement sync push/pull endpoints and client sync jobs
     - `POST /sync/push` and `GET /sync/pull?since=` with sync tokens; client writes locally then enqueues network-constrained WorkManager push/pull jobs with backoff; propagate deletes via tombstones; upload audio/thumbnails to object storage
+    - Backend endpoints (auth-protected), the sync repository (LWW + tombstones + monotonic sync token), the 0002 migration, and the OpenAPI contract are implemented and tested. The client-side WorkManager push/pull jobs remain — they require the Android SDK, which is not available in this environment.
     - _Requirements: 13.4, 14.4_
 
-  - [ ] 24.4 Write property test for cross-device sync round trip
+  - [x] 24.4 Write property test for cross-device sync round trip
     - **Property 30: Sync makes data available across devices (round trip)**
     - **Validates: Requirements 13.4**
 
-- [ ] 25. Implement the games engine (Go backend, server-authoritative pure logic)
-  - [ ] 25.1 Implement deterministic puzzle generation (server-authoritative)
+- [x] 25. Implement the games engine (Go backend, server-authoritative pure logic)
+  - [x] 25.1 Implement deterministic puzzle generation (server-authoritative)
     - Generate Spelling_Bee and Word_Guess daily puzzles deterministically from (orgId, gameType, date) so all org members get identical puzzles
     - _Requirements: 11.1, 11.2_
 
-  - [ ] 25.2 Write property test for deterministic puzzles
+  - [x] 25.2 Write property test for deterministic puzzles
     - **Property 21: Daily puzzles are deterministic per organization and date**
     - **Validates: Requirements 11.2**
 
-  - [ ] 25.3 Implement Word_Guess feedback and Spelling_Bee acceptance
+  - [x] 25.3 Implement Word_Guess feedback and Spelling_Bee acceptance
     - Word_Guess per-letter correct/present/absent feedback handling duplicate letters; Spelling_Bee accepts a word iff all letters are allowed and the word is in the word list
     - _Requirements: 11.5, 11.6_
 
-  - [ ] 25.4 Write property test for Word_Guess feedback
+  - [x] 25.4 Write property test for Word_Guess feedback
     - **Property 24: Word_Guess feedback is correct, including duplicate letters**
     - **Validates: Requirements 11.5**
 
-  - [ ] 25.5 Write property test for Spelling_Bee acceptance
+  - [x] 25.5 Write property test for Spelling_Bee acceptance
     - **Property 25: Spelling_Bee acceptance follows the allowed-letters and word-list rule**
     - **Validates: Requirements 11.6**
 
-  - [ ] 25.6 Implement scoring, completion, and replay guard
+  - [x] 25.6 Implement scoring, completion, and replay guard
     - Record exactly one score on completion with score from final state; on replay of a completed day, return the recorded result without rescoring
     - _Requirements: 11.3, 11.4_
 
-  - [ ] 25.7 Write property test for single-score recording
+  - [x] 25.7 Write property test for single-score recording
     - **Property 22: Completing a game records exactly one score**
     - **Validates: Requirements 11.3**
 
-  - [ ] 25.8 Write property test for replay guard
+  - [x] 25.8 Write property test for replay guard
     - **Property 23: Replaying a completed daily game does not rescore**
     - **Validates: Requirements 11.4**
 
-- [ ] 26. Implement leaderboard aggregation (Go backend pure logic + endpoints)
-  - [ ] 26.1 Implement period aggregation and ranking
+- [x] 26. Implement leaderboard aggregation (Go backend pure logic + endpoints)
+  - [x] 26.1 Implement period aggregation and ranking
     - On score recording, update daily/weekly/monthly per-user totals for the user's org; rank descending by total; isolate scores by period key (monthly reset, new daily/weekly boards at boundaries)
     - _Requirements: 12.2, 12.3, 12.4, 12.5, 12.6_
 
-  - [ ] 26.2 Write property test for three-board score updates
+  - [x] 26.2 Write property test for three-board score updates
     - **Property 26: Recording a score updates all three period leaderboards by that score**
     - **Validates: Requirements 12.2**
 
-  - [ ] 26.3 Write property test for descending ranking
+  - [x] 26.3 Write property test for descending ranking
     - **Property 27: Leaderboards are ranked by descending total score**
     - **Validates: Requirements 12.3**
 
-  - [ ] 26.4 Write property test for period-key isolation
+  - [x] 26.4 Write property test for period-key isolation
     - **Property 28: Leaderboards isolate scores by period key**
     - **Validates: Requirements 12.4, 12.5, 12.6**
 

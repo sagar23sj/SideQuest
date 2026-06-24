@@ -20,10 +20,13 @@ type AccountService interface {
 	Authenticate(ctx context.Context, email, password string) (domain.Account, error)
 }
 
-// TokenIssuer mints and refreshes JWT pairs. *auth.TokenService satisfies it.
+// TokenIssuer mints and refreshes JWT pairs and verifies access tokens.
+// *auth.TokenService satisfies it. VerifyAccessToken backs the auth middleware
+// that protects the sync endpoints.
 type TokenIssuer interface {
 	IssuePair(accountID string) (auth.TokenPair, error)
 	VerifyRefreshToken(raw string) (string, error)
+	VerifyAccessToken(raw string) (string, error)
 }
 
 // --- request/response payloads ---

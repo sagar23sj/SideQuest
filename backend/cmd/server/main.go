@@ -18,6 +18,7 @@ import (
 	"github.com/actiontracker/backend/internal/db"
 	"github.com/actiontracker/backend/internal/provider"
 	"github.com/actiontracker/backend/internal/server"
+	syncrepo "github.com/actiontracker/backend/internal/sync"
 )
 
 func main() {
@@ -66,6 +67,10 @@ func run(logger *slog.Logger) error {
 		return err
 	}
 
+	// Offline-first sync (Req 13.4, 14.4): parameterized push/pull over the
+	// pgx pool, with deterministic last-writer-wins from the domain package.
+	syncStore := syncrepo.NewRepository(database.Pool())
+
 	srv := server.New(cfg.ListenAddr,
 		server.WithLogger(logger),
 		server.WithDB(database),
@@ -73,6 +78,7 @@ func run(logger *slog.Logger) error {
 		server.WithTranscriptionProvider(stt),
 		server.WithAccountService(accountSvc),
 		server.WithTokenIssuer(tokenSvc),
+		server.WithSyncStore(syncStore),
 		server.WithReadHeaderTimeout(cfg.ReadHeaderTimeout),
 		server.WithReadTimeout(cfg.ReadTimeout),
 		server.WithWriteTimeout(cfg.WriteTimeout),

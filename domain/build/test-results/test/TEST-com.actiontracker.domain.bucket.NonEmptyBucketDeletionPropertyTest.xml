@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:25" hostname="INLPF5TK6XC" time="0.08">
+<testsuite name="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:28" hostname="INLPF5TK6XC" time="0.153">
   <properties/>
-  <testcase name="Property 6: reassign moves every contained item to the target, losing none and emptying the source" classname="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.048"/>
-  <testcase name="Property 6: delete removes exactly the contained items, preserving the rest" classname="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.03"/>
+  <testcase name="Property 6: reassign moves every contained item to the target, losing none and emptying the source" classname="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.079"/>
+  <testcase name="Property 6: delete removes exactly the contained items, preserving the rest" classname="com.actiontracker.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.073"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

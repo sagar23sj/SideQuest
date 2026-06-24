@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-24T13:07:26" hostname="INLPF5TK6XC" time="0.012">
+<testsuite name="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:29" hostname="INLPF5TK6XC" time="0.011">
   <properties/>
-  <testcase name="recordWishlistFields on a wishlist item updates productName and sourceLink" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
-  <testcase name="recordWishlistFields with a null sourceLink clears the existing link" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
+  <testcase name="recordWishlistFields on a wishlist item updates productName and sourceLink" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
+  <testcase name="recordWishlistFields with a null sourceLink clears the existing link" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
   <testcase name="recordWishlistFields leaves the purchased flag unchanged" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
-  <testcase name="recordWishlistFields on a non-wishlist item is a no-op (boundary)" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
-  <testcase name="applyShoppingMembership uses defaultProductName when designating a fresh wishlist item" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
-  <testcase name="applyShoppingMembership falls back to the item title and link when no defaultProductName" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
-  <testcase name="applyShoppingMembership clearing shopping drops the wishlist fields" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
+  <testcase name="recordWishlistFields on a non-wishlist item is a no-op (boundary)" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
+  <testcase name="applyShoppingMembership uses defaultProductName when designating a fresh wishlist item" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
+  <testcase name="applyShoppingMembership falls back to the item title and link when no defaultProductName" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.003"/>
+  <testcase name="applyShoppingMembership clearing shopping drops the wishlist fields" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
   <testcase name="markPurchased toggles an unpurchased wishlist item to purchased and completed" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
-  <testcase name="markPurchased is idempotent for an already-purchased item" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.001"/>
+  <testcase name="markPurchased is idempotent for an already-purchased item" classname="com.actiontracker.domain.wishlist.WishlistEditingExampleTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
