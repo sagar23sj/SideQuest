@@ -175,12 +175,12 @@ func upsertActionItem(ctx context.Context, q Querier, item domain.ActionItem) er
 	const query = `
 		INSERT INTO action_items (
 			id, account_id, bucket_id, title, content_type, status, created_at,
-			is_wishlist_item, timeframe_kind, timeframe_date,
+			timeframe_kind, timeframe_date,
 			updated_at, version, deleted, sync_seq
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7,
-			$8, $9, $10,
-			$11, $12, $13, nextval('action_items_sync_seq')
+			$8, $9,
+			$10, $11, $12, nextval('action_items_sync_seq')
 		)
 		ON CONFLICT (id) DO UPDATE SET
 			bucket_id      = EXCLUDED.bucket_id,
@@ -200,7 +200,7 @@ func upsertActionItem(ctx context.Context, q Querier, item domain.ActionItem) er
 
 	_, err := q.Exec(ctx, query,
 		item.ID, item.AccountID, item.BucketID, item.Title, int16(item.ContentType),
-		int16(item.Status), item.CreatedAt, item.IsWishlistItem,
+		int16(item.Status), item.CreatedAt,
 		int16(item.Timeframe.Kind), tfDate,
 		item.Sync.UpdatedAt, item.Sync.Version, item.Sync.Deleted,
 	)

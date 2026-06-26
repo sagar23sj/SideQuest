@@ -46,6 +46,7 @@ import com.actiontracker.R
 fun VoiceJournalScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
+    onReviewEntry: (String) -> Unit = {},
     viewModel: VoiceJournalViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -83,6 +84,7 @@ fun VoiceJournalScreen(
         },
         onErrorDismiss = viewModel::clearError,
         onNavigateBack = onNavigateBack,
+        onReviewEntry = onReviewEntry,
         modifier = modifier,
     )
 }
@@ -106,6 +108,7 @@ fun VoiceJournalContent(
     onErrorDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
+    onReviewEntry: (String) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -161,6 +164,9 @@ fun VoiceJournalContent(
                         liveRegion = LiveRegionMode.Polite
                     },
                 )
+                TextButton(onClick = { onReviewEntry(state.lastSavedEntryId) }) {
+                    Text(stringResource(R.string.voice_review_title))
+                }
             }
 
             if (state.isTranscribing) {

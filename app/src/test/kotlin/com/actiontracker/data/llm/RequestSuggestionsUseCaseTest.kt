@@ -40,7 +40,6 @@ class RequestSuggestionsUseCaseTest : StringSpec({
             timeframe = Timeframe.WithinAWeek,
             status = ActionStatus.NOT_STARTED,
             createdAt = 1_000L,
-            isWishlistItem = false,
             sync = SyncMeta(updatedAt = 1_000L, version = 1, deleted = false, dirty = true),
         )
 

@@ -6,7 +6,6 @@ import com.actiontracker.domain.model.ContentType
 import com.actiontracker.domain.model.LinkPreview
 import com.actiontracker.domain.model.SubAction
 import com.actiontracker.domain.model.Timeframe
-import com.actiontracker.domain.model.WishlistFields
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import java.time.LocalDate
@@ -14,12 +13,11 @@ import java.time.LocalDate
 /**
  * Room [TypeConverter]s for the non-primitive fields of the persisted entities.
  *
- * Enums are stored as their stable names. Structured types ([LinkPreview],
- * [WishlistFields], the [Timeframe] discriminated union, and the ordered
- * `List<SubAction>`) are serialized to JSON via kotlinx.serialization so the
- * persisted form mirrors the shared OpenAPI schema. Nullable inputs map to
- * nullable JSON columns so absent values stay `NULL` rather than the string
- * `"null"`.
+ * Enums are stored as their stable names. Structured types ([LinkPreview], the
+ * [Timeframe] discriminated union, and the ordered `List<SubAction>`) are
+ * serialized to JSON via kotlinx.serialization so the persisted form mirrors
+ * the shared OpenAPI schema. Nullable inputs map to nullable JSON columns so
+ * absent values stay `NULL` rather than the string `"null"`.
  */
 class Converters {
 
@@ -58,16 +56,6 @@ class Converters {
     @TypeConverter
     fun toLinkPreview(value: String?): LinkPreview? =
         value?.let { RoomJson.decodeFromString(LinkPreview.serializer(), it) }
-
-    // --- WishlistFields --------------------------------------------------
-
-    @TypeConverter
-    fun fromWishlistFields(value: WishlistFields?): String? =
-        value?.let { RoomJson.encodeToString(WishlistFields.serializer(), it) }
-
-    @TypeConverter
-    fun toWishlistFields(value: String?): WishlistFields? =
-        value?.let { RoomJson.decodeFromString(WishlistFields.serializer(), it) }
 
     // --- List<SubAction> (ordered) ---------------------------------------
 

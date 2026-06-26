@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.reminder.DailyDueSetPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:29" hostname="INLPF5TK6XC" time="0.062">
+<testsuite name="com.actiontracker.domain.reminder.DailyDueSetPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-25T22:40:58" hostname="INLPF5TK6XC" time="0.034">
   <properties/>
-  <testcase name="Property 12: dueOn returns exactly the items whose timeframe resolves to the target date" classname="com.actiontracker.domain.reminder.DailyDueSetPropertyTest" time="0.062"/>
+  <testcase name="Property 12: dueOn returns exactly the items whose timeframe resolves to the target date" classname="com.actiontracker.domain.reminder.DailyDueSetPropertyTest" time="0.034"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

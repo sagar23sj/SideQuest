@@ -55,6 +55,7 @@ import com.actiontracker.domain.plan.Progress
 @Composable
 fun ItemDetailScreen(
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {},
     viewModel: ItemDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,6 +65,7 @@ fun ItemDetailScreen(
         onToggleSubAction = viewModel::onToggleSubAction,
         onReorder = viewModel::onReorder,
         onMarkParentComplete = viewModel::onMarkParentComplete,
+        onNavigateBack = onNavigateBack,
         modifier = modifier,
     )
 }
@@ -88,11 +90,19 @@ fun ItemDetailContent(
     onReorder: (orderedIds: List<String>) -> Unit,
     onMarkParentComplete: () -> Unit,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.plan_title)) })
+            TopAppBar(
+                title = { Text(stringResource(R.string.plan_title)) },
+                navigationIcon = {
+                    TextButton(onClick = onNavigateBack) {
+                        Text(stringResource(R.string.reminder_back))
+                    }
+                },
+            )
         },
     ) { innerPadding ->
         when (state) {

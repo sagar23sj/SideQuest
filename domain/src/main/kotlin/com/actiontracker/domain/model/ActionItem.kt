@@ -6,8 +6,11 @@ import kotlinx.serialization.Serializable
  * A tracked, actionable task captured from shared content.
  *
  * IDs are client-generated UUIDs so items can be created offline without a
- * server round-trip. [preview] is present for [ContentType.LINK] items, and
- * [wishlist] is present when the item lives in a shopping bucket.
+ * server round-trip. [preview] is present for [ContentType.LINK] items.
+ *
+ * A "wishlist" is not a special kind of item — it is simply a [Bucket] the user
+ * created (e.g. named "Wishlist"). Items in such a bucket are ordinary action
+ * items, so there is no dedicated wishlist flag or fields here.
  */
 @Serializable
 data class ActionItem(
@@ -22,7 +25,5 @@ data class ActionItem(
     val timeframe: Timeframe,
     val status: ActionStatus,
     val createdAt: Long,
-    val isWishlistItem: Boolean,
-    val wishlist: WishlistFields? = null,
     val sync: SyncMeta,
 )

@@ -49,7 +49,6 @@ class CompletionCounterPropertyTest : StringSpec({
             id = id,
             accountId = accountId,
             name = id,
-            isShopping = false,
             notStartedColor = "#NS_$id",
             inProgressColor = "#IP_$id",
             completedColor = "#CO_$id",
@@ -74,7 +73,6 @@ class CompletionCounterPropertyTest : StringSpec({
             timeframe = Timeframe.Today,
             status = status,
             createdAt = createdAt,
-            isWishlistItem = false,
             sync = syncMeta(),
         )
     }

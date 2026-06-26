@@ -31,7 +31,10 @@ object DatabaseModule {
             context,
             ActionTrackerDatabase::class.java,
             ActionTrackerDatabase.DATABASE_NAME,
-        ).addMigrations(ActionTrackerDatabase.MIGRATION_1_2)
+        ).addMigrations(
+            ActionTrackerDatabase.MIGRATION_1_2,
+            ActionTrackerDatabase.MIGRATION_2_3,
+        )
             .build()
 
     @Provides

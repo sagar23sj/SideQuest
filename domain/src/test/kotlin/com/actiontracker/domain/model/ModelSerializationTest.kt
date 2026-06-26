@@ -80,8 +80,6 @@ class ModelSerializationTest : StringSpec({
             timeframe = Timeframe.SpecificDate(LocalDate.of(2025, 12, 31)),
             status = ActionStatus.NOT_STARTED,
             createdAt = 1_700_000_000_000L,
-            isWishlistItem = false,
-            wishlist = null,
             sync = SyncMeta(updatedAt = 1_700_000_000_000L, version = 1, deleted = false, dirty = true),
         )
 
@@ -90,7 +88,7 @@ class ModelSerializationTest : StringSpec({
         decoded shouldBe item
     }
 
-    "ActionItem wishlist variant with each Timeframe round-trips through JSON" {
+    "ActionItem TEXT variant with each Timeframe round-trips through JSON" {
         timeframes.forEach { (_, timeframe) ->
             val item = ActionItem(
                 id = "item-2",
@@ -103,12 +101,6 @@ class ModelSerializationTest : StringSpec({
                 timeframe = timeframe,
                 status = ActionStatus.IN_PROGRESS,
                 createdAt = 1_700_000_001_000L,
-                isWishlistItem = true,
-                wishlist = WishlistFields(
-                    productName = "Wireless headphones",
-                    sourceLink = "https://shop.example.com/hp",
-                    purchased = false,
-                ),
                 sync = SyncMeta(updatedAt = 1_700_000_001_000L, version = 2, deleted = false, dirty = false),
             )
 

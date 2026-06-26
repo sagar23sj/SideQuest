@@ -29,8 +29,6 @@ fun ActionItem.toEntity(): ActionItemEntity = ActionItemEntity(
     timeframe = timeframe,
     status = status,
     createdAt = createdAt,
-    isWishlistItem = isWishlistItem,
-    wishlist = wishlist,
     sync = sync,
 )
 
@@ -46,8 +44,6 @@ fun ActionItemEntity.toDomain(): ActionItem = ActionItem(
     timeframe = timeframe,
     status = status,
     createdAt = createdAt,
-    isWishlistItem = isWishlistItem,
-    wishlist = wishlist,
     sync = sync,
 )
 
@@ -57,7 +53,6 @@ fun Bucket.toEntity(): BucketEntity = BucketEntity(
     id = id,
     accountId = accountId,
     name = name,
-    isShopping = isShopping,
     notStartedColor = notStartedColor,
     inProgressColor = inProgressColor,
     completedColor = completedColor,
@@ -68,7 +63,6 @@ fun BucketEntity.toDomain(): Bucket = Bucket(
     id = id,
     accountId = accountId,
     name = name,
-    isShopping = isShopping,
     notStartedColor = notStartedColor,
     inProgressColor = inProgressColor,
     completedColor = completedColor,

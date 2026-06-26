@@ -8,3 +8,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Local MCP server config — contains API keys/credentials, never commit.
+.kiro/settings/mcp.json

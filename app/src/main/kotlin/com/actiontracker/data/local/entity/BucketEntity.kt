@@ -22,7 +22,6 @@ data class BucketEntity(
     @PrimaryKey val id: String,
     val accountId: String,
     val name: String,
-    val isShopping: Boolean,
     val notStartedColor: String,
     val inProgressColor: String,
     val completedColor: String,

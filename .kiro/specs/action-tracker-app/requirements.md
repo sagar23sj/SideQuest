@@ -19,7 +19,7 @@ This document defines the requirements for these capabilities using EARS pattern
 - **Link_Preview**: Metadata fetched from a shared link, including a title, a thumbnail image, and a source name.
 - **Preview_Service**: The App component that retrieves Link_Preview metadata for a shared link.
 - **Action_Item**: A tracked task created from a Shared_Item, voice journal entry, or manual entry, with a bucket, timeframe, and status.
-- **Bucket**: A user-defined category (for example travel, cooking, stocks, shopping) used to group Action_Items.
+- **Bucket**: A user-defined category (for example travel, cooking, stocks, shopping/wishlist) used to group Action_Items. A "wishlist" is simply a Bucket the User named for things they want to buy; it is not a special type.
 - **Timeframe**: The user-selected target window for acting on an Action_Item; one of "today", "within a day", "within a week", or a specific calendar date.
 - **Action_Status**: The state of an Action_Item; one of "not started", "in progress", or "completed".
 - **Board**: The primary view that displays Action_Items grouped by Bucket in order of creation.
@@ -27,7 +27,6 @@ This document defines the requirements for these capabilities using EARS pattern
 - **Notification_Service**: The App component that schedules and delivers reminders.
 - **LLM_Service**: An external large language model service used to generate notification text, action suggestions, task descriptions, and to extract actions from transcripts.
 - **Action_Plan**: An ordered set of sub-actions (steps) attached to an Action_Item to accomplish a larger task.
-- **Wishlist_Item**: An Action_Item representing a product the User intends to buy, grouped under a shopping Bucket.
 - **Voice_Journal_Entry**: An audio recording captured in the App together with its generated transcript.
 - **Transcription_Service**: The App component or external service that converts recorded audio into text.
 - **Game**: An in-app memory game; initially a Spelling_Bee game and a Word_Guess game.
@@ -137,17 +136,14 @@ This document defines the requirements for these capabilities using EARS pattern
 4. IF the LLM_Service is unavailable or returns an error, THEN THE Notification_Service SHALL deliver a reminder using default text without LLM content.
 5. IF the LLM_Service does not respond within the configured timeout, THEN THE App SHALL proceed without LLM content and SHALL inform the User that suggestions are unavailable.
 
-### Requirement 8: Shopping Wishlist Buckets
+### Requirement 8: Wishlist Buckets
 
 **User Story:** As a User, I want to collect products I want to buy under one bucket, so that I have a single wishlist instead of separate carts in many apps.
 
 #### Acceptance Criteria
 
-1. THE App SHALL allow the User to designate a Bucket as a shopping Bucket.
-2. WHERE a Bucket is a shopping Bucket, THE App SHALL store each contained Action_Item as a Wishlist_Item.
-3. THE App SHALL allow the User to record a product name and an optional source link for a Wishlist_Item.
-4. THE App SHALL allow the User to mark a Wishlist_Item as purchased.
-5. WHEN a User marks a Wishlist_Item as purchased, THE App SHALL set the Action_Status of the Wishlist_Item to "completed".
+1. THE App SHALL allow the User to create a Bucket (for example named "Wishlist") and capture products into it as ordinary Action_Items, without any special item type.
+2. THE App SHALL allow the User to mark a wishlist Action_Item as "completed" (for example once purchased) using the same Action_Status mechanism as any other Action_Item.
 
 ### Requirement 9: Action Planning
 
@@ -221,6 +217,6 @@ This document defines the requirements for these capabilities using EARS pattern
 #### Acceptance Criteria
 
 1. THE App SHALL run on the Android operating system.
-2. THE App SHALL persist Action_Items, Buckets, Action_Plans, Wishlist_Items, and Voice_Journal_Entries across App restarts.
+2. THE App SHALL persist Action_Items, Buckets, Action_Plans, and Voice_Journal_Entries across App restarts.
 3. WHEN a User edits or deletes an Action_Item, THE App SHALL persist the change.
 4. IF a network connection is unavailable, THEN THE App SHALL allow the User to view and edit locally stored Action_Items and SHALL synchronize changes when a connection is restored.

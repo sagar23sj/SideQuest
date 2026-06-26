@@ -6,7 +6,6 @@ import com.actiontracker.domain.model.ContentType
 import com.actiontracker.domain.model.LinkPreview
 import com.actiontracker.domain.model.SyncMeta
 import com.actiontracker.domain.model.Timeframe
-import com.actiontracker.domain.model.WishlistFields
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -60,14 +59,6 @@ class UnresolvedPreviewPropertyTest : StringSpec({
         )
     }
 
-    val arbWishlist: Arb<WishlistFields> = arbitrary {
-        WishlistFields(
-            productName = Arb.string(0..40).bind(),
-            sourceLink = Arb.string(0..60).orNull().bind(),
-            purchased = Arb.boolean().bind(),
-        )
-    }
-
     // An arbitrary ActionItem with an arbitrary (possibly null) existing preview.
     val arbItem: Arb<ActionItem> = arbitrary {
         ActionItem(
@@ -90,8 +81,6 @@ class UnresolvedPreviewPropertyTest : StringSpec({
             timeframe = arbTimeframe.bind(),
             status = Arb.enum<ActionStatus>().bind(),
             createdAt = Arb.long(0L, Long.MAX_VALUE).bind(),
-            isWishlistItem = Arb.boolean().bind(),
-            wishlist = arbWishlist.orNull().bind(),
             sync = arbSyncMeta.bind(),
         )
     }

@@ -34,7 +34,6 @@ class BucketCrudTest : StringSpec({
             id = id,
             accountId = accountId,
             name = name,
-            isShopping = false,
             notStartedColor = "#000000",
             inProgressColor = "#777777",
             completedColor = "#00FF00",
@@ -51,7 +50,6 @@ class BucketCrudTest : StringSpec({
             timeframe = Timeframe.Today,
             status = ActionStatus.NOT_STARTED,
             createdAt = 0L,
-            isWishlistItem = false,
             sync = syncMeta(),
         )
 

@@ -99,7 +99,6 @@ class BucketRepository(
     suspend fun createBucket(
         accountId: String,
         name: String,
-        isShopping: Boolean = false,
         notStartedColor: String,
         inProgressColor: String,
         completedColor: String,
@@ -110,7 +109,6 @@ class BucketRepository(
             id = idGenerator(),
             accountId = accountId,
             name = name,
-            isShopping = isShopping,
             notStartedColor = notStartedColor,
             inProgressColor = inProgressColor,
             completedColor = completedColor,
@@ -155,35 +153,6 @@ class BucketRepository(
             return BucketResult.Renamed(updated)
         }
         return result
-    }
-
-    /**
-     * Designates the bucket identified by [bucketId] as a shopping bucket, or
-     * clears that designation, by updating its `isShopping` flag (Req 8.1).
-     *
-     * The change bumps the bucket's sync metadata (updatedAt, version + 1,
-     * dirty) so it propagates through sync. Toggling membership of the bucket's
-     * existing items into/out of wishlist items (Req 8.2) is applied by
-     * [WishlistRepository] per item via the pure
-     * [com.actiontracker.domain.wishlist.WishlistOperations]; this method only
-     * flips the bucket flag. Returns the updated [Bucket], or null when no live
-     * bucket with [bucketId] exists.
-     */
-    suspend fun setShopping(bucketId: String, isShopping: Boolean): Bucket? {
-        val current = bucketDao.getById(bucketId)?.takeIf { !it.sync.deleted } ?: return null
-        if (current.isShopping == isShopping) {
-            return current.toDomain()
-        }
-        val updated = current.copy(
-            isShopping = isShopping,
-            sync = current.sync.copy(
-                updatedAt = clock(),
-                version = current.sync.version + 1,
-                dirty = true,
-            ),
-        )
-        bucketDao.upsert(updated)
-        return updated.toDomain()
     }
 
     /**

@@ -109,7 +109,6 @@ object BoardAggregation {
         id = bucketId,
         accountId = accountId,
         name = "",
-        isShopping = false,
         notStartedColor = "",
         inProgressColor = "",
         completedColor = "",

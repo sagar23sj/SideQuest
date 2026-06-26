@@ -9,12 +9,11 @@ import com.actiontracker.domain.model.ContentType
 import com.actiontracker.domain.model.LinkPreview
 import com.actiontracker.domain.model.SyncMeta
 import com.actiontracker.domain.model.Timeframe
-import com.actiontracker.domain.model.WishlistFields
 
 /**
  * Room representation of [com.actiontracker.domain.model.ActionItem].
  *
- * Structured fields ([timeframe], [preview], [wishlist]) are persisted via the
+ * Structured fields ([timeframe], [preview]) are persisted via the
  * [com.actiontracker.data.local.converters.Converters] type converters. The
  * [SyncMeta] is embedded as flat columns (no prefix) so it round-trips with the
  * rest of the row. Indexed on [accountId], [bucketId], and [createdAt] to keep
@@ -40,7 +39,5 @@ data class ActionItemEntity(
     val timeframe: Timeframe,
     val status: ActionStatus,
     val createdAt: Long,
-    val isWishlistItem: Boolean,
-    val wishlist: WishlistFields?,
     @Embedded val sync: SyncMeta,
 )

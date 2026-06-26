@@ -45,7 +45,6 @@ class PreviewDisplayTest : StringSpec({
             timeframe = Timeframe.Today,
             status = ActionStatus.NOT_STARTED,
             createdAt = 0L,
-            isWishlistItem = false,
             sync = syncMeta(),
         )
 

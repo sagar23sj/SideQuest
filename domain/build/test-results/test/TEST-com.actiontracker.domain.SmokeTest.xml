@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.SmokeTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:27" hostname="INLPF5TK6XC" time="0.037">
+<testsuite name="com.actiontracker.domain.SmokeTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-25T22:40:57" hostname="INLPF5TK6XC" time="0.014">
   <properties/>
-  <testcase name="kotest harness runs an empty test" classname="com.actiontracker.domain.SmokeTest" time="0.037"/>
+  <testcase name="kotest harness runs an empty test" classname="com.actiontracker.domain.SmokeTest" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

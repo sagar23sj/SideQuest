@@ -79,30 +79,21 @@ type LinkPreview struct {
 	Resolved     bool    `json:"resolved"`
 }
 
-// WishlistFields are present when an ActionItem lives in a shopping bucket.
-type WishlistFields struct {
-	ProductName string  `json:"productName"`
-	SourceLink  *string `json:"sourceLink,omitempty"`
-	Purchased   bool    `json:"purchased"`
-}
-
 // ActionItem is a tracked task. IDs are client-generated UUIDs so records can
 // be created offline.
 type ActionItem struct {
-	ID             string          `json:"id"`
-	AccountID      string          `json:"accountId"`
-	BucketID       string          `json:"bucketId"`
-	Title          string          `json:"title"`
-	Description    *string         `json:"description,omitempty"`
-	ContentType    ContentType     `json:"contentType"`
-	SourceContent  *string         `json:"sourceContent,omitempty"`
-	Preview        *LinkPreview    `json:"preview,omitempty"`
-	Timeframe      Timeframe       `json:"timeframe"`
-	Status         ActionStatus    `json:"status"`
-	CreatedAt      time.Time       `json:"createdAt"`
-	IsWishlistItem bool            `json:"isWishlistItem"`
-	Wishlist       *WishlistFields `json:"wishlist,omitempty"`
-	Sync           SyncMeta        `json:"sync"`
+	ID            string       `json:"id"`
+	AccountID     string       `json:"accountId"`
+	BucketID      string       `json:"bucketId"`
+	Title         string       `json:"title"`
+	Description   *string      `json:"description,omitempty"`
+	ContentType   ContentType  `json:"contentType"`
+	SourceContent *string      `json:"sourceContent,omitempty"`
+	Preview       *LinkPreview `json:"preview,omitempty"`
+	Timeframe     Timeframe    `json:"timeframe"`
+	Status        ActionStatus `json:"status"`
+	CreatedAt     time.Time    `json:"createdAt"`
+	Sync          SyncMeta     `json:"sync"`
 }
 
 // Bucket is a user-defined category. Name is unique per account.
@@ -110,7 +101,6 @@ type Bucket struct {
 	ID              string   `json:"id"`
 	AccountID       string   `json:"accountId"`
 	Name            string   `json:"name"`
-	IsShopping      bool     `json:"isShopping"`
 	NotStartedColor string   `json:"notStartedColor"`
 	InProgressColor string   `json:"inProgressColor"`
 	CompletedColor  string   `json:"completedColor"`

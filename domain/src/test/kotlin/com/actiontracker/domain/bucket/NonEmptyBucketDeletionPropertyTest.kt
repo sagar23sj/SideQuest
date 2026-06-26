@@ -50,7 +50,6 @@ class NonEmptyBucketDeletionPropertyTest : StringSpec({
             timeframe = Timeframe.Today,
             status = ActionStatus.NOT_STARTED,
             createdAt = 0L,
-            isWishlistItem = false,
             sync = SyncMeta(updatedAt = 0L, version = 1L, deleted = false, dirty = false),
         )
 

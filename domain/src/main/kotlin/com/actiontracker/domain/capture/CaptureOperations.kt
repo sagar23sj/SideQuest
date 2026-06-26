@@ -4,7 +4,6 @@ import com.actiontracker.domain.model.ActionItem
 import com.actiontracker.domain.model.ActionStatus
 import com.actiontracker.domain.model.SyncMeta
 import com.actiontracker.domain.model.Timeframe
-import com.actiontracker.domain.model.WishlistFields
 
 /**
  * Pure confirm-capture logic: building the Action_Item a user gets when they
@@ -39,10 +38,6 @@ object CaptureOperations {
      * @param id the client-generated UUID for the new item.
      * @param now epoch milliseconds used for both [ActionItem.createdAt] and the
      *   sync `updatedAt`.
-     * @param isWishlist whether the selected bucket is a shopping bucket; when
-     *   true the item is flagged a wishlist item (Req 8.2). Full wishlist field
-     *   capture is a later task, so [wishlist] defaults to null here.
-     * @param wishlist optional wishlist fields to attach when [isWishlist].
      */
     fun buildActionItem(
         draft: CaptureDraft,
@@ -50,8 +45,6 @@ object CaptureOperations {
         timeframe: Timeframe,
         id: String,
         now: Long,
-        isWishlist: Boolean = false,
-        wishlist: WishlistFields? = null,
     ): ActionItem = ActionItem(
         id = id,
         accountId = draft.accountId,
@@ -64,8 +57,6 @@ object CaptureOperations {
         timeframe = timeframe,
         status = ActionStatus.NOT_STARTED,
         createdAt = now,
-        isWishlistItem = isWishlist,
-        wishlist = if (isWishlist) wishlist else null,
         sync = SyncMeta(
             updatedAt = now,
             version = 1,

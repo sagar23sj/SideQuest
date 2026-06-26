@@ -40,7 +40,6 @@ CREATE TABLE buckets (
     id                  UUID PRIMARY KEY,
     account_id          UUID        NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
     name                TEXT        NOT NULL,
-    is_shopping         BOOLEAN     NOT NULL DEFAULT FALSE,
     not_started_color   TEXT        NOT NULL,
     in_progress_color   TEXT        NOT NULL,
     completed_color     TEXT        NOT NULL,
@@ -70,7 +69,6 @@ CREATE TABLE action_items (
     source_content      TEXT,                       -- nullable raw text/link/media ref
     status              SMALLINT    NOT NULL,
     created_at          TIMESTAMPTZ NOT NULL,       -- client-authoritative ordering within bucket
-    is_wishlist_item    BOOLEAN     NOT NULL DEFAULT FALSE,
 
     -- Timeframe (oneOf discriminator + payload)
     timeframe_kind      SMALLINT    NOT NULL,
@@ -82,11 +80,6 @@ CREATE TABLE action_items (
     preview_source_name TEXT,
     preview_raw_url     TEXT,
     preview_resolved    BOOLEAN,
-
-    -- Wishlist fields (nullable group; present in shopping buckets)
-    wishlist_product    TEXT,
-    wishlist_source     TEXT,
-    wishlist_purchased  BOOLEAN,
 
     -- Sync metadata
     updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),

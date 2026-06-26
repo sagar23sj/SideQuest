@@ -59,7 +59,6 @@ class ConflictResolutionPropertyTest : StringSpec({
                 timeframe = Timeframe.Today,
                 status = status,
                 createdAt = 0L,
-                isWishlistItem = false,
                 sync = sync(updatedAt, version, deleted),
             )
         Pair2(

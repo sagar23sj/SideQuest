@@ -58,6 +58,8 @@ import com.actiontracker.domain.model.ContentType
 fun BoardScreen(
     modifier: Modifier = Modifier,
     onOpenReminderSettings: () -> Unit = {},
+    onOpenItem: (String) -> Unit = {},
+    onManageBuckets: () -> Unit = {},
     viewModel: BoardViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -65,6 +67,8 @@ fun BoardScreen(
         state = state,
         onStatusChange = viewModel::onStatusChange,
         onOpenReminderSettings = onOpenReminderSettings,
+        onOpenItem = onOpenItem,
+        onManageBuckets = onManageBuckets,
         modifier = modifier,
     )
 }
@@ -85,6 +89,8 @@ fun BoardContent(
     onStatusChange: (itemId: String, newStatus: ActionStatus) -> Unit,
     modifier: Modifier = Modifier,
     onOpenReminderSettings: () -> Unit = {},
+    onOpenItem: (String) -> Unit = {},
+    onManageBuckets: () -> Unit = {},
 ) {
     val openSettingsDescription = stringResource(R.string.reminder_open_board_settings_desc)
     Scaffold(
@@ -93,6 +99,9 @@ fun BoardContent(
             TopAppBar(
                 title = { Text(stringResource(R.string.board_title)) },
                 actions = {
+                    TextButton(onClick = onManageBuckets) {
+                        Text(text = stringResource(R.string.buckets_title))
+                    }
                     TextButton(
                         onClick = onOpenReminderSettings,
                     ) {
@@ -114,6 +123,7 @@ fun BoardContent(
             is BoardUiState.Ready -> ReadyBoard(
                 board = state.board,
                 onStatusChange = onStatusChange,
+                onOpenItem = onOpenItem,
                 contentPadding = innerPadding,
             )
         }
@@ -145,6 +155,7 @@ private fun LoadingBoard(contentPadding: PaddingValues) {
 private fun ReadyBoard(
     board: BoardState,
     onStatusChange: (itemId: String, newStatus: ActionStatus) -> Unit,
+    onOpenItem: (String) -> Unit,
     contentPadding: PaddingValues,
 ) {
     LazyColumn(
@@ -183,6 +194,7 @@ private fun ReadyBoard(
                     onStatusChange = { newStatus ->
                         onStatusChange(boardItem.item.id, newStatus)
                     },
+                    onOpenItem = { onOpenItem(boardItem.item.id) },
                 )
             }
         }
@@ -253,10 +265,13 @@ private fun BucketHeader(group: BoardGroup) {
 private fun ActionItemRow(
     boardItem: BoardItem,
     onStatusChange: (ActionStatus) -> Unit,
+    onOpenItem: () -> Unit = {},
 ) {
     val display = previewDisplay(boardItem)
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onOpenItem),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

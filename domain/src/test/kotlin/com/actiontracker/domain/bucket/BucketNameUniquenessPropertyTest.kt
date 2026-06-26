@@ -39,7 +39,6 @@ class BucketNameUniquenessPropertyTest : StringSpec({
             id = id,
             accountId = accountId,
             name = name,
-            isShopping = false,
             notStartedColor = "#000000",
             inProgressColor = "#777777",
             completedColor = "#00FF00",

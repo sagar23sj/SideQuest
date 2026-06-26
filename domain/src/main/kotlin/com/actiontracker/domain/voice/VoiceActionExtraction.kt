@@ -7,7 +7,6 @@ import com.actiontracker.domain.model.ActionItem
 import com.actiontracker.domain.model.ContentType
 import com.actiontracker.domain.model.Timeframe
 import com.actiontracker.domain.model.VoiceJournalEntry
-import com.actiontracker.domain.model.WishlistFields
 
 /**
  * A single extracted action the user has confirmed, together with the bucket and
@@ -25,16 +24,11 @@ import com.actiontracker.domain.model.WishlistFields
  *   on the resulting Action_Item.
  * @property timeframe the timeframe the user assigned; stored verbatim. Callers
  *   are expected to have validated it (Req 3.2, 3.3) before confirming.
- * @property isWishlistBucket whether the chosen bucket is a shopping bucket, so
- *   the resulting item is flagged a wishlist item (Req 8.2).
- * @property wishlist optional wishlist fields to attach when [isWishlistBucket].
  */
 data class ConfirmedExtraction(
     val action: ExtractedAction,
     val bucketId: String,
     val timeframe: Timeframe,
-    val isWishlistBucket: Boolean = false,
-    val wishlist: WishlistFields? = null,
 )
 
 /**
@@ -113,8 +107,6 @@ object VoiceActionExtraction {
                 timeframe = confirmation.timeframe,
                 id = idGenerator(),
                 now = now,
-                isWishlist = confirmation.isWishlistBucket,
-                wishlist = confirmation.wishlist,
             )
         }
 

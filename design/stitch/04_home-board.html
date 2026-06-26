@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SideQuest Home Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#71d7cd",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#ddc0b8",
+                    "on-tertiary-fixed-variant": "#00504a",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#d4bbff",
+                    "on-primary-fixed": "#3a0b00",
+                    "tertiary-container": "#53bbb1",
+                    "primary-container": "#ff8a65",
+                    "surface-container-highest": "#c9e7f7",
+                    "on-secondary-container": "#533487",
+                    "secondary-fixed": "#ebdcff",
+                    "on-secondary-fixed-variant": "#543589",
+                    "surface-tint": "#9f4122",
+                    "on-primary-fixed-variant": "#7f2a0d",
+                    "surface": "#f4faff",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#006a63",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#e0f4ff",
+                    "surface-container-low": "#e6f6ff",
+                    "on-primary-container": "#752305",
+                    "surface-variant": "#c9e7f7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#56423c",
+                    "inverse-surface": "#163440",
+                    "secondary-container": "#c5a3ff",
+                    "primary": "#9f4122",
+                    "outline": "#89726b",
+                    "background": "#f4faff",
+                    "on-background": "#001f2a",
+                    "secondary": "#6d4ea2",
+                    "surface-dim": "#c0dfee",
+                    "on-tertiary-fixed": "#00201d",
+                    "on-tertiary-container": "#004842",
+                    "on-secondary-fixed": "#270058",
+                    "on-surface": "#001f2a",
+                    "primary-fixed-dim": "#ffb59e",
+                    "surface-container-high": "#ceedfd",
+                    "primary-fixed": "#ffdbd0",
+                    "surface-container": "#d9f2ff",
+                    "inverse-primary": "#ffb59e",
+                    "surface-bright": "#f4faff",
+                    "tertiary-fixed": "#8ef4e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "margin-tablet": "32px",
+                    "base": "4px",
+                    "gutter": "16px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Outfit"],
+                    "display-lg": ["Outfit"],
+                    "label-lg": ["Inter"],
+                    "headline-lg": ["Outfit"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Outfit"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .progress-ring__circle {
+            transition: stroke-dashoffset 1s ease-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg min-h-screen pb-32 overflow-x-hidden antialiased">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-margin-mobile w-full h-20 bg-surface shadow-sm docked full-width top-0 sticky z-40">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A small, circular profile avatar of a cheerful, stylish young person with colorful hair, set against a solid pastel background. The style is 3D rendered, reminiscent of high-quality expressive UI design, fitting perfectly into a vibrant, encouraging mobile application interface with a light-mode aesthetic, utilizing soft lighting and friendly tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXUciczSZPPcmySPNSB78UVXjT1CWMRXJikpTQ_uOeQ4BecNW-qKUd8naRJ_vFplRmNYYtBfkOTkzn1bV279HZFLD-uTFwdBt8u_iLFr_NF-Djx5nuFnk7827tEQJF2qbkSqYr4rMMFxqPQaZ-YssocAqtOHOvtGM2i07Gh-xJCzfhbZU2tr5QAIDsPyYT3t-vpeEdSmLurnpSLerHHOGR5JHjPV6r_SY_dIb8X7bg_8i2AmUAWdvlfZ9MxOl3fEn8jxEFBBNFXg"/>
+</div>
+<h1 class="font-display-lg text-headline-lg-mobile font-bold text-primary text-center absolute left-1/2 -translate-x-1/2">SideQuest</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</button>
+</header>
+<main class="flex flex-col gap-8 pt-6">
+<!-- Top Section: Progress Overview -->
+<section class="px-margin-mobile">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_24px_rgba(159,65,34,0.06)] border border-surface-container-high flex items-center justify-between gap-4">
+<div class="flex-1">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">3 actions done today! ✨</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">You're on a great streak. Keep exploring!</p>
+</div>
+<div class="relative w-24 h-24 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full absolute inset-0" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#d9f2ff" stroke-linecap="round" stroke-width="12"></circle>
+<!-- Progress Circle -->
+<circle class="progress-ring__circle" cx="50" cy="50" fill="transparent" r="40" stroke="#ff8a65" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="z-10 flex flex-col items-center justify-center">
+<span class="font-title-lg text-title-lg text-primary font-bold">75%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Buckets Section: Collections -->
+<section>
+<div class="px-margin-mobile mb-4 flex justify-between items-end">
+<h3 class="font-title-lg text-title-lg text-on-surface">Your Quests</h3>
+<button class="font-label-lg text-label-lg text-tertiary">View all</button>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar gap-4 px-margin-mobile pb-6 snap-x snap-mandatory">
+<!-- Travel Bucket (Active feeling) -->
+<div class="shrink-0 w-48 h-56 rounded-[28px] bg-secondary-container relative overflow-hidden snap-center shadow-[0_8px_16px_rgba(109,78,162,0.12)] border border-secondary/10 group cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-500" data-alt="A stylized, vibrant top-down view of a colorful map with a tiny 3D airplane soaring above it, representing a travel collection. The image uses a rich, warm color palette with expressive, rounded shapes, fitting a modern, encouraging mobile app interface in light mode. Soft ambient shadows and clear lighting give it a tactile, playful feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCnpxlOXOZq56m20abYosdC2zOWEgCtchN2SH-NB5ED9HCuHK0RHf2npbnqWNTR9SxHA0rWYVR-Abt6NH8FdrR5ZlGFpzJa3Rfel9vW3XZhqCiBftEnDhDXjWhmHxHhTz73IyfZ9knNPQv20sxpPr18xWeCImGEcxu8qe4X1C7fEZ8UPW-Yw-wmAyHWRCt1FNwuKmo1iK5zI8OeCV7VPzMlxakcBVvgQ8GTpWLoAV_6q8_aK8QYT5eXRiczPLrKwZuym6Z81f--ig')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-secondary-container via-secondary-container/80 to-transparent"></div>
+<div class="absolute inset-0 p-5 flex flex-col justify-end">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center mb-auto shadow-sm">
+<span class="material-symbols-outlined">flight</span>
+</div>
+<h4 class="font-title-lg text-title-lg text-on-secondary-container mb-1">Travel</h4>
+<p class="font-label-sm text-label-sm text-on-secondary-container/80 uppercase tracking-widest">5 Items</p>
+</div>
+</div>
+<!-- Home Bucket -->
+<div class="shrink-0 w-48 h-56 rounded-[28px] bg-surface-container-high relative overflow-hidden snap-center group cursor-pointer border border-outline-variant/30">
+<div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:scale-105 transition-transform duration-500" data-alt="A cozy, 3D rendered illustration of a stylized, modern living room corner with a comfortable armchair, a potted plant, and a warm lamp. The scene is lit with soft, inviting light mode illumination, emphasizing expressive, rounded geometry and a comforting color palette. This image serves as a collection cover for home tasks in a friendly, supportive app." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-Lte9oCxue48FOulGvOcKVpA7nhL1ixirhPhSsjowM8DI6WhWyQyeJmEiPlhpoeAJ9ohlVN84CmuS1UVLsFQwSEEqemjxUD_nsYVoFvYwaqf7amTZcBp5a0rp9pEGJ7IgEYPcCPcvpF1P125l1os-5MrofUF_fGvabhH5yIzhHWjc2naMXmvNpvBWmQ5siRUelEMvxXvYneEkDl5VUJDsjE8O7E2mLsTwAr6Oo7qhicPXoGIBCr5tI0hYoh7TgOXWaJPGb4FEQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-high via-surface-container-high/80 to-transparent"></div>
+<div class="absolute inset-0 p-5 flex flex-col justify-end">
+<div class="w-10 h-10 rounded-full bg-surface text-on-surface-variant flex items-center justify-center mb-auto shadow-sm">
+<span class="material-symbols-outlined">home</span>
+</div>
+<h4 class="font-title-lg text-title-lg text-on-surface mb-1">Home</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">12 Items</p>
+</div>
+</div>
+<!-- Learning Bucket -->
+<div class="shrink-0 w-48 h-56 rounded-[28px] bg-surface-container-high relative overflow-hidden snap-center group cursor-pointer border border-outline-variant/30">
+<div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:scale-105 transition-transform duration-500" data-alt="A playful, 3D rendered stack of colorful books with a glowing lightbulb floating above them, symbolizing learning and discovery. The aesthetic is clean, expressive, and optimistic, designed for a modern light mode mobile application interface. The colors are vibrant yet harmonious, with soft ambient lighting and rounded, tactile forms." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0_eApmCMn6uxoIhjqC3FPTIXi8vvwryJ9yOdduvR5r3Qes7w5aD4AsW-FhkJ1qLNKmUj0T0QUeZH_KPiasjCoOY8LCRMK0Yztpbs8MfAZuGLlQpPI3HrqQl3WjZSn3NP2A_dxg_RMOKRWWtNa6cTHf94lvaJLIK5IizCTMvXF24m1NjpTsW5WNKM4nZa2-yEHN5PpJjHCx8sdcjzjxqO0tGlo3i1iupZ7mQkjihkBwbQfcRPTKpRn92k8xmX2QUqqcpO90MiJmA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-high via-surface-container-high/80 to-transparent"></div>
+<div class="absolute inset-0 p-5 flex flex-col justify-end">
+<div class="w-10 h-10 rounded-full bg-surface text-on-surface-variant flex items-center justify-center mb-auto shadow-sm">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<h4 class="font-title-lg text-title-lg text-on-surface mb-1">Learning</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">2 Items</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Items Section: Rich Task Cards (Travel focus context) -->
+<section class="px-margin-mobile">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">Travel Focus</h3>
+<div class="flex flex-col gap-4">
+<!-- Rich Task Card 1 -->
+<div class="bg-surface-container-lowest rounded-[28px] p-4 flex items-center gap-4 shadow-[0_2px_12px_rgba(0,31,42,0.04)] border border-outline-variant/40 active:scale-[0.98] transition-transform">
+<div class="w-20 h-20 shrink-0 rounded-xl overflow-hidden relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A close-up, high-quality 3D render of a stylized airplane ticket and a bright yellow suitcase, resting on a clean, pastel surface. The lighting is soft and cheerful, tailored for an expressive, motivating light-mode UI design. The elements feature rounded, friendly shapes and vibrant colors, conveying a sense of excitement and readiness for travel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCsBKn2B-enyymf9mW8XkHy_p80IED38jbyefJgZ6mTjsaX24-BBW5igGnBr8Kzvcwd4qeQ-fTKupLREXM7x2jaO5Zbwp0eMJ0i4TsivB8_LETwCMpry5l6F5xsA71tfGD7G43UpSL9HtAcDU045eIJxW1OLnsYHK5q7vsN3nvh9gVg8Svph9TNWQRqY1xSpIQrhCDu6TJvHkM_AGjUByiS2VlA0_2TsxMF5ue4e4HB4jvjy2xE9NdpygAWqPvQKHQLG9x7kEOfA"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Not started</span>
+</div>
+<h4 class="font-title-lg text-title-lg text-on-surface truncate">Book flight to Japan</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Expedia</p>
+</div>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary shrink-0 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<!-- Rich Task Card 2 -->
+<div class="bg-surface-container-lowest rounded-[28px] p-4 flex items-center gap-4 shadow-[0_2px_12px_rgba(0,31,42,0.04)] border border-outline-variant/40 active:scale-[0.98] transition-transform">
+<div class="w-20 h-20 shrink-0 rounded-xl overflow-hidden relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A detailed, vibrant 3D rendering of a modern digital camera alongside a stylized travel journal and a pair of sunglasses on a soft pink background. The aesthetic is clean, expressive, and optimized for a light-mode mobile UI. Soft shadows and rounded edges emphasize a friendly, motivating vibe for travel preparation tasks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4SmODp_f8czviwFYehnRks2ldvnuLgGpw9KKfsnBRqtnXEaCLfaioYG90Tbfl9AjwWYyEicYmweN9i4rJ5u6DC8RPQM6P1aMc_yFs4qmtlsFzPW10HUvxK2eXzH44wfgw0iVwTQucbT01CuKm2apd2WLqhmTuqaoomVYSeidLlg0K78RBp5OKgJdXPEeANb9Qd-5CaRS1U18XSv8HF_dSfZDAaq5q0OARb38tB6foHXuhvUqGk4MKgs5cNZg798TJMF_efZwikg"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-sm text-label-sm text-tertiary">In progress</span>
+</div>
+<h4 class="font-title-lg text-title-lg text-on-surface truncate">Research cameras</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Notes</p>
+</div>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary shrink-0 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container rounded-t-lg shadow-lg">
+<!-- Board (Active) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-[16px] px-5 py-1 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm mt-1">Board</span>
+</button>
+<!-- Games (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-[16px] transition-colors">
+<span class="material-symbols-outlined text-[24px]">videogame_asset</span>
+<span class="font-label-sm text-label-sm mt-1">Games</span>
+</button>
+<!-- Voice (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-[16px] transition-colors">
+<span class="material-symbols-outlined text-[24px]">mic</span>
+<span class="font-label-sm text-label-sm mt-1">Voice</span>
+</button>
+<!-- Settings (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-[16px] transition-colors">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Settings</span>
+</button>
+</nav>
+<!-- Large FAB Contextual (Adding a Quest) -->
+<button class="fixed bottom-24 right-6 w-16 h-16 rounded-[20px] bg-primary text-on-primary flex items-center justify-center shadow-[0_8px_24px_rgba(159,65,34,0.3)] hover:scale-105 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</body></html>

@@ -24,7 +24,9 @@ import com.actiontracker.data.local.entity.VoiceJournalEntryEntity
  * com.actiontracker.domain.model.Timeframe] discriminator + payload). Version 2
  * adds the `voice_journal_entries` table for Voice_Journal_Entries (Req 10.4)
  * via [MIGRATION_1_2]; later milestones (games, leaderboards) add further
- * migrations as the schema evolves.
+ * migrations as the schema evolves. Version 3 drops the removed wishlist/
+ * shopping columns from `action_items` and `buckets` (a wishlist is now just a
+ * normal user-named bucket); this is a pre-release destructive schema change.
  */
 @Database(
     entities = [
@@ -33,7 +35,7 @@ import com.actiontracker.data.local.entity.VoiceJournalEntryEntity
         ActionPlanEntity::class,
         VoiceJournalEntryEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -84,6 +86,113 @@ abstract class ActionTrackerDatabase : RoomDatabase() {
                 db.execSQL(
                     "CREATE INDEX IF NOT EXISTS `index_voice_journal_entries_createdAt` " +
                         "ON `voice_journal_entries` (`createdAt`)",
+                )
+            }
+        }
+
+        /**
+         * Drops the removed wishlist/shopping columns: `isWishlistItem` and
+         * `wishlist` from `action_items`, and `isShopping` from `buckets`. A
+         * "wishlist" is now just a normal user-named bucket, so these columns no
+         * longer exist on the entities.
+         *
+         * SQLite on older Android API levels does not support `ALTER TABLE DROP
+         * COLUMN`, so each table is rebuilt with the new column set, data is
+         * copied across, the old table is dropped, the new one renamed, and the
+         * indices are recreated. Wrapped in the migration's implicit
+         * transaction so a failure leaves the original tables intact.
+         */
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // --- action_items: drop isWishlistItem + wishlist ---
+                db.execSQL(
+                    """
+                    CREATE TABLE `action_items_new` (
+                        `id` TEXT NOT NULL,
+                        `accountId` TEXT NOT NULL,
+                        `bucketId` TEXT NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `description` TEXT,
+                        `contentType` TEXT NOT NULL,
+                        `sourceContent` TEXT,
+                        `preview` TEXT,
+                        `timeframe` TEXT NOT NULL,
+                        `status` TEXT NOT NULL,
+                        `createdAt` INTEGER NOT NULL,
+                        `updatedAt` INTEGER NOT NULL,
+                        `version` INTEGER NOT NULL,
+                        `deleted` INTEGER NOT NULL,
+                        `dirty` INTEGER NOT NULL,
+                        PRIMARY KEY(`id`)
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL(
+                    """
+                    INSERT INTO `action_items_new` (
+                        `id`, `accountId`, `bucketId`, `title`, `description`,
+                        `contentType`, `sourceContent`, `preview`, `timeframe`,
+                        `status`, `createdAt`, `updatedAt`, `version`, `deleted`, `dirty`
+                    )
+                    SELECT
+                        `id`, `accountId`, `bucketId`, `title`, `description`,
+                        `contentType`, `sourceContent`, `preview`, `timeframe`,
+                        `status`, `createdAt`, `updatedAt`, `version`, `deleted`, `dirty`
+                    FROM `action_items`
+                    """.trimIndent(),
+                )
+                db.execSQL("DROP TABLE `action_items`")
+                db.execSQL("ALTER TABLE `action_items_new` RENAME TO `action_items`")
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_action_items_accountId` " +
+                        "ON `action_items` (`accountId`)",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_action_items_bucketId` " +
+                        "ON `action_items` (`bucketId`)",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_action_items_createdAt` " +
+                        "ON `action_items` (`createdAt`)",
+                )
+
+                // --- buckets: drop isShopping ---
+                db.execSQL(
+                    """
+                    CREATE TABLE `buckets_new` (
+                        `id` TEXT NOT NULL,
+                        `accountId` TEXT NOT NULL,
+                        `name` TEXT NOT NULL,
+                        `notStartedColor` TEXT NOT NULL,
+                        `inProgressColor` TEXT NOT NULL,
+                        `completedColor` TEXT NOT NULL,
+                        `updatedAt` INTEGER NOT NULL,
+                        `version` INTEGER NOT NULL,
+                        `deleted` INTEGER NOT NULL,
+                        `dirty` INTEGER NOT NULL,
+                        PRIMARY KEY(`id`)
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL(
+                    """
+                    INSERT INTO `buckets_new` (
+                        `id`, `accountId`, `name`, `notStartedColor`,
+                        `inProgressColor`, `completedColor`, `updatedAt`,
+                        `version`, `deleted`, `dirty`
+                    )
+                    SELECT
+                        `id`, `accountId`, `name`, `notStartedColor`,
+                        `inProgressColor`, `completedColor`, `updatedAt`,
+                        `version`, `deleted`, `dirty`
+                    FROM `buckets`
+                    """.trimIndent(),
+                )
+                db.execSQL("DROP TABLE `buckets`")
+                db.execSQL("ALTER TABLE `buckets_new` RENAME TO `buckets`")
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_buckets_accountId` " +
+                        "ON `buckets` (`accountId`)",
                 )
             }
         }

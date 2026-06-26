@@ -593,22 +593,10 @@ components:
           type: boolean
           description: When false, clients display rawUrl.
 
-    WishlistFields:
-      type: object
-      required: [productName, purchased]
-      properties:
-        productName:
-          type: string
-        sourceLink:
-          type: string
-          nullable: true
-        purchased:
-          type: boolean
-
     ActionItem:
       type: object
       required:
-        [id, accountId, bucketId, title, contentType, timeframe, status, createdAt, isWishlistItem, sync]
+        [id, accountId, bucketId, title, contentType, timeframe, status, createdAt, sync]
       properties:
         id:
           type: string
@@ -638,17 +626,13 @@ components:
         createdAt:
           type: string
           format: date-time
-        isWishlistItem:
-          type: boolean
-        wishlist:
-          $ref: "#/components/schemas/WishlistFields"
         sync:
           $ref: "#/components/schemas/SyncMeta"
 
     Bucket:
       type: object
       required:
-        [id, accountId, name, isShopping, notStartedColor, inProgressColor, completedColor, sync]
+        [id, accountId, name, notStartedColor, inProgressColor, completedColor, sync]
       properties:
         id:
           type: string
@@ -658,8 +642,6 @@ components:
           format: uuid
         name:
           type: string
-        isShopping:
-          type: boolean
         notStartedColor:
           type: string
         inProgressColor:

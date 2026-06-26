@@ -1,7 +1,6 @@
 package com.actiontracker.data.repository
 
 import com.actiontracker.data.local.dao.ActionItemDao
-import com.actiontracker.data.local.dao.BucketDao
 import com.actiontracker.data.local.entity.toEntity
 import com.actiontracker.data.preview.PreviewEnqueuer
 import com.actiontracker.domain.capture.CaptureDraft
@@ -41,9 +40,9 @@ sealed interface BeginCaptureResult {
  * not-started Action_Item lives in the pure `:domain`
  * [CaptureOperations.buildActionItem], so it is portable and validated by
  * Property 2 without Android. Here we classify shared content, build the draft,
- * look up whether the selected bucket is a shopping bucket, delegate item
- * construction to the domain, and persist via [ActionItemDao]. Writes mark the
- * row dirty so the offline-first sync layer pushes the newly captured item.
+ * delegate item construction to the domain, and persist via [ActionItemDao].
+ * Writes mark the row dirty so the offline-first sync layer pushes the newly
+ * captured item.
  *
  * Link-preview enrichment (Req 1a) and the ShareTargetActivity/categorization
  * sheet are later tasks, so [beginCapture] leaves [CaptureDraft.preview] null
@@ -52,7 +51,6 @@ sealed interface BeginCaptureResult {
 @Singleton
 class CaptureRepository(
     private val actionItemDao: ActionItemDao,
-    private val bucketDao: BucketDao,
     private val previewEnqueuer: PreviewEnqueuer,
     private val clock: () -> Long,
     private val idGenerator: () -> String,
@@ -67,11 +65,9 @@ class CaptureRepository(
     @Inject
     constructor(
         actionItemDao: ActionItemDao,
-        bucketDao: BucketDao,
         previewEnqueuer: PreviewEnqueuer,
     ) : this(
         actionItemDao = actionItemDao,
-        bucketDao = bucketDao,
         previewEnqueuer = previewEnqueuer,
         clock = System::currentTimeMillis,
         idGenerator = { UUID.randomUUID().toString() },
@@ -105,9 +101,7 @@ class CaptureRepository(
      * The Action_Item is built by the pure [CaptureOperations.buildActionItem]
      * (status [com.actiontracker.domain.model.ActionStatus.NOT_STARTED], bucket
      * and timeframe preserved exactly), with the id and timestamp injected from
-     * this repository's generators. Whether the item is a wishlist item is
-     * derived from the selected bucket's shopping flag (Req 8.2); full wishlist
-     * field capture is a later task, so wishlist fields are left null for now.
+     * this repository's generators.
      *
      * For LINK items the repository schedules background preview enrichment via
      * [PreviewEnqueuer] *after* the item is persisted. Enqueuing only schedules
@@ -116,27 +110,19 @@ class CaptureRepository(
      * (Req 1a.3, 1a.5). The worker later merges the fetched preview and upserts
      * the item, which the Board observes reactively through Room-backed Flows.
      *
-     * Returns the persisted domain [ActionItem]. The bucket is expected to exist
-     * (selected from the categorization sheet); a missing bucket simply yields a
-     * non-wishlist item.
+     * Returns the persisted domain [ActionItem].
      */
     suspend fun confirmCapture(
         draft: CaptureDraft,
         bucketId: String,
         timeframe: Timeframe,
     ): ActionItem {
-        val isShoppingBucket = bucketDao.getById(bucketId)
-            ?.takeIf { !it.sync.deleted }
-            ?.isShopping
-            ?: false
-
         val item = CaptureOperations.buildActionItem(
             draft = draft,
             bucketId = bucketId,
             timeframe = timeframe,
             id = idGenerator(),
             now = clock(),
-            isWishlist = isShoppingBucket,
         )
 
         actionItemDao.upsert(item.toEntity())

@@ -111,7 +111,6 @@ class DailyDueSetPropertyTest : StringSpec({
             timeframe = timeframe,
             status = spec.status,
             createdAt = createdAt,
-            isWishlistItem = false,
             sync = syncMeta(),
         )
     }

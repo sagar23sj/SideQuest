@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.bucket.BucketDeletionTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-24T16:11:28" hostname="INLPF5TK6XC" time="0.011">
+<testsuite name="com.actiontracker.domain.bucket.BucketDeletionTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-25T22:40:57" hostname="INLPF5TK6XC" time="0.007">
   <properties/>
-  <testcase name="reassign moves all contained items to the target bucket and empties the source" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.005"/>
+  <testcase name="reassign moves all contained items to the target bucket and empties the source" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.003"/>
   <testcase name="delete removes exactly the contained items and decreases the count by that amount" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.001"/>
   <testcase name="deleting an empty bucket leaves all items unchanged" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.001"/>
-  <testcase name="reassigning a bucket with no items is a no-op" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.001"/>
+  <testcase name="reassigning a bucket with no items is a no-op" classname="com.actiontracker.domain.bucket.BucketDeletionTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

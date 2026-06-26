@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Bucket</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#8ef4e9",
+                        "on-tertiary-fixed": "#00201d",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ffb59e",
+                        "on-secondary-container": "#533487",
+                        "primary-container": "#ff8a65",
+                        "inverse-primary": "#ffb59e",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "on-tertiary-container": "#004842",
+                        "secondary-container": "#c5a3ff",
+                        "tertiary-container": "#53bbb1",
+                        "on-surface": "#001f2a",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#163440",
+                        "primary-fixed": "#ffdbd0",
+                        "surface-bright": "#f4faff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#006a63",
+                        "secondary-fixed-dim": "#d4bbff",
+                        "on-primary-fixed": "#3a0b00",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#e6f6ff",
+                        "surface-container": "#d9f2ff",
+                        "secondary-fixed": "#ebdcff",
+                        "surface-dim": "#c0dfee",
+                        "outline": "#89726b",
+                        "on-secondary-fixed": "#270058",
+                        "outline-variant": "#ddc0b8",
+                        "inverse-on-surface": "#e0f4ff",
+                        "surface": "#f4faff",
+                        "surface-container-high": "#ceedfd",
+                        "on-surface-variant": "#56423c",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#752305",
+                        "tertiary-fixed-dim": "#71d7cd",
+                        "secondary": "#6d4ea2",
+                        "surface-variant": "#c9e7f7",
+                        "on-secondary-fixed-variant": "#543589",
+                        "surface-container-highest": "#c9e7f7",
+                        "background": "#f4faff",
+                        "on-primary-fixed-variant": "#7f2a0d",
+                        "on-background": "#001f2a",
+                        "surface-tint": "#9f4122",
+                        "primary": "#9f4122",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "sm": "8px",
+                        "margin-tablet": "32px",
+                        "margin-mobile": "20px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Outfit"],
+                        "display-lg": ["Outfit"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Outfit"],
+                        "body-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .spring-bounce {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .spring-bounce:active {
+            transform: scale(0.95);
+        }
+        
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #9f4122; /* primary */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ffdbd0; /* primary-fixed */
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+            background-color: #9f4122; /* primary */
+        }
+        
+        .color-radio:checked + label {
+            border-width: 4px;
+            border-color: #001f2a; /* on-surface */
+            transform: scale(1.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-lg flex flex-col md:max-w-md md:mx-auto md:shadow-2xl md:min-h-[850px] md:my-8 md:rounded-xl md:border md:border-outline-variant overflow-hidden relative">
+<!-- Top App Bar -->
+<header class="bg-background w-full top-0 sticky z-10 flex justify-between items-center px-margin-mobile py-sm flat no shadows">
+<button aria-label="Go back" class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full spring-bounce">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">Create Bucket</h1>
+<button aria-hidden="true" class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full spring-bounce opacity-0 cursor-default" disabled="">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile py-lg pb-[120px] overflow-y-auto flex flex-col gap-xl">
+<!-- Graphic / Illustration Area -->
+<div class="w-full flex justify-center mb-sm">
+<div class="w-32 h-32 bg-primary-container rounded-full flex items-center justify-center shadow-lg relative overflow-hidden group">
+<span class="material-symbols-outlined text-on-primary-container text-[64px]" data-icon="shopping_basket">shopping_basket</span>
+<div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+</div>
+</div>
+<!-- Bucket Name Input -->
+<section class="flex flex-col gap-sm">
+<label class="font-title-lg text-title-lg text-on-surface" for="bucketName">Bucket Name</label>
+<div class="relative">
+<input class="w-full bg-surface-container rounded-lg px-lg py-[20px] font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:bg-surface-container-high transition-all border-none shadow-[0_4px_8px_rgba(0,0,0,0.02)]" id="bucketName" placeholder="e.g. Weekly Groceries" type="text"/>
+</div>
+</section>
+<!-- Color Picker -->
+<section class="flex flex-col gap-sm">
+<label class="font-title-lg text-title-lg text-on-surface">Theme Color</label>
+<div class="grid grid-cols-4 gap-md pt-sm">
+<!-- Color 1 -->
+<div class="relative flex items-center justify-center">
+<input checked="" class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color1" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-primary-container cursor-pointer shadow-sm transition-all duration-200" for="color1"></label>
+</div>
+<!-- Color 2 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color2" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-secondary-container cursor-pointer shadow-sm transition-all duration-200" for="color2"></label>
+</div>
+<!-- Color 3 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color3" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-tertiary-container cursor-pointer shadow-sm transition-all duration-200" for="color3"></label>
+</div>
+<!-- Color 4 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color4" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-[#fbbc04] cursor-pointer shadow-sm transition-all duration-200" for="color4"></label>
+</div>
+<!-- Color 5 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color5" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-[#34a853] cursor-pointer shadow-sm transition-all duration-200" for="color5"></label>
+</div>
+<!-- Color 6 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color6" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-[#4285f4] cursor-pointer shadow-sm transition-all duration-200" for="color6"></label>
+</div>
+<!-- Color 7 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color7" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-[#ea4335] cursor-pointer shadow-sm transition-all duration-200" for="color7"></label>
+</div>
+<!-- Color 8 -->
+<div class="relative flex items-center justify-center">
+<input class="color-radio opacity-0 absolute w-full h-full cursor-pointer z-10" id="color8" name="themeColor" type="radio"/>
+<label class="w-12 h-12 rounded-full bg-surface-variant cursor-pointer shadow-sm transition-all duration-200" for="color8"></label>
+</div>
+</div>
+</section>
+<!-- Shopping Bucket Toggle -->
+<section class="bg-surface-container-low rounded-lg p-lg shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-surface-variant">
+<div class="flex items-center justify-between gap-md mb-sm">
+<div class="flex items-center gap-sm text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="sell" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sell</span>
+<h3 class="font-title-lg text-title-lg">Shopping Bucket</h3>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-14 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 transition-transform duration-300" id="toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-8 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="toggle"></label>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant pl-8">
+                Enable product price tracking and purchased status for items in this bucket.
+            </p>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full p-margin-mobile bg-background/90 backdrop-blur-md z-40 md:absolute md:rounded-b-xl border-t border-surface-variant/50">
+<button class="w-full bg-primary hover:bg-surface-tint text-on-primary font-title-lg text-title-lg py-md px-lg rounded-full shadow-lg shadow-primary/20 spring-bounce flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" data-icon="add" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add</span>
+            Create Bucket
+        </button>
+</div>
+</body></html>

@@ -16,7 +16,6 @@ import com.actiontracker.domain.model.LinkPreview
 import com.actiontracker.domain.model.SubAction
 import com.actiontracker.domain.model.SyncMeta
 import com.actiontracker.domain.model.Timeframe
-import com.actiontracker.domain.model.WishlistFields
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -208,7 +207,6 @@ private fun bucketArb(): Arb<Bucket> = arbitrary {
         id = UUID.randomUUID().toString(),
         accountId = "acct-1",
         name = nonBlankString().bind(),
-        isShopping = Arb.boolean().bind(),
         notStartedColor = "#9E9E9E",
         inProgressColor = "#1976D2",
         completedColor = "#388E3C",
@@ -225,11 +223,10 @@ private fun subActionArb(order: Int): Arb<SubAction> = arbitrary {
     )
 }
 
-/** Builds an [ActionItem] in [bucketId] covering content/wishlist variations. */
+/** Builds an [ActionItem] in [bucketId] covering content variations. */
 private fun actionItemArb(bucketId: String): Arb<ActionItem> = arbitrary {
     val contentType = contentTypeArb.bind()
     val status = statusArb.bind()
-    val isWishlist = Arb.boolean().bind()
     val title = nonBlankString().bind()
     ActionItem(
         id = UUID.randomUUID().toString(),
@@ -253,16 +250,6 @@ private fun actionItemArb(bucketId: String): Arb<ActionItem> = arbitrary {
         timeframe = timeframeArb.bind(),
         status = status,
         createdAt = Arb.long(0L, 4_000_000_000_000L).bind(),
-        isWishlistItem = isWishlist,
-        wishlist = if (isWishlist) {
-            WishlistFields(
-                productName = "product:$title",
-                sourceLink = Arb.string(1, 10).map { "https://shop/$it" }.orNull().bind(),
-                purchased = status == ActionStatus.COMPLETED,
-            )
-        } else {
-            null
-        },
         sync = syncMetaArb().bind(),
     )
 }
@@ -299,7 +286,6 @@ private val datasetArb: Arb<Dataset> = arbitrary {
 
 private fun editBucket(bucket: Bucket): Bucket = bucket.copy(
     name = bucket.name + "-edited",
-    isShopping = !bucket.isShopping,
     inProgressColor = "#FF5722",
     sync = bucket.sync.copy(version = bucket.sync.version + 1, dirty = true),
 )

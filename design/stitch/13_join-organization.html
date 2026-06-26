@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Join a Guild - SideQuest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f4faff",
+                        "surface-container-highest": "#c9e7f7",
+                        "on-primary-container": "#752305",
+                        "primary-fixed-dim": "#ffb59e",
+                        "tertiary": "#006a63",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#e0f4ff",
+                        "primary-fixed": "#ffdbd0",
+                        "tertiary-fixed-dim": "#71d7cd",
+                        "on-tertiary-fixed": "#00201d",
+                        "primary-container": "#ff8a65",
+                        "surface-variant": "#c9e7f7",
+                        "on-primary-fixed-variant": "#7f2a0d",
+                        "surface": "#f4faff",
+                        "inverse-primary": "#ffb59e",
+                        "surface-container-low": "#e6f6ff",
+                        "primary": "#9f4122",
+                        "on-surface": "#001f2a",
+                        "on-primary-fixed": "#3a0b00",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "on-secondary-container": "#533487",
+                        "surface-container-high": "#ceedfd",
+                        "surface-container": "#d9f2ff",
+                        "surface-tint": "#9f4122",
+                        "tertiary-container": "#53bbb1",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#8ef4e9",
+                        "inverse-surface": "#163440",
+                        "on-tertiary-container": "#004842",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#c5a3ff",
+                        "outline-variant": "#ddc0b8",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#d4bbff",
+                        "on-background": "#001f2a",
+                        "secondary-fixed": "#ebdcff",
+                        "on-secondary-fixed-variant": "#543589",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#c0dfee",
+                        "outline": "#89726b",
+                        "on-secondary-fixed": "#270058",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f4faff",
+                        "secondary": "#6d4ea2",
+                        "on-surface-variant": "#56423c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "base": "4px",
+                        "margin-mobile": "20px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "margin-tablet": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Outfit"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Outfit"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg-mobile": ["Outfit"],
+                        "title-lg": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .spring-bounce:active {
+            transform: scale(0.95);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container pb-[80px]">
+<!-- TopAppBar (Transactional Intent: Hiding full Nav Shell, just using simple header for focused flow) -->
+<header class="w-full top-0 sticky z-40 bg-background flex justify-between items-center px-margin-mobile py-sm border-b border-surface-variant">
+<button class="text-on-surface-variant p-sm rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="font-title-lg text-title-lg md:font-headline-lg-mobile md:text-headline-lg-mobile font-bold text-primary tracking-tight">
+            SideQuest
+        </div>
+<div class="w-[40px]"></div> <!-- Spacer for centering -->
+</header>
+<main class="flex-1 flex flex-col px-margin-mobile pt-lg pb-xl max-w-2xl mx-auto w-full gap-lg">
+<!-- Header Section -->
+<section class="text-center flex flex-col items-center gap-sm">
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container mb-xs shadow-sm">
+<span class="material-symbols-outlined text-[32px]" data-icon="groups">groups</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Join a Guild</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">Find your people, complete quests together, and climb the leaderboards.</p>
+</section>
+<!-- Search Bar -->
+<section class="w-full relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-md pl-[48px] pr-md font-body-lg text-body-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-[0_2px_8px_0_rgba(0,0,0,0.02)] placeholder:text-outline" placeholder="Search guilds or interests..." type="text"/>
+</section>
+<!-- Suggested Guilds -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-lg text-title-lg text-on-surface">Suggested for You</h2>
+<div class="grid grid-cols-1 gap-md">
+<!-- Guild Card 1 -->
+<div class="bg-surface-container rounded-lg p-lg shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-white/40 flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-start gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A stylized, flat vector illustration icon representing a hiking club. A glowing, warm orange sun setting behind abstract teal mountains. Minimalist expressive design, warm color palette, soft vector aesthetic suitable for a friendly community app avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb-yzAIw6Tb9IQfpRb3yizZnKfIw0684dzfqjcyIGuZ9VnYCbDQ1OQDwFp-qR_SEJAyzFWHVuWrgTz-0a1oD6cPwZ6x39VC_cejUeMdVHNAn-aTe00xPdZhQ8eCuD3jsiKzSyLULAHLBOfnG14wIEmotxvwZda49DvBUlyE9fWP2_qm6I-swOyhgA7ytOvhMbEbByqjKbRRt99Vp0Z-TN63clYHHqVFZXkgd-RMqqi0ZmL7qgZQ9tOfbckRItVawnwt1aCqu9r3g"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-sm">
+<h3 class="font-title-lg text-title-lg text-on-surface truncate">Trailblazers</h3>
+<span class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-sm py-xs rounded-full shrink-0">Open</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-xs">Weekend warriors dedicated to conquering local trails and parks. All skill levels welcome!</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-xs border-t border-outline-variant/20 pt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] fill" data-icon="person" data-weight="fill">person</span>
+<span class="font-label-lg text-label-lg">1,204 Members</span>
+</div>
+<button class="text-primary font-label-lg text-label-lg flex items-center gap-xs hover:text-on-primary-container transition-colors spring-bounce">
+                            Join <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Guild Card 2 -->
+<div class="bg-surface-container rounded-lg p-lg shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-white/40 flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-start gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A stylized, flat vector illustration icon representing a coding group. Abstract geometric shapes resembling a laptop and curly braces in deep violet and soft lavender tones. Minimalist expressive design, clean modern tech aesthetic suitable for a friendly app avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6m-LT3xZFvbQt2Yr4s0WFoo2bMYRe0atw0k8B7sKJXceoJk3beZ4dGmv2uSW1f8ruN0rLck_uRVs3hiFKohVz6lsXB3uV45cy1ylklDGIeYPLHBtPSfkwk0cIf2Maow3UsLvDubifdJ_YPV5Azs9Lz_aVMXPbmyiXoFLv4ot3BAxf4g8y878Yx6fEughSYtNX0f7YFR7Y9Ne6fz8OJjhN97GW2rcmd8KCm0tsSm-g3D3xolmoAsvQkc_XNeR1GWfn1gZFBEZ22Q"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-sm">
+<h3 class="font-title-lg text-title-lg text-on-surface truncate">Midnight Coders</h3>
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-sm py-xs rounded-full shrink-0">Invite Only</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-xs">Building side projects, sharing resources, and debugging together late into the night.</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-xs border-t border-outline-variant/20 pt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] fill" data-icon="person" data-weight="fill">person</span>
+<span class="font-label-lg text-label-lg">842 Members</span>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-xs hover:text-on-secondary-container transition-colors spring-bounce">
+                            Request <span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+</button>
+</div>
+</div>
+<!-- Guild Card 3 -->
+<div class="bg-surface-container rounded-lg p-lg shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-white/40 flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-start gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A stylized, flat vector illustration icon representing a photography club. A sleek vintage camera graphic surrounded by subtle sparkle accents in earthy brown and soft cream tones. Minimalist expressive design, warm and inviting aesthetic suitable for a friendly community app avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSSbA45AXmZd7Nj1vOnrdBjLzJG_ZvbHoUFbKvtel7vgsHod_v_iryzQImGaQhLa84caL8hGRtLWuBfYL-uljSrXJHZSzp7K_2CobEIH_d_oDRUsuy75Pp76uf7ftJfXecSJ8ohevkagaoyEMgBiaAZrhjAzbSIQIKk6Xan_zAbfToloTdxPbHg0e0v53KXJzxm3VqjWioPf8Gc_r0cm7F2q4CeQ61OYgOwsYGda8BJwaxmwNXMenJ8h-bjDIzO67JrInfwlWMCQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-sm">
+<h3 class="font-title-lg text-title-lg text-on-surface truncate">Shutterbugs</h3>
+<span class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-sm py-xs rounded-full shrink-0">Open</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-xs">Daily photo challenges, critique sessions, and sharing the beauty of everyday life.</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-xs border-t border-outline-variant/20 pt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] fill" data-icon="person" data-weight="fill">person</span>
+<span class="font-label-lg text-label-lg">3,105 Members</span>
+</div>
+<button class="text-primary font-label-lg text-label-lg flex items-center gap-xs hover:text-on-primary-container transition-colors spring-bounce">
+                            Join <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area (Fixed) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-outline-variant/20 p-margin-mobile z-40 pb-xl">
+<div class="max-w-2xl mx-auto flex flex-col gap-sm">
+<div class="text-center mb-xs">
+<span class="font-body-md text-body-md text-on-surface-variant">Can't find what you're looking for?</span>
+</div>
+<button class="w-full bg-gradient-to-r from-primary to-surface-tint text-on-primary font-label-lg text-label-lg py-md rounded-full shadow-lg shadow-primary/20 flex items-center justify-center gap-sm hover:opacity-90 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Create New Guild
+            </button>
+</div>
+</div>
+</body></html>
