@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DEBUG-ONLY network security config.
+
+    Allows cleartext (HTTP) traffic to the local development backend so the
+    emulator/device can reach the Go server running on the host machine over
+    http://10.0.2.2:8080 (and localhost variants). This file lives in
+    src/debug, so it is NOT part of release builds — release traffic stays
+    HTTPS-only under Android's secure defaults.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Emulator alias for the host machine's loopback. -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!-- Loopback (e.g. adb reverse / running on the host). -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+    </domain-config>
+</network-security-config>

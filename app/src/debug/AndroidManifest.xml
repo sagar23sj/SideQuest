@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DEBUG manifest overlay. Merged into the main manifest for debug builds only.
+    Points the app at the debug network security config so it can reach the
+    local development backend over cleartext HTTP (http://10.0.2.2:8080).
+    Release builds do not include this overlay and keep HTTPS-only defaults.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:replace="android:networkSecurityConfig" />
+</manifest>

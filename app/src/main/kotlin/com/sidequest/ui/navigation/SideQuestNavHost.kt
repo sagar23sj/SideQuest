@@ -1,0 +1,328 @@
+package com.sidequest.ui.navigation
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.sidequest.ui.board.BoardScreen
+import com.sidequest.ui.bucket.BucketManagementScreen
+import com.sidequest.ui.bucket.CreateBucketScreen
+import com.sidequest.ui.detail.ItemDetailScreen
+import com.sidequest.ui.games.GamesHubScreen
+import com.sidequest.ui.games.SpellingBeeScreen
+import com.sidequest.ui.games.WordGuessScreen
+import com.sidequest.ui.leaderboard.LeaderboardScreen
+import com.sidequest.ui.profile.ProfileScreen
+import com.sidequest.ui.reminder.ReminderSettingsScreen
+import com.sidequest.ui.voice.VoiceJournalScreen
+import com.sidequest.ui.voice.VoiceReviewScreen
+
+/**
+ * Hosts the SideQuest navigation shell: a four-tab bottom bar (Board, Games,
+ * Voice, Profile) with a center capture FAB, plus the pushed routes layered on
+ * top (item detail, bucket management, create/edit bucket, voice review, the
+ * games, the leaderboard, reminder settings, and the auth flow).
+ *
+ * This replaces the previous two-state `RootScreen` enum in `MainActivity` with
+ * a real Navigation-Compose graph so every built and newly added screen is
+ * reachable.
+ *
+ * @param onAddItem invoked by the capture FAB. The OS share sheet remains the
+ *   primary external capture path; this gives an in-app entry point that reuses
+ *   the same categorization flow (hosted by the share-target activity).
+ */
+@Composable
+fun SideQuestNavHost(
+    onAddItem: () -> Unit,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
+    // The bottom bar + FAB only show on the top-level tabs; pushed routes use
+    // their own top-bar back affordance and hide the shell.
+    val showShell = TopLevelDestination.entries.any { it.route == currentRoute }
+
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
+            AnimatedVisibility(
+                visible = showShell,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                BottomNavBar(navController = navController)
+            }
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = showShell,
+                enter = scaleIn(),
+                exit = scaleOut(),
+            ) {
+                CaptureFab(onClick = onAddItem)
+            }
+        },
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Routes.BOARD,
+            modifier = Modifier.padding(innerPadding),
+        ) {
+            composable(Routes.BOARD) {
+                BoardScreen(
+                    onOpenItem = { itemId -> navController.navigate(Routes.itemDetail(itemId)) },
+                    onManageBuckets = { navController.navigate(Routes.BUCKETS) },
+                    onOpenBucket = { bucketId -> navController.navigate(Routes.bucketDetail(bucketId)) },
+                    onOpenProfile = { navController.navigate(Routes.PROFILE) },
+                    onOpenLeaderboard = { navController.navigate(Routes.LEADERBOARD) },
+                )
+            }
+
+            composable(Routes.GAMES) {
+                GamesHubScreen(
+                    onPlaySpellingBee = { navController.navigate(Routes.SPELLING_BEE) },
+                    onPlayWordGuess = { navController.navigate(Routes.WORD_GUESS) },
+                    onOpenLeaderboard = { navController.navigate(Routes.LEADERBOARD) },
+                )
+            }
+
+            composable(Routes.VOICE) {
+                VoiceJournalScreen(
+                    onReviewEntry = { entryId -> navController.navigate(Routes.voiceReview(entryId)) },
+                )
+            }
+
+            composable(Routes.PROFILE) {
+                ProfileScreen(
+                    onOpenReminders = { navController.navigate(Routes.REMINDER_SETTINGS) },
+                    onManageBuckets = { navController.navigate(Routes.BUCKETS) },
+                    onJoinOrganization = { navController.navigate(Routes.JOIN_ORG) },
+                    onSignIn = { navController.navigate(Routes.LOGIN) },
+                )
+            }
+
+            composable(
+                route = Routes.ITEM_DETAIL_PATTERN,
+                arguments = listOf(navArgument(Routes.ITEM_DETAIL_ARG) { type = NavType.StringType }),
+            ) {
+                ItemDetailScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(Routes.BUCKETS) {
+                BucketManagementScreen(
+                    onNavigateBack = navController::popBackStack,
+                    onCreateBucket = { navController.navigate(Routes.CREATE_BUCKET) },
+                    onEditBucket = { bucketId -> navController.navigate(Routes.editBucket(bucketId)) },
+                )
+            }
+
+            composable(
+                route = Routes.BUCKET_DETAIL_PATTERN,
+                arguments = listOf(navArgument(Routes.BUCKET_DETAIL_ARG) { type = NavType.StringType }),
+            ) {
+                com.sidequest.ui.bucket.BucketDetailScreen(
+                    onNavigateBack = navController::popBackStack,
+                    onOpenItem = { itemId -> navController.navigate(Routes.itemDetail(itemId)) },
+                )
+            }
+
+            composable(Routes.CREATE_BUCKET) {
+                CreateBucketScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(
+                route = Routes.EDIT_BUCKET_PATTERN,
+                arguments = listOf(navArgument(Routes.EDIT_BUCKET_ARG) { type = NavType.StringType }),
+            ) {
+                CreateBucketScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(
+                route = Routes.VOICE_REVIEW_PATTERN,
+                arguments = listOf(navArgument(Routes.VOICE_REVIEW_ARG) { type = NavType.StringType }),
+            ) {
+                VoiceReviewScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(Routes.REMINDER_SETTINGS) {
+                ReminderSettingsScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(Routes.SPELLING_BEE) {
+                SpellingBeeScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(Routes.WORD_GUESS) {
+                WordGuessScreen(onNavigateBack = navController::popBackStack)
+            }
+
+            composable(Routes.LEADERBOARD) {
+                LeaderboardScreen(
+                    onNavigateBack = navController::popBackStack,
+                    onJoinOrganization = { navController.navigate(Routes.JOIN_ORG) },
+                )
+            }
+
+            composable(Routes.LOGIN) {
+                com.sidequest.ui.auth.LoginScreen(
+                    onAuthenticated = navController::popBackStack,
+                    onSkip = navController::popBackStack,
+                )
+            }
+
+            composable(Routes.JOIN_ORG) {
+                com.sidequest.ui.auth.JoinOrganizationScreen(
+                    onJoined = navController::popBackStack,
+                    onSkip = navController::popBackStack,
+                )
+            }
+        }
+    }
+}
+
+/**
+ * The four-tab bottom navigation bar, styled to the SideQuest design: a
+ * floating rounded `surface-container` bar where the active tab is a filled
+ * pill (`secondary-container`). Tab selection uses the standard single-top +
+ * restore-state pattern so switching tabs keeps each tab's back stack and
+ * avoids piling duplicate destinations.
+ */
+@Composable
+private fun BottomNavBar(navController: NavHostController) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
+
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        shadowElevation = 12.dp,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            TopLevelDestination.entries.forEach { destination ->
+                val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
+                BottomNavItem(
+                    destination = destination,
+                    selected = selected,
+                    onClick = {
+                        navController.navigate(destination.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * A single bottom-nav tab. The active tab renders as a filled
+ * `secondary-container` pill with its label; inactive tabs show just the
+ * outlined icon, matching the design's pill active-state.
+ */
+@Composable
+private fun BottomNavItem(
+    destination: TopLevelDestination,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val label = stringResource(destination.labelRes)
+    val container = if (selected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
+    val content = if (selected) {
+        MaterialTheme.colorScheme.onSecondaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = container,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
+                contentDescription = label,
+                tint = content,
+            )
+            if (selected) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = content,
+                )
+            }
+        }
+    }
+}
+
+/**
+ * The center capture FAB: a rounded squircle in the primary coral with an
+ * ambient shadow, matching the Home Board design's "add a SideQuest" button.
+ */
+@Composable
+private fun CaptureFab(onClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = onClick,
+        shape = RoundedCornerShape(20.dp),
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = stringResource(com.sidequest.R.string.nav_capture_desc),
+        )
+    }
+}

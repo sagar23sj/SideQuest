@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transcript Review</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#8ef4e9",
+                        "on-tertiary-fixed": "#00201d",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ffb59e",
+                        "on-secondary-container": "#533487",
+                        "primary-container": "#ff8a65",
+                        "inverse-primary": "#ffb59e",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "on-tertiary-container": "#004842",
+                        "secondary-container": "#c5a3ff",
+                        "tertiary-container": "#53bbb1",
+                        "on-surface": "#001f2a",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#163440",
+                        "primary-fixed": "#ffdbd0",
+                        "surface-bright": "#f4faff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#006a63",
+                        "secondary-fixed-dim": "#d4bbff",
+                        "on-primary-fixed": "#3a0b00",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#e6f6ff",
+                        "surface-container": "#d9f2ff",
+                        "secondary-fixed": "#ebdcff",
+                        "surface-dim": "#c0dfee",
+                        "outline": "#89726b",
+                        "on-secondary-fixed": "#270058",
+                        "outline-variant": "#ddc0b8",
+                        "inverse-on-surface": "#e0f4ff",
+                        "surface": "#f4faff",
+                        "surface-container-high": "#ceedfd",
+                        "on-surface-variant": "#56423c",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#752305",
+                        "tertiary-fixed-dim": "#71d7cd",
+                        "secondary": "#6d4ea2",
+                        "surface-variant": "#c9e7f7",
+                        "on-secondary-fixed-variant": "#543589",
+                        "surface-container-highest": "#c9e7f7",
+                        "background": "#f4faff",
+                        "on-primary-fixed-variant": "#7f2a0d",
+                        "on-background": "#001f2a",
+                        "surface-tint": "#9f4122",
+                        "primary": "#9f4122",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "sm": "8px",
+                        "margin-tablet": "32px",
+                        "margin-mobile": "20px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Outfit"],
+                        "display-lg": ["Outfit"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Outfit"],
+                        "body-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "700" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom spring animations for interactions */
+        .spring-bounce:active {
+            transform: scale(0.96);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* Custom checkbox styles */
+        .task-checkbox:checked + div {
+            background-color: theme('colors.primary');
+            border-color: theme('colors.primary');
+        }
+        .task-checkbox:checked + div svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Smooth state transitions for cards */
+        .task-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .task-card.selected {
+            background-color: theme('colors.primary-fixed');
+            border-color: theme('colors.primary-fixed-dim');
+        }
+        
+        /* Ambient shadow for the primary button */
+        .ambient-shadow-primary {
+            box-shadow: 0 8px 24px -4px rgba(159, 65, 34, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex justify-center">
+<div class="w-full max-w-md relative pb-[120px] bg-background shadow-2xl shadow-surface-tint/5">
+<!-- Contextual Top App Bar (Transactional Flow -> Shell Navigation Suppressed) -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-margin-mobile py-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high active:scale-95 transition-all text-on-surface">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface tracking-tight">Review</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high active:scale-95 transition-all text-on-surface">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</header>
+<main class="flex flex-col w-full">
+<!-- Transcript Bubble Area -->
+<section class="px-margin-mobile pt-sm pb-lg animate-[fadeIn_0.5s_ease-out]">
+<div class="bg-surface-container rounded-[28px] p-lg shadow-sm border border-outline-variant/20 relative">
+<!-- Decorative quote mark -->
+<span class="material-symbols-outlined absolute top-md left-md text-primary/20 text-4xl" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed relative z-10 pt-sm">
+                        "So, I finally decided to do the Patagonia trail next month. I need to remember to buy new hiking boots before the weekend trip because my old ones are falling apart. Oh, and I must call the flight agency tomorrow morning to confirm if I can get that seat upgrade. Need to make sure I pack the blue backpack too."
+                    </p>
+<div class="mt-md flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">mic</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">0:42 recorded just now</span>
+</div>
+</div>
+</section>
+<!-- Extracted Actions Section -->
+<section class="px-margin-mobile pt-md animate-[slideUp_0.6s_ease-out]">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h2 class="font-title-lg text-title-lg text-on-surface">Extracted Actions</h2>
+</div>
+<div class="flex flex-col gap-md" id="action-list">
+<!-- Action Card 1 -->
+<label class="task-card bg-surface-container-lowest border-2 border-outline-variant/30 rounded-[24px] p-md flex flex-col gap-md cursor-pointer spring-bounce shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<div class="flex items-start gap-md">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="task-checkbox peer sr-only" type="checkbox"/>
+<div class="w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center transition-all duration-300">
+<svg class="w-3.5 h-3.5 text-on-primary opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface flex-1">Buy hiking boots</span>
+</div>
+<div class="pl-[40px]">
+<div class="inline-flex items-center gap-xs bg-surface-container px-md py-xs rounded-full border border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">shopping_bag</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Shopping</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant ml-xs">keyboard_arrow_down</span>
+</div>
+</div>
+</label>
+<!-- Action Card 2 -->
+<label class="task-card bg-surface-container-lowest border-2 border-outline-variant/30 rounded-[24px] p-md flex flex-col gap-md cursor-pointer spring-bounce shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<div class="flex items-start gap-md">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="task-checkbox peer sr-only" type="checkbox"/>
+<div class="w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center transition-all duration-300">
+<svg class="w-3.5 h-3.5 text-on-primary opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface flex-1">Call flight agency</span>
+</div>
+<div class="pl-[40px]">
+<div class="inline-flex items-center gap-xs bg-surface-container px-md py-xs rounded-full border border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">flight</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Travel</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant ml-xs">keyboard_arrow_down</span>
+</div>
+</div>
+</label>
+<!-- Action Card 3 -->
+<label class="task-card bg-surface-container-lowest border-2 border-outline-variant/30 rounded-[24px] p-md flex flex-col gap-md cursor-pointer spring-bounce shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<div class="flex items-start gap-md">
+<div class="relative flex items-center justify-center mt-1">
+<input class="task-checkbox peer sr-only" type="checkbox"/>
+<div class="w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center transition-all duration-300">
+<svg class="w-3.5 h-3.5 text-on-primary opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface flex-1">Pack the blue backpack</span>
+</div>
+<div class="pl-[40px]">
+<div class="inline-flex items-center gap-xs bg-surface-container-low px-md py-xs rounded-full border border-outline-variant border-dashed hover:bg-surface-container transition-colors">
+<span class="font-label-lg text-label-lg text-on-surface-variant italic">Pick a Bucket</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant ml-xs">keyboard_arrow_down</span>
+</div>
+</div>
+</label>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full flex justify-center z-50 pointer-events-none">
+<div class="w-full max-w-md bg-gradient-to-t from-background via-background/95 to-transparent pt-xl pb-margin-mobile px-margin-mobile pointer-events-auto">
+<button class="w-full bg-primary text-on-primary rounded-[20px] py-lg font-title-lg text-title-lg flex justify-center items-center gap-sm spring-bounce ambient-shadow-primary group relative overflow-hidden">
+<!-- subtle gradient overlay for the 'juicy' primary button feel -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+<span>Add to my board</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+        // Simple script to handle card visual state based on checkbox
+        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+            
+            const updateCardState = (cb) => {
+                const card = cb.closest('.task-card');
+                if (cb.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            };
+
+            // Initialize state
+            updateCardState(checkbox);
+
+            // Listen for changes
+            checkbox.addEventListener('change', (e) => {
+                updateCardState(e.target);
+                
+                // Add a small haptic-like pulse effect to the checkbox container
+                const circle = e.target.nextElementSibling;
+                circle.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    circle.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+    </script>
+</body></html>

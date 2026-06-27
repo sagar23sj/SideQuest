@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.sidequest.app-mergeDebugResources-70:/values-v23/values-v23.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\caches\\8.11\\transforms\\8aa941aa8c477384b7b76cb57b5b6960\\transformed\\work-runtime-2.9.1\\res\\values-v23\\values-v23.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,121",
+                        "endColumns": "65,62",
+                        "endOffsets": "116,179"
+                    }
+                }
+            ]
+        }
+    ]
+}

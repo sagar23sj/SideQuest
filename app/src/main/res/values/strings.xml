@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Action Tracker</string>
+    <string name="app_name">SideQuest</string>
 
     <!-- Share target / capture flow. -->
-    <string name="share_target_label">Save to Action Tracker</string>
+    <string name="share_target_label">Save to SideQuest</string>
     <string name="capture_title">Save to a bucket</string>
     <string name="capture_unsupported_title">Content type not supported</string>
-    <string name="capture_unsupported_message">Action Tracker can\'t save this kind of content. Try sharing a link, text, image, or video.</string>
+    <string name="capture_unsupported_message">SideQuest can\'t save this kind of content. Try sharing a link, text, image, or video.</string>
     <string name="capture_discard">Discard</string>
     <string name="capture_close">Close</string>
     <string name="capture_confirm">Save</string>
@@ -24,15 +24,19 @@
     <!-- Board screen. -->
     <string name="board_title">Action Board</string>
     <string name="board_loading">Loading your board…</string>
-    <string name="board_empty">No action items yet. Share content into Action Tracker to get started.</string>
+    <string name="board_empty">No action items yet. Share content into SideQuest to get started.</string>
     <string name="board_completion_label">Completed</string>
     <string name="board_completion_count_desc">%1$d action items completed</string>
     <string name="board_change_status">Change status</string>
+    <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
+    <string name="board_view_all">View all</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
 
     <!-- Action_Item detail / Action_Plan screen. -->
     <string name="plan_title">Action plan</string>
-    <string name="plan_empty">No steps yet. Add a sub-action to start planning this item.</string>
+    <string name="plan_empty">No checklist yet. Add one to break this quest into steps you can tick off.</string>
+    <string name="plan_checklist_title">Checklist</string>
+    <string name="plan_add_checklist">Add a checklist</string>
     <string name="plan_progress_label">%1$d / %2$d completed</string>
     <string name="plan_progress_desc">%1$d of %2$d sub-actions completed</string>
     <string name="plan_add_sub_action_label">New step</string>
@@ -64,8 +68,23 @@
     <string name="reminder_open_settings">Open notification settings</string>
     <string name="reminder_back">Back</string>
 
+    <!-- Per-task reminders (Req 6). -->
+    <string name="reminder_task_title">Reminder</string>
+    <string name="reminder_task_none">No reminder set. Add one to be nudged at a time you choose.</string>
+    <string name="reminder_task_add">Add a reminder</string>
+    <string name="reminder_task_edit">Edit reminder</string>
+    <string name="reminder_task_remove">Remove reminder</string>
+    <string name="reminder_task_pick_time">When should we remind you?</string>
+    <string name="reminder_task_next">Next</string>
+    <string name="reminder_task_save">Save</string>
+    <string name="reminder_task_recurring">Repeat daily until then</string>
+    <string name="reminder_task_summary_once">Once at %1$s on %2$s</string>
+    <string name="reminder_task_summary_recurring">Every day at %1$s until %2$s</string>
+
     <!-- Voice journaling (Req 10.1, 10.2, 10.4). -->
     <string name="voice_journal_title">Voice journal</string>
+    <string name="voice_journal_history">Your journals</string>
+    <string name="voice_journal_no_transcript_yet">Transcribing your recording…</string>
     <string name="voice_journal_hint">Tap record and speak. Your recording is saved when you stop.</string>
     <string name="voice_journal_record">Record</string>
     <string name="voice_journal_record_desc">Start voice journal recording</string>
@@ -142,11 +161,17 @@
 
     <!-- Games hub (Req 11, 12). -->
     <string name="games_title">Games Hub</string>
-    <string name="games_subtitle">One puzzle a day. Play to climb your org leaderboard.</string>
+    <string name="games_subtitle">Complete your daily challenges to earn points and climb the leaderboard.</string>
+    <string name="games_today_title">Today\'s Puzzles</string>
+    <string name="games_resets_daily">New puzzles every day</string>
     <string name="games_spelling_bee">Spelling Bee</string>
+    <string name="games_spelling_bee_tag">Word Builder</string>
     <string name="games_spelling_bee_desc">Form words from today\'s letters.</string>
     <string name="games_word_guess">Word Guess</string>
+    <string name="games_word_guess_tag">Daily Puzzle</string>
     <string name="games_word_guess_desc">Guess the hidden word in six tries.</string>
+    <string name="games_streak_title">Keep your streak alive</string>
+    <string name="games_streak_subtitle">Play today\'s puzzles to maintain your streak.</string>
     <string name="games_play">Play</string>
     <string name="games_completed_today">Completed today</string>
     <string name="games_view_leaderboard">View leaderboard</string>
@@ -160,6 +185,7 @@
     <string name="spelling_bee_shuffle">Shuffle</string>
     <string name="spelling_bee_already_played">You\'ve already played today. Here\'s your result.</string>
     <string name="spelling_bee_invalid">Not in word list, or missing the center letter.</string>
+    <string name="spelling_bee_empty_hint">Tap letters to build a word. Every word must use the center letter.</string>
     <string name="spelling_bee_letter_desc">Letter %1$s</string>
     <string name="spelling_bee_center_letter_desc">Center letter %1$s (required)</string>
 
@@ -170,6 +196,8 @@
     <string name="word_guess_won">Solved in %1$d tries!</string>
     <string name="word_guess_lost">Out of tries. The word was %1$s.</string>
     <string name="word_guess_row_desc">Guess row %1$d</string>
+    <string name="word_guess_attempt">Attempt %1$d of %2$d</string>
+    <string name="word_guess_backspace">Delete letter</string>
 
     <!-- Leaderboard (Req 12). -->
     <string name="leaderboard_title">Leaderboard</string>
@@ -180,6 +208,15 @@
     <string name="leaderboard_no_org_title">Join an organization</string>
     <string name="leaderboard_no_org_message">Leaderboards are shared within an organization. Join one to compete with others.</string>
     <string name="leaderboard_join_org">Join organization</string>
+    <string name="leaderboard_subtitle">Guild Rankings</string>
+    <string name="leaderboard_period_day">Day</string>
+    <string name="leaderboard_period_week">Week</string>
+    <string name="leaderboard_period_month">Month</string>
+    <string name="leaderboard_you">You</string>
+    <string name="leaderboard_points_short">%1$d pt</string>
+    <string name="leaderboard_cta_title">Quest Better Together</string>
+    <string name="leaderboard_cta_message">Join an organization to pool your points and unlock epic weekly rewards.</string>
+    <string name="leaderboard_cta_button">Explore Guilds</string>
 
     <!-- Auth: login. -->
     <string name="login_title">Welcome to SideQuest</string>
@@ -205,8 +242,11 @@
     <string name="profile_signed_out">Signed in offline (local account)</string>
     <string name="profile_organization_label">Organization</string>
     <string name="profile_no_organization">Not in an organization</string>
+    <string name="profile_local_subtitle">Adventurer</string>
     <string name="profile_reminders">Daily reminders</string>
-    <string name="profile_buckets">Manage buckets</string>
+    <string name="profile_reminders_subtitle">Per-task and evening nudges</string>
+    <string name="profile_buckets">Bucket colors</string>
+    <string name="profile_buckets_subtitle">Customize your categories</string>
     <string name="profile_use_system_colors">Use system colors</string>
     <string name="profile_use_system_colors_desc">Match the device dynamic color palette instead of the SideQuest theme.</string>
     <string name="profile_sign_out">Sign out</string>

@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.actiontracker"
+    namespace = "com.sidequest"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.actiontracker"
+        applicationId = "com.sidequest"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -22,11 +22,28 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Local backend reached from the Android emulator. 10.0.2.2 is the
+            // emulator's alias for the host machine's loopback (the Go server
+            // listens on 127.0.0.1:8080 on the host). On a physical device,
+            // replace with the host's LAN IP.
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                "\"http://10.0.2.2:8080/\"",
+            )
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
+            )
+            // Real deployed backend endpoint (replace before shipping).
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                "\"https://api.sidequest.invalid/\"",
             )
         }
     }
@@ -42,6 +59,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     testOptions {

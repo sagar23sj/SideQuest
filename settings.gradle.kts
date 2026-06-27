@@ -20,7 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ActionTracker"
+rootProject.name = "SideQuest"
 
 include(":app")
 include(":domain")

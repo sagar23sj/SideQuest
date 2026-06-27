@@ -2,7 +2,9 @@
 
 ## Introduction
 
-The Action Tracker App is a mobile application (primary target Android, with iOS as a desired secondary platform) that helps people convert content they save while browsing social media into tracked, actionable tasks. Today users save interesting reels, videos, articles, and suggestions to scattered places (saved collections, self-chats) and rarely revisit them. This app provides a "task board" experience: shared content is captured, categorized into user-defined buckets (such as travel, cooking, stocks, shopping), assigned an action timeframe, and surfaced through daily reminders so users actually follow through and feel a sense of accomplishment.
+SideQuest is a mobile application (primary target Android, with iOS as a desired secondary platform) that helps people convert content they save while browsing social media into tracked, actionable tasks. Today users save interesting reels, videos, articles, and suggestions to scattered places (saved collections, self-chats) and rarely revisit them. SideQuest provides a "task board" experience: shared content is captured, categorized into user-defined buckets (such as travel, cooking, stocks, shopping), assigned an action timeframe, and surfaced through reminders so users actually follow through and feel a sense of accomplishment.
+
+Reminders in SideQuest are primarily **task-based**: when the User adds a task they can attach a reminder time and an "until" date, optionally recurring daily until that date or until the task is marked done. Tasks with no reminder are gathered into a single collective evening nudge. A separate optional global daily notification lets the User nudge themselves to open the app at a chosen time. Completing a task is a deliberate in-app gesture (press-and-hold) so that following through brings the User back into SideQuest to discover what else is there.
 
 The product also includes two additional capabilities the user wants in the same app:
 1. **Voice Journaling** - users speak into the app, receive transcripts, and have actionable items extracted and filed under relevant buckets.
@@ -12,9 +14,9 @@ This document defines the requirements for these capabilities using EARS pattern
 
 ## Glossary
 
-- **App**: The Action Tracker mobile application running on a user device.
-- **User**: A person who installs and uses the App.
-- **Capture_Service**: The App component that receives shared content from external applications via the OS share mechanism.
+- **App** / **SideQuest**: The SideQuest mobile application running on a user device.
+- **User**: A person who installs and uses SideQuest.
+- **Capture_Service**: The component that receives shared content from external applications via the OS share mechanism.
 - **Shared_Item**: A piece of external content (link, video reference, image, or text) sent to the App through the OS share sheet.
 - **Link_Preview**: Metadata fetched from a shared link, including a title, a thumbnail image, and a source name.
 - **Preview_Service**: The App component that retrieves Link_Preview metadata for a shared link.
@@ -24,7 +26,10 @@ This document defines the requirements for these capabilities using EARS pattern
 - **Action_Status**: The state of an Action_Item; one of "not started", "in progress", or "completed".
 - **Board**: The primary view that displays Action_Items grouped by Bucket in order of creation.
 - **Completion_Counter**: A displayed count of Action_Items the User has marked completed.
-- **Notification_Service**: The App component that schedules and delivers reminders.
+- **Notification_Service**: The component that schedules and delivers reminders, including per-task reminders, the collective evening nudge, and the optional global daily notification.
+- **Task_Reminder**: An optional reminder attached to an Action_Item, consisting of a time of day and an "until" date, optionally recurring daily until the until-date or until the Action_Item is marked completed (whichever comes first).
+- **Collective_Evening_Nudge**: A single daily notification, delivered in the evening, that summarizes Action_Items which are not completed and have no Task_Reminder set.
+- **Global_Daily_Notification**: An optional self-reminder notification the User can enable at a chosen time of day to prompt themselves to open SideQuest; it is an ordinary notification, not an exact alarm.
 - **LLM_Service**: An external large language model service used to generate notification text, action suggestions, task descriptions, and to extract actions from transcripts.
 - **Action_Plan**: An ordered set of sub-actions (steps) attached to an Action_Item to accomplish a larger task.
 - **Voice_Journal_Entry**: An audio recording captured in the App together with its generated transcript.
@@ -111,18 +116,69 @@ This document defines the requirements for these capabilities using EARS pattern
 3. WHEN a User changes an Action_Item from "completed" to a non-completed Action_Status, THE App SHALL decrease the Completion_Counter by one.
 4. THE Completion_Counter SHALL reflect the total number of Action_Items with Action_Status "completed".
 
-### Requirement 6: Daily Reminder Notifications
+### Requirement 6: Task-Based Reminders
 
-**User Story:** As a User, I want daily reminders about what I planned to do, so that I do not forget to take action.
+**User Story:** As a User, I want to attach a reminder to a specific task with its own time and an end date, so that SideQuest reminds me about that task when I actually plan to do it instead of with a single generic daily alert.
 
 #### Acceptance Criteria
 
-1. WHEN a User first launches the App, THE App SHALL request operating system permission to send notifications.
-2. THE App SHALL allow the User to enable or disable daily reminder notifications.
-3. THE App SHALL allow the User to set the time of day for daily reminder notifications.
-4. WHILE daily reminders are enabled, THE Notification_Service SHALL deliver one reminder at the User-selected time each day summarizing Action_Items due that day.
-5. IF notification permission is denied, THEN THE App SHALL display a message explaining that reminders are unavailable and SHALL provide a link to the operating system notification settings.
-6. IF daily reminders are enabled and no Action_Items are due on a given day, THEN THE Notification_Service SHALL deliver a reminder prompting the User to review upcoming Action_Items.
+1. WHEN a User first launches SideQuest, THE App SHALL request operating system permission to send notifications.
+2. WHEN a User creates or edits an Action_Item, THE App SHALL allow the User to optionally attach a Task_Reminder consisting of a reminder time of day and an "until" date.
+3. WHERE a User attaches a Task_Reminder, THE App SHALL allow the User to choose whether the reminder recurs daily until the until-date or fires only once.
+4. IF a User sets a Task_Reminder until-date earlier than the current date, THEN THE App SHALL reject the selection and SHALL display a message requesting a current or future date.
+5. WHILE an Action_Item has an active Task_Reminder and is not completed, THE Notification_Service SHALL deliver a reminder for that Action_Item at its reminder time.
+6. WHERE a Task_Reminder is recurring, THE Notification_Service SHALL deliver the reminder at the reminder time on each day up to and including the until-date, until the Action_Item is marked completed.
+7. WHEN an Action_Item with a Task_Reminder is marked completed, THE App SHALL cancel any pending reminders for that Action_Item.
+8. WHEN the until-date of a Task_Reminder passes, THE App SHALL stop delivering reminders for that Action_Item.
+9. THE Notification_Service SHALL anchor each Task_Reminder to the device's local time zone so that the reminder fires at the intended wall-clock time when the device time zone changes.
+10. WHEN the device restarts, THE App SHALL reschedule all pending Task_Reminders so that no reminder is lost across a reboot.
+11. WHERE the operating system requires permission to schedule exact-time alarms, THE App SHALL request that permission so that Task_Reminders fire at their exact times.
+12. IF notification permission is denied, THEN THE App SHALL display a message explaining that reminders are unavailable and SHALL provide a link to the operating system notification settings.
+
+### Requirement 6a: Collective Evening Nudge
+
+**User Story:** As a User, I want one evening summary of tasks I have not scheduled, so that untimed tasks are not forgotten without my having to set a reminder on each one.
+
+#### Acceptance Criteria
+
+1. THE App SHALL allow the User to enable or disable the Collective_Evening_Nudge and to set its time of day.
+2. WHILE the Collective_Evening_Nudge is enabled, THE Notification_Service SHALL deliver one notification at the configured evening time summarizing Action_Items that are not completed and have no Task_Reminder set.
+3. WHERE an Action_Item has a Task_Reminder set, THE Notification_Service SHALL exclude that Action_Item from the Collective_Evening_Nudge.
+4. IF the Collective_Evening_Nudge is enabled and there are no eligible Action_Items on a given day, THEN THE Notification_Service SHALL NOT deliver an empty nudge that day.
+5. WHEN a User opens the Collective_Evening_Nudge, THE App SHALL open SideQuest so the User can review and update the pending Action_Items.
+
+### Requirement 6b: Global Daily Notification
+
+**User Story:** As a User, I want an optional daily nudge to open SideQuest at a time I choose, so that I build a habit of checking in.
+
+#### Acceptance Criteria
+
+1. THE App SHALL allow the User to enable or disable a Global_Daily_Notification and to set its time of day.
+2. WHILE the Global_Daily_Notification is enabled, THE Notification_Service SHALL deliver one notification at the configured time prompting the User to open SideQuest.
+3. THE Global_Daily_Notification SHALL be delivered as an ordinary notification and SHALL NOT require exact-alarm scheduling.
+
+### Requirement 6c: Mark a Task Done
+
+**User Story:** As a User, I want completing a task to be a deliberate, satisfying gesture inside the app, so that following through feels rewarding and brings me back into SideQuest.
+
+#### Acceptance Criteria
+
+1. THE App SHALL allow the User to mark an Action_Item completed using a press-and-hold control rather than a checkbox.
+2. WHILE the User holds the control, THE App SHALL display a progressive fill animation and SHALL complete the action only after the hold is sustained for the configured duration.
+3. WHEN the press-and-hold completes, THE App SHALL set the Action_Item Action_Status to "completed", SHALL provide haptic feedback, and SHALL play a brief confetti celebration animation.
+4. IF the User releases the control before the hold duration elapses, THEN THE App SHALL cancel the gesture and SHALL leave the Action_Status unchanged.
+5. THE App SHALL NOT require the User to set "in progress" in the UI; the in-app interaction offers only "mark completed", while the Action_Status field SHALL still be stored so completed Action_Items can be listed with the Bucket they belonged to.
+
+### Requirement 6d: Thought of the Day Loading Experience
+
+**User Story:** As a User, I want the app to greet me with an uplifting thought while it loads, so that opening SideQuest feels encouraging and reinforces doing over consuming.
+
+#### Acceptance Criteria
+
+1. WHILE SideQuest is loading at launch, THE App SHALL display a "thought of the day" — a short motivational message centered on accomplishment, doing, and well-being rather than passive consumption.
+2. THE App SHALL select the thought of the day deterministically per calendar day so the message is consistent across launches on the same day and changes the next day.
+3. THE App SHALL provide a built-in set of thoughts so the loading experience works fully offline.
+4. THE App SHALL render the loading experience in the SideQuest visual style (brand typography, color, and motion) consistent with the rest of the app.
 
 ### Requirement 7: LLM-Curated Notifications and Suggestions
 
@@ -130,10 +186,10 @@ This document defines the requirements for these capabilities using EARS pattern
 
 #### Acceptance Criteria
 
-1. WHEN the Notification_Service prepares a reminder, THE App SHALL request notification text from the LLM_Service based on the relevant Action_Items.
+1. WHEN the Notification_Service prepares a Task_Reminder or a Collective_Evening_Nudge, THE App SHALL request notification text from the LLM_Service based on the relevant Action_Items.
 2. WHEN a User opens an Action_Item, THE App SHALL allow the User to request suggested actions for the Action_Item from the LLM_Service.
 3. WHEN the App requests a task description for an Action_Item, THE LLM_Service SHALL generate a description summarizing the Shared_Item content.
-4. IF the LLM_Service is unavailable or returns an error, THEN THE Notification_Service SHALL deliver a reminder using default text without LLM content.
+4. IF the LLM_Service is unavailable or returns an error, THEN THE Notification_Service SHALL deliver the notification using default text without LLM content.
 5. IF the LLM_Service does not respond within the configured timeout, THEN THE App SHALL proceed without LLM content and SHALL inform the User that suggestions are unavailable.
 
 ### Requirement 8: Wishlist Buckets
