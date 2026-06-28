@@ -2,6 +2,7 @@ package com.sidequest.ui.detail;
 
 import androidx.lifecycle.SavedStateHandle;
 import com.sidequest.data.local.dao.ActionItemDao;
+import com.sidequest.data.local.dao.BucketDao;
 import com.sidequest.data.repository.ActionPlanRepository;
 import com.sidequest.data.repository.BoardRepository;
 import dagger.internal.DaggerGenerated;
@@ -33,34 +34,37 @@ public final class ItemDetailViewModel_Factory implements Factory<ItemDetailView
 
   private final Provider<ActionItemDao> actionItemDaoProvider;
 
+  private final Provider<BucketDao> bucketDaoProvider;
+
   private final Provider<SavedStateHandle> savedStateHandleProvider;
 
   public ItemDetailViewModel_Factory(Provider<ActionPlanRepository> planRepositoryProvider,
       Provider<BoardRepository> boardRepositoryProvider,
-      Provider<ActionItemDao> actionItemDaoProvider,
+      Provider<ActionItemDao> actionItemDaoProvider, Provider<BucketDao> bucketDaoProvider,
       Provider<SavedStateHandle> savedStateHandleProvider) {
     this.planRepositoryProvider = planRepositoryProvider;
     this.boardRepositoryProvider = boardRepositoryProvider;
     this.actionItemDaoProvider = actionItemDaoProvider;
+    this.bucketDaoProvider = bucketDaoProvider;
     this.savedStateHandleProvider = savedStateHandleProvider;
   }
 
   @Override
   public ItemDetailViewModel get() {
-    return newInstance(planRepositoryProvider.get(), boardRepositoryProvider.get(), actionItemDaoProvider.get(), savedStateHandleProvider.get());
+    return newInstance(planRepositoryProvider.get(), boardRepositoryProvider.get(), actionItemDaoProvider.get(), bucketDaoProvider.get(), savedStateHandleProvider.get());
   }
 
   public static ItemDetailViewModel_Factory create(
       Provider<ActionPlanRepository> planRepositoryProvider,
       Provider<BoardRepository> boardRepositoryProvider,
-      Provider<ActionItemDao> actionItemDaoProvider,
+      Provider<ActionItemDao> actionItemDaoProvider, Provider<BucketDao> bucketDaoProvider,
       Provider<SavedStateHandle> savedStateHandleProvider) {
-    return new ItemDetailViewModel_Factory(planRepositoryProvider, boardRepositoryProvider, actionItemDaoProvider, savedStateHandleProvider);
+    return new ItemDetailViewModel_Factory(planRepositoryProvider, boardRepositoryProvider, actionItemDaoProvider, bucketDaoProvider, savedStateHandleProvider);
   }
 
   public static ItemDetailViewModel newInstance(ActionPlanRepository planRepository,
-      BoardRepository boardRepository, ActionItemDao actionItemDao,
+      BoardRepository boardRepository, ActionItemDao actionItemDao, BucketDao bucketDao,
       SavedStateHandle savedStateHandle) {
-    return new ItemDetailViewModel(planRepository, boardRepository, actionItemDao, savedStateHandle);
+    return new ItemDetailViewModel(planRepository, boardRepository, actionItemDao, bucketDao, savedStateHandle);
   }
 }

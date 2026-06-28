@@ -50,6 +50,7 @@ data class ReviewAction(
 data class VoiceReviewUiState(
     val loading: Boolean = true,
     val transcript: String? = null,
+    val audioRef: String? = null,
     val actions: List<ReviewAction> = emptyList(),
     val suggestionsUnavailable: Boolean = false,
     val buckets: List<Bucket> = emptyList(),
@@ -110,6 +111,7 @@ class VoiceReviewViewModel @Inject constructor(
                 it.copy(
                     loading = false,
                     transcript = entry?.transcript,
+                    audioRef = entry?.audioRef,
                     actions = actions,
                     suggestionsUnavailable = outcome?.unavailable ?: false,
                     buckets = buckets,

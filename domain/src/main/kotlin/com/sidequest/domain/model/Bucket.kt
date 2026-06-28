@@ -17,5 +17,11 @@ data class Bucket(
     val notStartedColor: String,
     val inProgressColor: String,
     val completedColor: String,
+    /**
+     * Optional cover image for the bucket: a local file path (or URI) to a
+     * user-chosen photo. When null, the UI shows a domain-themed cover derived
+     * from the bucket [name].
+     */
+    val imageRef: String? = null,
     val sync: SyncMeta,
 )

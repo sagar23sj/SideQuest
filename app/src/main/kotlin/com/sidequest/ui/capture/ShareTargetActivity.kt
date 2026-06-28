@@ -60,7 +60,12 @@ class ShareTargetActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        viewModel.onShared(parseSharedIntent(intent))
+        val manual = intent?.getBooleanExtra(EXTRA_MANUAL, false) == true
+        if (manual) {
+            viewModel.startManual()
+        } else {
+            viewModel.onShared(parseSharedIntent(intent))
+        }
 
         setContent {
             SideQuestTheme {
@@ -70,6 +75,7 @@ class ShareTargetActivity : ComponentActivity() {
                     onBucketSelected = viewModel::onBucketSelected,
                     onTimeframeSelected = viewModel::onTimeframeSelected,
                     onSpecificDatePicked = viewModel::onSpecificDatePicked,
+                    onManualTitleChange = viewModel::onManualTitleChange,
                     onConfirm = viewModel::onConfirm,
                     onDismiss = ::finish,
                 )
@@ -117,6 +123,11 @@ class ShareTargetActivity : ComponentActivity() {
             @Suppress("DEPRECATION")
             getParcelableArrayListExtra(Intent.EXTRA_STREAM)
         }
+
+    companion object {
+        /** Intent extra flag: open the capture flow as a manual "new task" entry. */
+        const val EXTRA_MANUAL = "com.sidequest.extra.MANUAL"
+    }
 }
 
 /**
@@ -130,6 +141,7 @@ private fun CaptureScreen(
     onBucketSelected: (String) -> Unit,
     onTimeframeSelected: (TimeframeOption) -> Unit,
     onSpecificDatePicked: (java.time.LocalDate) -> Unit,
+    onManualTitleChange: (String) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -156,6 +168,7 @@ private fun CaptureScreen(
                     state = state,
                     onBucketSelected = onBucketSelected,
                     onTimeframeSelected = onTimeframeSelected,
+                    onManualTitleChange = onManualTitleChange,
                     onPickDate = { showDatePicker = true },
                     onConfirm = onConfirm,
                 )

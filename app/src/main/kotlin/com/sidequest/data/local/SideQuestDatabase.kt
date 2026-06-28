@@ -35,7 +35,7 @@ import com.sidequest.data.local.entity.VoiceJournalEntryEntity
         ActionPlanEntity::class,
         VoiceJournalEntryEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -207,6 +207,18 @@ abstract class SideQuestDatabase : RoomDatabase() {
         val MIGRATION_3_4: Migration = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `action_items` ADD COLUMN `reminder` TEXT")
+            }
+        }
+
+        /**
+         * Adds the nullable `imageRef` column to `buckets` for an optional
+         * user-chosen cover image (a local file path/URI). Null means the UI
+         * renders a domain-themed cover from the bucket name. Additive
+         * `ALTER TABLE ADD COLUMN` is safe since the column is nullable.
+         */
+        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `buckets` ADD COLUMN `imageRef` TEXT")
             }
         }
     }

@@ -25,6 +25,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,9 +69,10 @@ import com.sidequest.ui.voice.VoiceReviewScreen
  *   primary external capture path; this gives an in-app entry point that reuses
  *   the same categorization flow (hosted by the share-target activity).
  */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SideQuestNavHost(
-    onAddItem: () -> Unit,
+    onAddTask: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -78,6 +82,8 @@ fun SideQuestNavHost(
     // The bottom bar + FAB only show on the top-level tabs; pushed routes use
     // their own top-bar back affordance and hide the shell.
     val showShell = TopLevelDestination.entries.any { it.route == currentRoute }
+
+    var showAddSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -96,7 +102,7 @@ fun SideQuestNavHost(
                 enter = scaleIn(),
                 exit = scaleOut(),
             ) {
-                CaptureFab(onClick = onAddItem)
+                CaptureFab(onClick = { showAddSheet = true })
             }
         },
     ) { innerPadding ->
@@ -211,6 +217,107 @@ fun SideQuestNavHost(
                 com.sidequest.ui.auth.JoinOrganizationScreen(
                     onJoined = navController::popBackStack,
                     onSkip = navController::popBackStack,
+                )
+            }
+        }
+
+        // The capture FAB chooser: create a bucket or a task (Req 1/2). This
+        // replaces the old FAB that launched the share flow with no content
+        // (which errored). "New task" opens the manual capture entry.
+        if (showAddSheet) {
+            androidx.compose.material3.ModalBottomSheet(
+                onDismissRequest = { showAddSheet = false },
+            ) {
+                AddChooserSheet(
+                    onNewBucket = {
+                        showAddSheet = false
+                        navController.navigate(Routes.CREATE_BUCKET)
+                    },
+                    onNewTask = {
+                        showAddSheet = false
+                        onAddTask()
+                    },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * The "+" chooser content: two large options — create a new bucket, or add a
+ * new task (manual capture). Keeps the FAB scoped to exactly these two actions.
+ */
+@Composable
+private fun AddChooserSheet(
+    onNewBucket: () -> Unit,
+    onNewTask: () -> Unit,
+) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(horizontal = 20.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(
+            text = stringResource(com.sidequest.R.string.add_chooser_title),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp),
+        )
+        AddChooserOption(
+            icon = androidx.compose.material.icons.Icons.Filled.Add,
+            title = stringResource(com.sidequest.R.string.add_chooser_task),
+            subtitle = stringResource(com.sidequest.R.string.add_chooser_task_desc),
+            container = MaterialTheme.colorScheme.primaryContainer,
+            onContainer = MaterialTheme.colorScheme.onPrimaryContainer,
+            onClick = onNewTask,
+        )
+        AddChooserOption(
+            icon = androidx.compose.material.icons.Icons.Filled.Add,
+            title = stringResource(com.sidequest.R.string.add_chooser_bucket),
+            subtitle = stringResource(com.sidequest.R.string.add_chooser_bucket_desc),
+            container = MaterialTheme.colorScheme.secondaryContainer,
+            onContainer = MaterialTheme.colorScheme.onSecondaryContainer,
+            onClick = onNewBucket,
+        )
+        androidx.compose.foundation.layout.Spacer(Modifier.padding(bottom = 8.dp))
+    }
+}
+
+@Composable
+private fun AddChooserOption(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String,
+    container: Color,
+    onContainer: Color,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(20.dp),
+        color = container,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .then(Modifier),
+            ) {
+                Icon(imageVector = icon, contentDescription = null, tint = onContainer)
+            }
+            androidx.compose.foundation.layout.Column(modifier = Modifier.fillMaxWidth()) {
+                Text(text = title, style = MaterialTheme.typography.titleMedium, color = onContainer)
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = onContainer.copy(alpha = 0.8f),
                 )
             }
         }

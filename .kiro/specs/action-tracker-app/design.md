@@ -157,7 +157,7 @@ Flow:
 1. Receive intent → classify content type (link, text, image, video reference).
 2. If unsupported MIME type → show "content type not supported" message and discard (Req 1.4).
 3. Otherwise launch the categorization sheet (Bucket + Timeframe selection) (Req 1.3).
-4. If the content contains a URL, kick off `Preview_Service` asynchronously (Req 1a).
+4. If the content contains a URL, kick off `Preview_Service` asynchronously (Req 1.6).
 5. On confirm → create Action_Item with status "not started" (Req 1.5).
 
 ```kotlin
@@ -172,9 +172,9 @@ interface CaptureService {
 
 Fetches Open Graph / Twitter Card metadata for shared URLs. Runs off the capture critical path with a configurable timeout (default ~5s).
 
-- On success: store title, thumbnail URL (downloaded/cached), source name with the Action_Item (Req 1a.2).
-- On failure: store raw link, display raw link (Req 1a.4).
-- On timeout: save Action_Item with raw link immediately; do not block (Req 1a.5). If enrichment later succeeds, the Action_Item is updated reactively.
+- On success: store title, thumbnail URL (downloaded/cached), source name with the Action_Item (Req 1.7).
+- On failure: store raw link, display raw link (Req 1.9).
+- On timeout: save Action_Item with raw link immediately; do not block (Req 1.10). If enrichment later succeeds, the Action_Item is updated reactively.
 
 ```kotlin
 interface PreviewService {
@@ -247,6 +247,37 @@ interface DailyGame<P : Puzzle, M : Move, R : MoveResult> {
 - **Word_Guess**: per-guess feedback marks each letter as correct / present / absent (Req 11.5).
 - **Spelling_Bee**: accepts a word only if it uses allowed letters and is in the word list (Req 11.6).
 - Replay guard: once a user completes a game for a date, re-entry shows the recorded result without rescoring (Req 11.4).
+
+### Scoring, single scoreboard, and offline sync
+
+This subsection records the agreed scoring model and how the two games feed one shared scoreboard. The **server is the source of truth for all scores**: the client computes a provisional score for instant feedback, but the backend recomputes authoritatively from the submitted facts (so scores can't be spoofed and word-list validation stays server-side).
+
+**Single combined points currency.** Both games award points into one per-user **points total** per day. There is one scoreboard and one leaderboard — not per-game boards. Day/Week/Month leaderboards simply window the points earned in that period.
+
+**Word_Guess scoring (partial credit).** A round is scored when it **ends** — solved *or* all attempts exhausted — and submitted in a single call. Even an unsolved round earns points for progress, measured on the player's **best single guess** (never summed across guesses, to prevent farming):
+- `+10` per letter in the correct position (correct) on the best guess
+- `+3` per letter present in the word but in the wrong position (present) on the best guess
+- `+50` solve bonus when solved, plus `+10 × attemptsRemaining` for efficiency
+- Elapsed **active** time is a tiebreaker only (never points)
+
+Submission payload (facts, not score): `{ date, solved, attempts, bestCorrectCount, bestPresentCount, elapsedSeconds }`. The server recomputes the score from these and records it.
+
+> Note: the agreed attempt limit is **5** (reconcile the backend `maxAttempts` default, currently 6, to 5). The daily answer may be **5 or 6 letters**; the board sizes itself to the answer length, and `EvaluateGuess` already handles variable length.
+
+**Spelling_Bee scoring.** Open-ended "find as many as you can"; each accepted word scores immediately:
+- 4-letter word = `1` pt; `+1` per additional letter
+- pangram (uses all allowed letters) = `+7` bonus
+The day's score is the sum over accepted words. Submission is the day's set of found words; the server validates each against the authoritative dictionary, dedupes, and computes the authoritative score. Time is a tiebreaker only.
+
+**Active-time rule.** "Time" everywhere means *active* play seconds — accumulated only while the game screen is open and the round is unfinished — so pausing/resuming never inflates it.
+
+**Offline-first sync.** Both games are fully playable offline; progress and a provisional score persist locally. Each game keeps a per-day record with a `dirty` flag and reconciles through the existing Sync Service:
+- **Word_Guess**: marked dirty and pushed once when the round finishes.
+- **Spelling_Bee**: marked dirty whenever a word is added; pushed when connectivity is available (batched on app foreground / end of day otherwise). Accepted words accumulate offline and the authoritative score updates on the next successful sync.
+- Pushes are **idempotent** (server dedupes by `user + game + date`), so retries never double-count. On ack, the server's authoritative score replaces the local provisional score and the leaderboards update.
+
+**Leaderboard scoping (single, guild-scoped).** Leaderboards are scoped to an **organization (guild)**, not worldwide — guild-scale ranking is motivating and matches Req 12 / 13.5. The board ranks the **combined points total** (both games) for the selected period. A user's points are identical everywhere, but **rank is per guild** because membership differs; when a user belongs to more than one guild, the board shows the ranking for the **currently selected guild** (a guild switcher is added only once multi-guild membership exists — default to the single guild until then). A user with no guild sees the join prompt (Req 13.5), optionally alongside their personal points/streak so the screen is not a dead end.
+
 
 ### Leaderboard_Service (backend)
 
@@ -451,13 +482,13 @@ These properties target the pure logic of the system (capture/classification, bo
 
 *For any* successful preview result, the resulting Action_Item's preview carries the same title, thumbnail, and source name, with `resolved == true`.
 
-**Validates: Requirements 1a.2**
+**Validates: Requirements 1.7**
 
 ### Property 4: An unresolved preview falls back to the raw link without blocking capture
 
 *For any* link URL, when the preview fails or times out, capture still completes and the resulting Action_Item stores a preview with `resolved == false` whose `rawUrl` equals the original URL.
 
-**Validates: Requirements 1a.4, 1a.5**
+**Validates: Requirements 1.9, 1.10**
 
 ### Property 5: Bucket names are unique per account
 
@@ -633,8 +664,8 @@ The system is designed to fail soft and keep the core capture/track experience u
 
 ### Capture and previews
 - **Unsupported content**: show a clear "content type not supported" message and discard the item (Req 1.4).
-- **Preview failure**: store and display the raw link (Req 1a.4).
-- **Preview timeout**: complete capture immediately with the raw link; if a later background fetch succeeds, the item is updated reactively via its Room-backed Flow (Req 1a.5).
+- **Preview failure**: store and display the raw link (Req 1.9).
+- **Preview timeout**: complete capture immediately with the raw link; if a later background fetch succeeds, the item is updated reactively via its Room-backed Flow (Req 1.10).
 
 ### Network and sync
 - All reads/writes go to the local Room database first, so the UI works fully offline (Req 14.4).
@@ -683,7 +714,7 @@ The feature contains substantial pure logic (classification, board aggregation, 
 ### Example/unit tests (representative)
 
 - Share intent dispatch launches the categorization flow (Req 1.2, 1.3).
-- Board row renders preview title + thumbnail for a link item (Req 1a.3).
+- Board row renders preview title + thumbnail for a link item (Req 1.8).
 - Bucket create/rename/delete CRUD (Req 2.1–2.4).
 - Timeframe option set and date-picker minimum (Req 3.1, 3.2).
 - Status change persists (Req 4.6); counter rendered at top of board (Req 5.1).

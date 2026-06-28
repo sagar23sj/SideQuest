@@ -1,0 +1,51 @@
+package com.sidequest.data.local
+
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+/**
+ * Small local store for lightweight, device-local user preferences that don't
+ * belong in the synced Room database — currently the player's chosen display
+ * name. This lets someone use SideQuest (and appear on a future leaderboard as
+ * a friendly name rather than "Adventurer") without signing in; when they later
+ * create an account, the name can seed their profile.
+ *
+ * Backed by SharedPreferences and exposed as a [StateFlow] so the UI updates
+ * reactively when the name changes.
+ */
+@Singleton
+class UserPreferences @Inject constructor(
+    @ApplicationContext context: Context,
+) {
+    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    private val _displayName = MutableStateFlow(prefs.getString(KEY_NAME, null))
+    /** The chosen display name, or null when not yet set. */
+    val displayName: StateFlow<String?> = _displayName.asStateFlow()
+
+    /** Whether the user has been asked for their name at least once. */
+    val hasSeenNamePrompt: Boolean
+        get() = prefs.getBoolean(KEY_NAME_PROMPTED, false)
+
+    fun setDisplayName(name: String) {
+        val trimmed = name.trim().take(MAX_NAME_LENGTH)
+        prefs.edit().putString(KEY_NAME, trimmed).putBoolean(KEY_NAME_PROMPTED, true).apply()
+        _displayName.value = trimmed
+    }
+
+    fun markNamePromptSeen() {
+        prefs.edit().putBoolean(KEY_NAME_PROMPTED, true).apply()
+    }
+
+    private companion object {
+        const val PREFS_NAME = "sidequest_user_prefs"
+        const val KEY_NAME = "display_name"
+        const val KEY_NAME_PROMPTED = "name_prompted"
+        const val MAX_NAME_LENGTH = 40
+    }
+}

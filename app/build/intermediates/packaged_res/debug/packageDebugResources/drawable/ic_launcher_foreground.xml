@@ -1,9 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SideQuest launcher foreground: a clean rocket (the brand "rocket_launch"
+  motif from the app header), kept within the adaptive-icon safe zone. White
+  body with a terracotta porthole, coral fins, and a coral/amber flame.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!-- Left fin -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M44,38h20v8h-20z M44,52h20v8h-20z M44,66h20v8h-20z" />
+        android:fillColor="#FFFF8A65"
+        android:pathData="M45,57 L34,72 Q33,73 35,72 L46,67 Z" />
+    <!-- Right fin -->
+    <path
+        android:fillColor="#FFFF8A65"
+        android:pathData="M63,57 L74,72 Q75,73 73,72 L62,67 Z" />
+
+    <!-- Flame -->
+    <path
+        android:fillColor="#FFFFB59E"
+        android:pathData="M47,68 L61,68 L57,82 Q54,87 51,82 Z" />
+    <path
+        android:fillColor="#FFFF8A65"
+        android:pathData="M50,68 L58,68 L55.5,79 Q54,82 52.5,79 Z" />
+
+    <!-- Rocket body -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,24 C62,32 66,44 66,57 L66,66 Q66,70 62,70 L46,70 Q42,70 42,66 L42,57 C42,44 46,32 54,24 Z" />
+
+    <!-- Porthole -->
+    <path
+        android:fillColor="#FF9F4122"
+        android:pathData="M54,46 m-7,0 a7,7 0,1 1,14 0 a7,7 0,1 1,-14 0z" />
+    <path
+        android:fillColor="#FFFFB59E"
+        android:pathData="M54,46 m-3.5,0 a3.5,3.5 0,1 1,7 0 a3.5,3.5 0,1 1,-7 0z" />
 </vector>

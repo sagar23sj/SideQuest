@@ -74,53 +74,44 @@ fun SectionHeader(
 fun QuestCard(
     name: String,
     itemCountLabel: String,
-    icon: ImageVector,
-    container: Color,
-    onContainer: Color,
-    iconContainer: Color,
-    onIconContainer: Color,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    cover: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier
             .width(168.dp)
             .height(200.dp),
         shape = RoundedCornerShape(28.dp),
-        color = container,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         onClick = onClick ?: {},
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Cover: the bucket's custom image or a domain-themed gradient+icon.
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(iconContainer),
-                contentAlignment = Alignment.Center,
+                    .fillMaxWidth()
+                    .height(116.dp),
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = onIconContainer,
-                )
+                cover()
             }
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.titleLarge,
-                    color = onContainer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = itemCountLabel.uppercase(),
                     style = MaterialTheme.typography.labelSmall,
-                    color = onContainer.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }

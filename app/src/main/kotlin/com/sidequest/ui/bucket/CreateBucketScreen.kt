@@ -1,5 +1,7 @@
 package com.sidequest.ui.bucket
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,13 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,8 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sidequest.R
+import com.sidequest.ui.board.BucketCover
 import com.sidequest.ui.board.parseStatusColor
 import com.sidequest.ui.components.PillButton
+import com.sidequest.ui.components.SecondaryPillButton
 
 /**
  * Create / edit bucket form (Req 2.1, 2.3, 2.6). Captures the name, the three
@@ -52,6 +59,10 @@ fun CreateBucketScreen(
     viewModel: CreateBucketViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val imagePicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia(),
+    ) { uri -> viewModel.onImagePicked(uri) }
 
     LaunchedEffect(state.saved) {
         if (state.saved) onNavigateBack()
@@ -91,6 +102,37 @@ fun CreateBucketScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
+            // Cover image: a live preview (themed when none chosen) plus a
+            // picker so the user can customize the bucket with their own photo.
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .clip(RoundedCornerShape(24.dp)),
+            ) {
+                BucketCover(
+                    name = state.name.ifBlank { "Bucket" },
+                    imageRef = state.imageRef,
+                    modifier = Modifier.fillMaxSize(),
+                    iconSize = 56.dp,
+                )
+            }
+            SecondaryPillButton(
+                text = stringResource(
+                    if (state.imageRef != null) R.string.create_bucket_change_image
+                    else R.string.create_bucket_add_image,
+                ),
+                onClick = {
+                    imagePicker.launch(
+                        androidx.activity.result.PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly,
+                        ),
+                    )
+                },
+                icon = Icons.Filled.PhotoCamera,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
             OutlinedTextField(
                 value = state.name,
                 onValueChange = viewModel::onNameChange,

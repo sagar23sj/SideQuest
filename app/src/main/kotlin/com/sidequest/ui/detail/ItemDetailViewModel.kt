@@ -4,9 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sidequest.data.local.dao.ActionItemDao
+import com.sidequest.data.local.dao.BucketDao
 import com.sidequest.data.local.entity.toDomain
 import com.sidequest.data.repository.ActionPlanRepository
 import com.sidequest.data.repository.BoardRepository
+import com.sidequest.domain.model.ActionItem
 import com.sidequest.domain.model.ActionPlan
 import com.sidequest.domain.model.TaskReminder
 import com.sidequest.domain.plan.ActionPlanOperations
@@ -47,6 +49,7 @@ class ItemDetailViewModel @Inject constructor(
     private val planRepository: ActionPlanRepository,
     private val boardRepository: BoardRepository,
     private val actionItemDao: ActionItemDao,
+    private val bucketDao: BucketDao,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -65,7 +68,8 @@ class ItemDetailViewModel @Inject constructor(
                 } else {
                     combine(planRepository.observePlan(id), refresh) { plan, _ ->
                         val item = actionItemDao.getById(id)?.toDomain()
-                        plan.toUiState(item?.reminder)
+                        val bucket = item?.let { bucketDao.getById(it.bucketId) }
+                        plan.toUiState(item, bucket?.name, bucket?.imageRef)
                     }
                 }
             }
@@ -150,13 +154,16 @@ class ItemDetailViewModel @Inject constructor(
      * from the pure domain operations. A null plan (no steps yet) yields an
      * empty, zero-progress view with no prompt.
      */
-    private fun ActionPlan?.toUiState(reminder: TaskReminder?): ItemDetailUiState =
+    private fun ActionPlan?.toUiState(item: ActionItem?, bucketName: String?, bucketImageRef: String?): ItemDetailUiState =
         if (this == null) {
             ItemDetailUiState.Ready(
                 subActions = emptyList(),
                 progress = Progress(completed = 0, total = 0),
                 showParentCompletePrompt = false,
-                reminder = reminder,
+                reminder = item?.reminder,
+                item = item,
+                bucketName = bucketName,
+                bucketImageRef = bucketImageRef,
             )
         } else {
             ItemDetailUiState.Ready(
@@ -164,7 +171,10 @@ class ItemDetailViewModel @Inject constructor(
                 progress = ActionPlanOperations.progress(this),
                 showParentCompletePrompt =
                     ActionPlanOperations.shouldPromptParentComplete(this),
-                reminder = reminder,
+                reminder = item?.reminder,
+                item = item,
+                bucketName = bucketName,
+                bucketImageRef = bucketImageRef,
             )
         }
 

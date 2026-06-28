@@ -112,6 +112,15 @@ fun VoiceReviewScreen(
                 TranscriptCard(transcript = state.transcript)
             }
 
+            if (state.audioRef != null) {
+                item(key = "audio") {
+                    AudioPlayerButton(
+                        audioPath = state.audioRef!!,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
             item(key = "extracted-label") {
                 Text(
                     text = stringResource(R.string.voice_review_extracted_label),

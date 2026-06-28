@@ -275,6 +275,10 @@ private fun JournalEntryCard(
                 maxLines = 2,
                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
             )
+            AudioPlayerButton(
+                audioPath = entry.audioRef,
+                modifier = Modifier.padding(top = 4.dp),
+            )
         }
     }
 }

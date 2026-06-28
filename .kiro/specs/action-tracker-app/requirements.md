@@ -45,7 +45,7 @@ This document defines the requirements for these capabilities using EARS pattern
 
 ### Requirement 1: Capture Shared Content
 
-**User Story:** As a User, I want to share content from other apps into the App, so that I can turn saved content into tracked tasks instead of losing it.
+**User Story:** As a User, I want to share content from other apps into the App, so that I can turn saved content into tracked tasks instead of losing it. I also want shared links to show a title and thumbnail, so that I can recognize saved content at a glance without opening it.
 
 #### Acceptance Criteria
 
@@ -54,18 +54,11 @@ This document defines the requirements for these capabilities using EARS pattern
 3. WHEN the Capture_Service receives a Shared_Item, THE App SHALL prompt the User to select a Bucket and a Timeframe before saving.
 4. IF the Capture_Service receives a Shared_Item in an unsupported format, THEN THE App SHALL display a message stating the content type is not supported and SHALL discard the Shared_Item.
 5. WHEN a User confirms the Bucket and Timeframe for a Shared_Item, THE App SHALL create an Action_Item with Action_Status "not started".
-
-### Requirement 1a: Fetch Link Previews
-
-**User Story:** As a User, I want shared links to show a title and thumbnail, so that I can recognize saved content at a glance without opening it.
-
-#### Acceptance Criteria
-
-1. WHEN the Capture_Service receives a Shared_Item that contains a link, THE Preview_Service SHALL request Link_Preview metadata for the link.
-2. WHEN the Preview_Service retrieves Link_Preview metadata, THE App SHALL store the title, thumbnail image, and source name with the resulting Action_Item.
-3. THE Board SHALL display the Link_Preview title and thumbnail for each Action_Item created from a link.
-4. IF the Preview_Service cannot retrieve Link_Preview metadata, THEN THE App SHALL store the raw link and SHALL display the raw link in place of a preview.
-5. IF the Preview_Service does not respond within the configured timeout, THEN THE App SHALL save the Action_Item with the raw link without blocking the capture flow.
+6. WHEN the Capture_Service receives a Shared_Item that contains a link, THE Preview_Service SHALL request Link_Preview metadata for the link.
+7. WHEN the Preview_Service retrieves Link_Preview metadata, THE App SHALL store the title, thumbnail image, and source name with the resulting Action_Item.
+8. THE Board SHALL display the Link_Preview title and thumbnail for each Action_Item created from a link.
+9. IF the Preview_Service cannot retrieve Link_Preview metadata, THEN THE App SHALL store the raw link and SHALL display the raw link in place of a preview.
+10. IF the Preview_Service does not respond within the configured timeout, THEN THE App SHALL save the Action_Item with the raw link without blocking the capture flow.
 
 ### Requirement 2: Manage Buckets
 

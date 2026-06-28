@@ -101,11 +101,13 @@ private fun SideQuestRoot(
     }
 
     SideQuestNavHost(
-        onAddItem = {
-            // The capture FAB reuses the share-target activity's categorization
-            // flow for in-app adds (the OS share sheet remains the primary
-            // external capture path).
-            context.startActivity(Intent(context, ShareTargetActivity::class.java))
+        onAddTask = {
+            // The capture FAB's "New task" opens the manual capture entry
+            // (no shared content) so the user can type a task under a bucket.
+            context.startActivity(
+                Intent(context, ShareTargetActivity::class.java)
+                    .putExtra(ShareTargetActivity.EXTRA_MANUAL, true),
+            )
         },
         modifier = modifier,
     )

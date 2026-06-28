@@ -5,6 +5,13 @@
     <!-- Share target / capture flow. -->
     <string name="share_target_label">Save to SideQuest</string>
     <string name="capture_title">Save to a bucket</string>
+    <string name="capture_new_task_title">New task</string>
+    <string name="capture_task_title_label">What do you want to do?</string>
+    <string name="add_chooser_title">Add to SideQuest</string>
+    <string name="add_chooser_task">New task</string>
+    <string name="add_chooser_task_desc">Add a task under a bucket</string>
+    <string name="add_chooser_bucket">New bucket</string>
+    <string name="add_chooser_bucket_desc">Create a category for your tasks</string>
     <string name="capture_unsupported_title">Content type not supported</string>
     <string name="capture_unsupported_message">SideQuest can\'t save this kind of content. Try sharing a link, text, image, or video.</string>
     <string name="capture_discard">Discard</string>
@@ -84,6 +91,8 @@
     <!-- Voice journaling (Req 10.1, 10.2, 10.4). -->
     <string name="voice_journal_title">Voice journal</string>
     <string name="voice_journal_history">Your journals</string>
+    <string name="voice_play">Play</string>
+    <string name="voice_pause">Pause</string>
     <string name="voice_journal_no_transcript_yet">Transcribing your recording…</string>
     <string name="voice_journal_hint">Tap record and speak. Your recording is saved when you stop.</string>
     <string name="voice_journal_record">Record</string>
@@ -139,6 +148,8 @@
     <string name="create_bucket_shopping_desc">Items in this bucket show a product name, an optional source link, and a purchased toggle.</string>
     <string name="create_bucket_save">Save bucket</string>
     <string name="create_bucket_cancel">Cancel</string>
+    <string name="create_bucket_add_image">Add a cover image</string>
+    <string name="create_bucket_change_image">Change cover image</string>
 
     <!-- Shopping item fields on the detail screen (Req 4.6). -->
     <string name="shopping_section_title">Shopping</string>
@@ -173,6 +184,15 @@
     <string name="games_streak_title">Keep your streak alive</string>
     <string name="games_streak_subtitle">Play today\'s puzzles to maintain your streak.</string>
     <string name="games_play">Play</string>
+    <string name="games_resume">Resume</string>
+    <string name="games_continue">Keep playing</string>
+    <string name="games_view_result">View result</string>
+    <string name="games_status_in_progress">In progress</string>
+    <string name="games_status_done">Done today</string>
+    <string name="games_status_solved">Solved in %1$d</string>
+    <string name="games_status_out_of_tries">Out of tries today</string>
+    <string name="games_status_guesses_used">%1$d of %2$d guesses used</string>
+    <string name="games_status_words_found">%1$d words · %2$d pts</string>
     <string name="games_completed_today">Completed today</string>
     <string name="games_view_leaderboard">View leaderboard</string>
     <string name="games_score_label">Score: %1$d</string>
@@ -198,6 +218,7 @@
     <string name="word_guess_row_desc">Guess row %1$d</string>
     <string name="word_guess_attempt">Attempt %1$d of %2$d</string>
     <string name="word_guess_backspace">Delete letter</string>
+    <string name="word_guess_come_back">You\'ve already played today. Come back tomorrow for a new word.</string>
 
     <!-- Leaderboard (Req 12). -->
     <string name="leaderboard_title">Leaderboard</string>
@@ -243,10 +264,14 @@
     <string name="profile_organization_label">Organization</string>
     <string name="profile_no_organization">Not in an organization</string>
     <string name="profile_local_subtitle">Adventurer</string>
+    <string name="profile_set_name">Set your name</string>
+    <string name="profile_edit_name">Edit your name</string>
+    <string name="profile_name_dialog_title">What should we call you?</string>
+    <string name="profile_name_dialog_label">Your name</string>
     <string name="profile_reminders">Daily reminders</string>
     <string name="profile_reminders_subtitle">Per-task and evening nudges</string>
-    <string name="profile_buckets">Bucket colors</string>
-    <string name="profile_buckets_subtitle">Customize your categories</string>
+    <string name="profile_buckets">Buckets</string>
+    <string name="profile_buckets_subtitle">Names, colors, and cover images</string>
     <string name="profile_use_system_colors">Use system colors</string>
     <string name="profile_use_system_colors_desc">Match the device dynamic color palette instead of the SideQuest theme.</string>
     <string name="profile_sign_out">Sign out</string>

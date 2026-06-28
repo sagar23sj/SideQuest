@@ -39,6 +39,7 @@ fun CategorizationSheetContent(
     state: CaptureUiState.Categorizing,
     onBucketSelected: (String) -> Unit,
     onTimeframeSelected: (TimeframeOption) -> Unit,
+    onManualTitleChange: (String) -> Unit,
     onPickDate: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
@@ -50,18 +51,30 @@ fun CategorizationSheetContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
-            text = stringResource(R.string.capture_title),
+            text = stringResource(
+                if (state.isManual) R.string.capture_new_task_title else R.string.capture_title,
+            ),
             style = MaterialTheme.typography.titleLarge,
         )
 
-        state.draft.title.takeIf { it.isNotBlank() }?.let { title ->
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
+        if (state.isManual) {
+            androidx.compose.material3.OutlinedTextField(
+                value = state.manualTitle,
+                onValueChange = onManualTitleChange,
+                label = { Text(stringResource(R.string.capture_task_title_label)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
             )
+        } else {
+            state.draft.title.takeIf { it.isNotBlank() }?.let { title ->
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
 
         BucketSelector(

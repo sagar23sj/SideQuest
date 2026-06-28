@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.CorporateFare
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
@@ -30,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sidequest.R
 import com.sidequest.ui.components.SecondaryPillButton
 import com.sidequest.ui.components.SettingsRow
@@ -58,8 +62,31 @@ fun ProfileScreen(
     onManageBuckets: () -> Unit = {},
     onJoinOrganization: () -> Unit = {},
     onSignIn: () -> Unit = {},
+    viewModel: ProfileViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
 ) {
     var useSystemColors by remember { mutableStateOf(false) }
+    val displayName by viewModel.displayName.collectAsStateWithLifecycle()
+    var showNameDialog by remember { mutableStateOf(false) }
+
+    // First-run: gently ask for a name so the experience feels personal even
+    // before signing in.
+    LaunchedEffect(Unit) {
+        if (viewModel.shouldPromptForName) {
+            showNameDialog = true
+            viewModel.dismissNamePrompt()
+        }
+    }
+
+    if (showNameDialog) {
+        NameDialog(
+            initial = displayName.orEmpty(),
+            onConfirm = { name ->
+                if (name.isNotBlank()) viewModel.setDisplayName(name)
+                showNameDialog = false
+            },
+            onDismiss = { showNameDialog = false },
+        )
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -89,7 +116,10 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ProfileHero(onJoinOrganization = onJoinOrganization)
+            ProfileHero(
+                displayName = displayName,
+                onEditName = { showNameDialog = true },
+            )
 
             SettingsGroup {
                 SettingsRow(
@@ -145,7 +175,7 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun ProfileHero(onJoinOrganization: () -> Unit) {
+private fun ProfileHero(displayName: String?, onEditName: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -167,17 +197,69 @@ private fun ProfileHero(onJoinOrganization: () -> Unit) {
                 )
             }
         }
+        // Tappable name — edit it any time, signed in or not.
+        Surface(
+            onClick = onEditName,
+            shape = CircleShape,
+            color = androidx.compose.ui.graphics.Color.Transparent,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+            ) {
+                Text(
+                    text = displayName?.takeIf { it.isNotBlank() }
+                        ?: stringResource(R.string.profile_set_name),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = stringResource(R.string.profile_edit_name),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
         Text(
             text = stringResource(R.string.profile_signed_out),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Text(
-            text = stringResource(R.string.profile_local_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
+}
+
+/** A simple dialog to capture/edit the player's display name. */
+@Composable
+private fun NameDialog(
+    initial: String,
+    onConfirm: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var text by remember { mutableStateOf(initial) }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.profile_name_dialog_title)) },
+        text = {
+            androidx.compose.material3.OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                singleLine = true,
+                label = { Text(stringResource(R.string.profile_name_dialog_label)) },
+            )
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = { onConfirm(text) }) {
+                Text(stringResource(R.string.create_bucket_save))
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.create_bucket_cancel))
+            }
+        },
+    )
 }
 
 @Composable

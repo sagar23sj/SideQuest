@@ -36,5 +36,8 @@ sealed interface ItemDetailUiState {
         val progress: Progress,
         val showParentCompletePrompt: Boolean,
         val reminder: com.sidequest.domain.model.TaskReminder? = null,
+        val item: com.sidequest.domain.model.ActionItem? = null,
+        val bucketName: String? = null,
+        val bucketImageRef: String? = null,
     ) : ItemDetailUiState
 }

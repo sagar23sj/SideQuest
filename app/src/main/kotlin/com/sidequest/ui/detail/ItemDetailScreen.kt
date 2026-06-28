@@ -1,6 +1,7 @@
 package com.sidequest.ui.detail
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,7 +86,12 @@ fun ItemDetailScreen(
         onAddSubAction = viewModel::onAddSubAction,
         onToggleSubAction = viewModel::onToggleSubAction,
         onReorder = viewModel::onReorder,
-        onMarkParentComplete = viewModel::onMarkParentComplete,
+        onMarkParentComplete = {
+            // Mark the parent done, then return to the board where the
+            // completion is reflected — otherwise the action looks like a no-op.
+            viewModel.onMarkParentComplete()
+            onNavigateBack()
+        },
         onSetReminder = viewModel::onSetReminder,
         onNavigateBack = onNavigateBack,
         modifier = modifier,
@@ -170,6 +178,14 @@ private fun ReadyPlan(
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        item(key = "header") {
+            ItemHeaderCard(
+                item = state.item,
+                bucketName = state.bucketName,
+                bucketImageRef = state.bucketImageRef,
+            )
+        }
+
         item(key = "reminder") {
             ReminderCard(reminder = state.reminder, onSetReminder = onSetReminder)
         }
@@ -217,6 +233,136 @@ private fun ReadyPlan(
                 onMoveUp = { onReorder(moveUp(subActions, index)) },
                 onMoveDown = { onReorder(moveDown(subActions, index)) },
             )
+        }
+    }
+}
+
+/**
+ * The item header: a domain-tinted icon "cover", the title, a bucket chip and
+ * status, an optional description, and — for link items — a tappable preview
+ * (thumbnail, source, and link). This is the context the screen previously
+ * lacked: title, description, bucket, and links.
+ */
+@Composable
+private fun ItemHeaderCard(
+    item: com.sidequest.domain.model.ActionItem?,
+    bucketName: String?,
+    bucketImageRef: String?,
+) {
+    if (item == null) return
+    val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+    val preview = item.preview
+    val statusLabel = when (item.status) {
+        com.sidequest.domain.model.ActionStatus.NOT_STARTED -> stringResource(R.string.status_not_started)
+        com.sidequest.domain.model.ActionStatus.IN_PROGRESS -> stringResource(R.string.status_in_progress)
+        com.sidequest.domain.model.ActionStatus.COMPLETED -> stringResource(R.string.status_completed)
+    }
+
+    SoftCard(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // Cover: the link's thumbnail when present, else the bucket's
+            // custom image, else a domain-themed cover.
+            com.sidequest.ui.board.BucketCover(
+                name = bucketName ?: item.title,
+                imageRef = preview?.thumbnailUrl ?: bucketImageRef,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                iconSize = 48.dp,
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                // Bucket chip + status.
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    if (!bucketName.isNullOrBlank()) {
+                        Surface(
+                            shape = RoundedCornerShape(50),
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                        ) {
+                            Text(
+                                text = bucketName,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                            )
+                        }
+                    }
+                    Text(
+                        text = statusLabel,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+
+                if (!item.description.isNullOrBlank()) {
+                    Text(
+                        text = item.description!!,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+
+                // Link preview / source link.
+                val link = preview?.rawUrl ?: item.sourceContent
+                if (!link.isNullOrBlank() && link.startsWith("http")) {
+                    Surface(
+                        onClick = { runCatching { uriHandler.openUri(link) } },
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(14.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            if (!preview?.sourceName.isNullOrBlank()) {
+                                Text(
+                                    text = preview!!.sourceName!!,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                            if (!preview?.title.isNullOrBlank()) {
+                                Text(
+                                    text = preview!!.title!!,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+                            Text(
+                                text = link,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                } else if (!item.sourceContent.isNullOrBlank()) {
+                    // Plain text content.
+                    Text(
+                        text = item.sourceContent!!,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
         }
     }
 }

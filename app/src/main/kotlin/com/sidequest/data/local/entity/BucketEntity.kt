@@ -25,5 +25,6 @@ data class BucketEntity(
     val notStartedColor: String,
     val inProgressColor: String,
     val completedColor: String,
+    val imageRef: String? = null,
     @Embedded val sync: SyncMeta,
 )

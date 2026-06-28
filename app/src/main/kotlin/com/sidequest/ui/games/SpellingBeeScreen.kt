@@ -32,9 +32,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -73,16 +78,54 @@ fun SpellingBeeScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
 ) {
-    // Local placeholder puzzle. The center letter is required in every word.
-    val centerLetter = 'A'
-    var outerLetters by remember { mutableStateOf(listOf('R', 'T', 'L', 'N', 'E', 'C')) }
+    val context = LocalContext.current
+    val today = remember { todayEpochDay() }
 
+    // Deterministic daily puzzle; the center letter is required in every word.
+    val puzzle = remember(today) { dailySpellingBee(today) }
+    val centerLetter = puzzle.center
+
+    // Resume today's saved progress (found words + score + elapsed) if present.
+    val saved = remember {
+        loadSpellingBeeProgress(context)?.takeIf { it.day == today }
+    }
+
+    var outerLetters by remember { mutableStateOf(puzzle.outer) }
     var current by remember { mutableStateOf("") }
-    var found by remember { mutableStateOf(listOf<String>()) }
-    var score by remember { mutableStateOf(0) }
+    var found by remember { mutableStateOf(saved?.found ?: emptyList()) }
+    var score by remember { mutableIntStateOf(saved?.score ?: 0) }
+    var elapsed by remember { mutableIntStateOf(saved?.elapsedSeconds ?: 0) }
     var error by remember { mutableStateOf<String?>(null) }
 
     val allowed = remember(outerLetters) { (outerLetters + centerLetter).toSet() }
+
+    // Active-time timer (open-ended game: counts while the screen is open).
+    LaunchedEffect(Unit) {
+        while (true) {
+            kotlinx.coroutines.delay(1000)
+            elapsed += 1
+        }
+    }
+
+    fun persist() {
+        saveSpellingBeeProgress(
+            context,
+            SpellingBeeProgress(day = today, found = found, score = score, elapsedSeconds = elapsed),
+        )
+    }
+
+    // Save the latest state when leaving the screen.
+    val latestFound by rememberUpdatedState(found)
+    val latestScore by rememberUpdatedState(score)
+    val latestElapsed by rememberUpdatedState(elapsed)
+    DisposableEffect(Unit) {
+        onDispose {
+            saveSpellingBeeProgress(
+                context,
+                SpellingBeeProgress(today, latestFound, latestScore, latestElapsed),
+            )
+        }
+    }
 
     fun submit() {
         val word = current.uppercase()
@@ -91,6 +134,7 @@ fun SpellingBeeScreen(
             score += scoreFor(word)
             current = ""
             error = null
+            persist()
         } else {
             error = "invalid"
         }

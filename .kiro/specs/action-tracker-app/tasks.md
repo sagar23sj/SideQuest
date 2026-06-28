@@ -138,23 +138,23 @@ Tasks marked with `*` are optional (test hardening, backend-heavy work, and iOS-
 - [x] 10. Implement link preview enrichment (non-blocking)
   - [x] 10.1 Implement Preview_Service and preview-merge logic
     - Fetch Open Graph/Twitter Card metadata with a configurable timeout; on success store title/thumbnail/source with `resolved == true`; on failure/timeout store the raw link with `resolved == false` without blocking capture
-    - _Requirements: 1a.1, 1a.2, 1a.4, 1a.5_
+    - _Requirements: 1.6, 1.7, 1.9, 1.10_
 
   - [x] 10.2 Write property test for resolved previews
     - **Property 3: A resolved link preview is stored faithfully**
-    - **Validates: Requirements 1a.2**
+    - **Validates: Requirements 1.7**
 
   - [x] 10.3 Write property test for unresolved/timeout fallback
     - **Property 4: An unresolved preview falls back to the raw link without blocking capture**
-    - **Validates: Requirements 1a.4, 1a.5**
+    - **Validates: Requirements 1.9, 1.10**
 
   - [x] 10.4 Wire preview fetch as a WorkManager job and reactive Board update
     - Kick off preview fetch off the capture critical path; update the Action_Item reactively via its Room-backed Flow; render title + thumbnail on the Board row
-    - _Requirements: 1a.3, 1a.5_
+    - _Requirements: 1.8, 1.10_
 
   - [x] 10.5 Write example test for preview row rendering
     - Board row renders preview title + thumbnail for a link item
-    - _Requirements: 1a.3_
+    - _Requirements: 1.8_
 
 - [x] 11. Implement Action Plans (sub-action steps)
   - [x] 11.1 Implement Action_Plan logic: progress, completion prompt, reordering

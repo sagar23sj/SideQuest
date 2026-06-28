@@ -20,7 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Backspace
-import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,33 +31,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sidequest.R
 import com.sidequest.ui.theme.LocalGameColors
 
-private const val WORD_LENGTH = 5
-private const val MAX_ATTEMPTS = 6
+private const val MAX_ATTEMPTS = WORD_GUESS_MAX_ATTEMPTS
 
 /** Per-letter feedback for a guessed tile (Req 11.2). */
 private enum class LetterFeedback { CORRECT, PRESENT, ABSENT, EMPTY }
 
 /**
- * Word Guess (Req 11.2): guess a hidden 5-letter word within six attempts, with
- * per-letter feedback — correct (right letter and position), present (in the
- * word, wrong position), or absent.
+ * Word Guess (Req 11.2): guess the hidden word of the day within five attempts,
+ * with per-letter feedback — correct (right letter and position), present (in
+ * the word, wrong position), or absent. The daily word is 5 or 6 letters and the
+ * board sizes itself to its length.
  *
  * The hidden word, word-list validation, scoring, and the once-per-day replay
  * guard are owned by the Go backend (one shared word per org per day). With no
@@ -71,23 +77,67 @@ fun WordGuessScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
 ) {
-    val answer = "QUEST"
+    val context = LocalContext.current
+    val today = remember { todayEpochDay() }
+    val answer = remember(today) { dailyWord(today) }
+    val wordLength = answer.length
 
-    var guesses by remember { mutableStateOf(listOf<String>()) }
+    // Resume today's saved progress (guesses + elapsed time) if present, so the
+    // player picks up where they left off and a finished round stays finished.
+    val saved = remember {
+        loadWordGuessProgress(context)?.takeIf { it.day == today && it.answer == answer }
+    }
+
+    var guesses by remember { mutableStateOf(saved?.guesses ?: emptyList()) }
     var current by remember { mutableStateOf("") }
+    var elapsed by remember { mutableIntStateOf(saved?.elapsedSeconds ?: 0) }
 
     val solved = guesses.lastOrNull() == answer
     val finished = solved || guesses.size >= MAX_ATTEMPTS
 
+    // Active-time timer: ticks only while the round is unfinished.
+    LaunchedEffect(finished) {
+        while (!finished) {
+            kotlinx.coroutines.delay(1000)
+            elapsed += 1
+        }
+    }
+
+    // Persist immediately whenever a guess is committed so progress survives a
+    // crash or process death mid-round.
+    LaunchedEffect(guesses) {
+        if (guesses.isNotEmpty()) {
+            saveWordGuessProgress(
+                context,
+                WordGuessProgress(today, answer, guesses, elapsed, finished),
+            )
+        }
+    }
+
+    // Persist the latest elapsed time + state when leaving the screen.
+    val latestGuesses by rememberUpdatedState(guesses)
+    val latestElapsed by rememberUpdatedState(elapsed)
+    val latestFinished by rememberUpdatedState(finished)
+    DisposableEffect(Unit) {
+        onDispose {
+            if (latestGuesses.isNotEmpty()) {
+                saveWordGuessProgress(
+                    context,
+                    WordGuessProgress(today, answer, latestGuesses, latestElapsed, latestFinished),
+                )
+            }
+        }
+    }
+
     fun onKey(c: Char) {
         if (finished) return
-        if (current.length < WORD_LENGTH) current += c
+        if (current.length < wordLength) current += c
     }
     fun onBackspace() {
         if (current.isNotEmpty()) current = current.dropLast(1)
     }
     fun onEnter() {
-        if (current.length == WORD_LENGTH && !finished) {
+        if (current.length == wordLength && !finished) {
             guesses = guesses + current
             current = ""
         }
@@ -121,13 +171,19 @@ fun WordGuessScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ProgressHeader(attempt = guesses.size, finished = finished)
+            ProgressHeader(attempt = guesses.size, finished = finished, elapsedSeconds = elapsed)
 
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                GuessGrid(answer = answer, guesses = guesses, current = current)
+                GuessGrid(
+                    answer = answer,
+                    guesses = guesses,
+                    current = current,
+                    wordLength = wordLength,
+                )
             }
 
             if (finished) {
+                // Round is over for the day — show the outcome and lock input.
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = if (solved) {
@@ -136,37 +192,56 @@ fun WordGuessScreen(
                         MaterialTheme.colorScheme.surfaceContainerHigh
                     },
                 ) {
-                    Text(
-                        text = if (solved) {
-                            stringResource(R.string.word_guess_won, guesses.size)
-                        } else {
-                            stringResource(R.string.word_guess_lost, answer)
-                        },
-                        style = MaterialTheme.typography.titleMedium,
-                        color = if (solved) {
-                            MaterialTheme.colorScheme.onTertiaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        },
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                    ) {
+                        Text(
+                            text = if (solved) {
+                                stringResource(R.string.word_guess_won, guesses.size)
+                            } else {
+                                stringResource(R.string.word_guess_lost, answer)
+                            },
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (solved) {
+                                MaterialTheme.colorScheme.onTertiaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.onSurface
+                            },
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                        )
+                        Text(
+                            text = stringResource(R.string.word_guess_come_back),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 4.dp),
+                        )
+                    }
                 }
+            } else {
+                Keyboard(
+                    answer = answer,
+                    guesses = guesses,
+                    onKey = ::onKey,
+                    onEnter = ::onEnter,
+                    onBackspace = ::onBackspace,
+                )
             }
-
-            Keyboard(
-                answer = answer,
-                guesses = guesses,
-                onKey = ::onKey,
-                onEnter = ::onEnter,
-                onBackspace = ::onBackspace,
-            )
         }
     }
 }
 
+/** Formats a second count as m:ss. */
+private fun formatElapsed(seconds: Int): String {
+    val m = seconds / 60
+    val s = seconds % 60
+    return "%d:%02d".format(m, s)
+}
+
 @Composable
-private fun ProgressHeader(attempt: Int, finished: Boolean) {
+private fun ProgressHeader(attempt: Int, finished: Boolean, elapsedSeconds: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,6 +249,7 @@ private fun ProgressHeader(attempt: Int, finished: Boolean) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // Timer chip.
         Surface(
             shape = RoundedCornerShape(50),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -184,27 +260,44 @@ private fun ProgressHeader(attempt: Int, finished: Boolean) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector = Icons.Filled.EmojiEvents,
+                    imageVector = Icons.Filled.Timer,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.size(20.dp),
                 )
                 Text(
-                    text = stringResource(
-                        R.string.word_guess_attempt,
-                        (attempt + if (finished) 0 else 1).coerceAtMost(MAX_ATTEMPTS),
-                        MAX_ATTEMPTS,
-                    ),
+                    text = formatElapsed(elapsedSeconds),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
         }
+        // Attempts chip.
+        Surface(
+            shape = RoundedCornerShape(50),
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.word_guess_attempt,
+                    (attempt + if (finished) 0 else 1).coerceAtMost(MAX_ATTEMPTS),
+                    MAX_ATTEMPTS,
+                ),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
     }
 }
 
 @Composable
-private fun GuessGrid(answer: String, guesses: List<String>, current: String) {
+private fun GuessGrid(
+    answer: String,
+    guesses: List<String>,
+    current: String,
+    wordLength: Int,
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.widthIn(max = 340.dp),
@@ -220,7 +313,7 @@ private fun GuessGrid(answer: String, guesses: List<String>, current: String) {
                     .fillMaxWidth()
                     .semantics { contentDescription = rowDesc },
             ) {
-                for (col in 0 until WORD_LENGTH) {
+                for (col in 0 until wordLength) {
                     val letter = text.getOrNull(col)
                     val feedback = if (guess != null && letter != null) {
                         feedbackFor(answer, guess, col)

@@ -70,13 +70,18 @@ sealed interface CaptureUiState {
         val selectedTimeframe: TimeframeOption = TimeframeOption.Today,
         val dateError: String? = null,
         val isSaving: Boolean = false,
+        /** True for an in-app manual "new task" entry (shows a title field). */
+        val isManual: Boolean = false,
+        /** The user-typed title for a manual task entry. */
+        val manualTitle: String = "",
     ) : CaptureUiState {
 
         /** True when a bucket and a fully-specified timeframe are selected. */
         val canConfirm: Boolean
             get() = !isSaving &&
                 selectedBucketId != null &&
-                selectedTimeframe.toTimeframeOrNull() != null
+                selectedTimeframe.toTimeframeOrNull() != null &&
+                (!isManual || manualTitle.isNotBlank())
     }
 
     /** The capture was confirmed and persisted; the activity should finish (Req 1.5). */

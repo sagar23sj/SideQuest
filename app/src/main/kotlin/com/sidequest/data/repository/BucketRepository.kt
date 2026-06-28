@@ -102,6 +102,7 @@ class BucketRepository(
         notStartedColor: String,
         inProgressColor: String,
         completedColor: String,
+        imageRef: String? = null,
     ): BucketResult {
         val existing = bucketDao.getByAccount(accountId).toBuckets()
         val now = clock()
@@ -112,6 +113,7 @@ class BucketRepository(
             notStartedColor = notStartedColor,
             inProgressColor = inProgressColor,
             completedColor = completedColor,
+            imageRef = imageRef,
             sync = SyncMeta(
                 updatedAt = now,
                 version = 1,
@@ -125,6 +127,48 @@ class BucketRepository(
             bucketDao.upsert(result.bucket.toEntity())
         }
         return result
+    }
+
+    /**
+     * Sets (or clears, when [imageRef] is null) the cover image of the bucket
+     * identified by [bucketId], bumping its sync metadata so the change
+     * propagates. No-op when no live bucket with [bucketId] exists.
+     */
+    suspend fun setBucketImage(bucketId: String, imageRef: String?) {
+        val current = bucketDao.getById(bucketId)?.takeIf { !it.sync.deleted } ?: return
+        val updated = current.copy(
+            imageRef = imageRef,
+            sync = current.sync.copy(
+                updatedAt = clock(),
+                version = current.sync.version + 1,
+                dirty = true,
+            ),
+        )
+        bucketDao.upsert(updated)
+    }
+
+    /**
+     * Updates the three per-status indicator colors of the bucket [bucketId],
+     * bumping its sync metadata. No-op when no live bucket exists.
+     */
+    suspend fun updateBucketColors(
+        bucketId: String,
+        notStartedColor: String,
+        inProgressColor: String,
+        completedColor: String,
+    ) {
+        val current = bucketDao.getById(bucketId)?.takeIf { !it.sync.deleted } ?: return
+        val updated = current.copy(
+            notStartedColor = notStartedColor,
+            inProgressColor = inProgressColor,
+            completedColor = completedColor,
+            sync = current.sync.copy(
+                updatedAt = clock(),
+                version = current.sync.version + 1,
+                dirty = true,
+            ),
+        )
+        bucketDao.upsert(updated)
     }
 
     /**

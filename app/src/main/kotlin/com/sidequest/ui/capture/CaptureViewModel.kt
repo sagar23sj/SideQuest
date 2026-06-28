@@ -86,6 +86,32 @@ class CaptureViewModel(
         }
     }
 
+    /**
+     * Begins a manual in-app "new task" entry (the capture FAB). There is no
+     * shared content, so the user types the task title in the categorization
+     * sheet; bucket + timeframe selection is identical to a shared capture.
+     */
+    fun startManual() {
+        if (started) return
+        started = true
+
+        viewModelScope.launch {
+            val accountId = accountProvider.currentAccountId()
+            val draft = com.sidequest.domain.capture.CaptureDraft(
+                accountId = accountId,
+                title = "",
+                contentType = com.sidequest.domain.model.ContentType.TEXT,
+                sourceContent = null,
+                preview = null,
+            )
+            _uiState.value = CaptureUiState.Categorizing(draft = draft, isManual = true)
+            observeBuckets(accountId)
+        }
+    }
+
+    /** Updates the typed title for a manual task entry. */
+    fun onManualTitleChange(value: String) = updateCategorizing { it.copy(manualTitle = value) }
+
     private fun observeBuckets(accountId: String) {
         viewModelScope.launch {
             bucketRepository.observeBuckets(accountId).collect { buckets ->
@@ -150,7 +176,17 @@ class CaptureViewModel(
 
         updateCategorizing { it.copy(isSaving = true) }
         viewModelScope.launch {
-            captureRepository.confirmCapture(state.draft, bucketId, timeframe)
+            // For a manual entry, fold the typed title into the draft as both
+            // the title and the stored content.
+            val draft = if (state.isManual) {
+                state.draft.copy(
+                    title = state.manualTitle.trim(),
+                    sourceContent = state.manualTitle.trim(),
+                )
+            } else {
+                state.draft
+            }
+            captureRepository.confirmCapture(draft, bucketId, timeframe)
             _uiState.value = CaptureUiState.Saved
         }
     }

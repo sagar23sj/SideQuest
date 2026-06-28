@@ -329,7 +329,6 @@ private fun QuestsCarousel(
     onManageBuckets: () -> Unit,
     onOpenBucket: (String) -> Unit,
 ) {
-    val scheme = MaterialTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(
             title = "Your Quests",
@@ -342,16 +341,18 @@ private fun QuestsCarousel(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             itemsIndexed(board.groups, key = { _, g -> g.bucket.id }) { index, group ->
-                val visual = bucketVisual(group.bucket.name, index, scheme)
                 QuestCard(
                     name = group.bucket.name,
                     itemCountLabel = "${group.items.size} items",
-                    icon = visual.icon,
-                    container = visual.container,
-                    onContainer = visual.onContainer,
-                    iconContainer = visual.iconContainer,
-                    onIconContainer = visual.onIconContainer,
                     onClick = { onOpenBucket(group.bucket.id) },
+                    cover = {
+                        BucketCover(
+                            name = group.bucket.name,
+                            imageRef = group.bucket.imageRef,
+                            modifier = Modifier.fillMaxSize(),
+                            iconSize = 44.dp,
+                        )
+                    },
                 )
             }
         }

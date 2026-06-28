@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Monochrome rocket silhouette for Android 13+ themed icons. A single fill the
+  system tints; the porthole is punched out via evenOdd fill.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group>
+        <!-- Fins -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M45,57 L34,72 Q33,73 35,72 L46,67 Z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M63,57 L74,72 Q75,73 73,72 L62,67 Z" />
+        <!-- Flame -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M47,68 L61,68 L57,82 Q54,87 51,82 Z" />
+        <!-- Body with punched-out porthole (evenOdd) -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M54,24 C62,32 66,44 66,57 L66,66 Q66,70 62,70 L46,70 Q42,70 42,66 L42,57 C42,44 46,32 54,24 Z M54,39 a7,7 0,1 0,0.01 0 Z" />
+    </group>
+</vector>

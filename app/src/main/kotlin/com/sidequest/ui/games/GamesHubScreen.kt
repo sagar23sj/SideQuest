@@ -29,11 +29,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +59,12 @@ fun GamesHubScreen(
     onPlayWordGuess: () -> Unit = {},
     onOpenLeaderboard: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+    // Read today's saved progress so each card reflects real state. Re-read on
+    // each entry into the hub (Navigation recomposes this destination on return).
+    val wordGuess = remember { todayWordGuessProgress(context) }
+    val spellingBee = remember { todaySpellingBeeProgress(context) }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -87,10 +95,31 @@ fun GamesHubScreen(
         ) {
             DailyHeader()
 
+            // --- Word Guess status ---
+            val wgStarted = wordGuess != null && wordGuess.guesses.isNotEmpty()
+            val wgDone = wordGuess?.finished == true
+            val wgStatusLine = when {
+                !wgStarted -> stringResource(R.string.games_word_guess_desc)
+                wgDone && wordGuess!!.solved ->
+                    stringResource(R.string.games_status_solved, wordGuess.attempts)
+                wgDone -> stringResource(R.string.games_status_out_of_tries)
+                else -> stringResource(
+                    R.string.games_status_guesses_used,
+                    wordGuess!!.attempts,
+                    WORD_GUESS_MAX_ATTEMPTS,
+                )
+            }
+            val wgButton = when {
+                wgDone -> stringResource(R.string.games_view_result)
+                wgStarted -> stringResource(R.string.games_resume)
+                else -> stringResource(R.string.games_play)
+            }
             GameCard(
                 title = stringResource(R.string.games_word_guess),
                 tagline = stringResource(R.string.games_word_guess_tag),
-                statusLine = stringResource(R.string.games_word_guess_desc),
+                statusLine = wgStatusLine,
+                buttonText = wgButton,
+                statusBadge = gameBadge(started = wgStarted, done = wgDone),
                 icon = Icons.Filled.Grid4x4,
                 badgeContainer = MaterialTheme.colorScheme.primary,
                 onBadge = MaterialTheme.colorScheme.onPrimary,
@@ -101,10 +130,28 @@ fun GamesHubScreen(
                 onPlay = onPlayWordGuess,
             )
 
+            // --- Spelling Bee status (open-ended: started, never "done") ---
+            val sbStarted = spellingBee != null && spellingBee.found.isNotEmpty()
+            val sbStatusLine = if (sbStarted) {
+                stringResource(
+                    R.string.games_status_words_found,
+                    spellingBee!!.found.size,
+                    spellingBee.score,
+                )
+            } else {
+                stringResource(R.string.games_spelling_bee_desc)
+            }
+            val sbButton = if (sbStarted) {
+                stringResource(R.string.games_continue)
+            } else {
+                stringResource(R.string.games_play)
+            }
             GameCard(
                 title = stringResource(R.string.games_spelling_bee),
                 tagline = stringResource(R.string.games_spelling_bee_tag),
-                statusLine = stringResource(R.string.games_spelling_bee_desc),
+                statusLine = sbStatusLine,
+                buttonText = sbButton,
+                statusBadge = gameBadge(started = sbStarted, done = false),
                 icon = Icons.Filled.Spellcheck,
                 badgeContainer = MaterialTheme.colorScheme.secondary,
                 onBadge = MaterialTheme.colorScheme.onSecondary,
@@ -118,6 +165,14 @@ fun GamesHubScreen(
             StreakCard(onOpenLeaderboard = onOpenLeaderboard)
         }
     }
+}
+
+/** Picks the status-badge label for a game card, or null when not started. */
+@Composable
+private fun gameBadge(started: Boolean, done: Boolean): String? = when {
+    done -> stringResource(R.string.games_status_done)
+    started -> stringResource(R.string.games_status_in_progress)
+    else -> null
 }
 
 @Composable
@@ -168,6 +223,8 @@ private fun GameCard(
     title: String,
     tagline: String,
     statusLine: String,
+    buttonText: String,
+    statusBadge: String?,
     icon: ImageVector,
     badgeContainer: Color,
     onBadge: Color,
@@ -217,6 +274,9 @@ private fun GameCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+                if (statusBadge != null) {
+                    StatusBadge(label = statusBadge)
+                }
             }
             Text(
                 text = statusLine,
@@ -224,7 +284,7 @@ private fun GameCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             GradientPillButton(
-                text = stringResource(R.string.games_play),
+                text = buttonText,
                 onClick = onPlay,
                 startColor = gradientStart,
                 endColor = gradientEnd,
@@ -233,6 +293,23 @@ private fun GameCard(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+    }
+}
+
+/** A small tonal pill marking a game card's daily status. */
+@Composable
+private fun StatusBadge(label: String) {
+    Surface(
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+        )
     }
 }
 
