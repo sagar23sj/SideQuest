@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CorporateFare
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NotificationsActive
@@ -60,6 +61,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     onOpenReminders: () -> Unit = {},
     onManageBuckets: () -> Unit = {},
+    onCreateBucket: () -> Unit = {},
     onJoinOrganization: () -> Unit = {},
     onSignIn: () -> Unit = {},
     viewModel: ProfileViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
@@ -149,7 +151,7 @@ fun ProfileScreen(
                     iconContainer = MaterialTheme.colorScheme.primaryContainer,
                     onIconContainer = MaterialTheme.colorScheme.onPrimaryContainer,
                     onClick = onManageBuckets,
-                    trailing = { Chevron() },
+                    trailing = { AddBucketButton(onClick = onCreateBucket) },
                 )
                 RowDivider()
                 SettingsRow(
@@ -289,6 +291,23 @@ private fun Chevron() {
         contentDescription = null,
         tint = MaterialTheme.colorScheme.onSurfaceVariant,
     )
+}
+
+/** A circular "+" button on the Buckets row to create a new bucket. */
+@Composable
+private fun AddBucketButton(onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primary,
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = stringResource(R.string.buckets_add),
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.padding(6.dp),
+        )
+    }
 }
 
 @Composable

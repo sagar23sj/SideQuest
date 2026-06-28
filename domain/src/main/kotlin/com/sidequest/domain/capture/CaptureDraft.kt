@@ -29,5 +29,6 @@ data class CaptureDraft(
     val title: String,
     val contentType: ContentType,
     val sourceContent: String? = null,
+    val description: String? = null,
     val preview: LinkPreview? = null,
 )

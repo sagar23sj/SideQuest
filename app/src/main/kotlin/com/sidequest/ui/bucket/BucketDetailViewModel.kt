@@ -28,6 +28,7 @@ data class BucketDetailUiState(
     val loading: Boolean = true,
     val group: BoardGroup? = null,
     val bucketName: String = "",
+    val bucketId: String? = null,
 )
 
 /**
@@ -57,6 +58,7 @@ class BucketDetailViewModel @Inject constructor(
                     loading = false,
                     group = group,
                     bucketName = group?.bucket?.name ?: "",
+                    bucketId = bucketId,
                 )
             }
             .stateIn(
@@ -69,6 +71,13 @@ class BucketDetailViewModel @Inject constructor(
     fun complete(itemId: String) {
         viewModelScope.launch {
             boardRepository.changeStatus(itemId, ActionStatus.COMPLETED)
+        }
+    }
+
+    /** Reverts a completed item back to "not started" (undo). */
+    fun uncomplete(itemId: String) {
+        viewModelScope.launch {
+            boardRepository.changeStatus(itemId, ActionStatus.NOT_STARTED)
         }
     }
 

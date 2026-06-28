@@ -101,12 +101,14 @@ private fun SideQuestRoot(
     }
 
     SideQuestNavHost(
-        onAddTask = {
-            // The capture FAB's "New task" opens the manual capture entry
-            // (no shared content) so the user can type a task under a bucket.
+        onAddTask = { bucketId ->
+            // The capture FAB's "add task" opens the manual capture entry (no
+            // shared content). When launched from a bucket, that bucket is
+            // pre-selected.
             context.startActivity(
                 Intent(context, ShareTargetActivity::class.java)
-                    .putExtra(ShareTargetActivity.EXTRA_MANUAL, true),
+                    .putExtra(ShareTargetActivity.EXTRA_MANUAL, true)
+                    .apply { if (bucketId != null) putExtra(ShareTargetActivity.EXTRA_BUCKET_ID, bucketId) },
             )
         },
         modifier = modifier,

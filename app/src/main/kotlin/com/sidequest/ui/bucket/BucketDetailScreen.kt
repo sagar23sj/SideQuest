@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,15 +57,32 @@ fun BucketDetailScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
     onOpenItem: (String) -> Unit = {},
+    onAddTask: (String) -> Unit = {},
     viewModel: BucketDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val confetti = rememberConfettiController()
+    val bucketId = state.bucketId
 
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
+            floatingActionButton = {
+                if (bucketId != null) {
+                    androidx.compose.material3.FloatingActionButton(
+                        onClick = { onAddTask(bucketId) },
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Filled.Add,
+                            contentDescription = stringResource(R.string.nav_capture_desc),
+                        )
+                    }
+                }
+            },
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -123,6 +141,7 @@ fun BucketDetailScreen(
                                 confetti.celebrate()
                                 viewModel.complete(boardItem.item.id)
                             },
+                            onUndo = { viewModel.uncomplete(boardItem.item.id) },
                             onOpenItem = { onOpenItem(boardItem.item.id) },
                         )
                     }
@@ -137,6 +156,7 @@ fun BucketDetailScreen(
 private fun TaskCard(
     boardItem: BoardItem,
     onComplete: () -> Unit,
+    onUndo: () -> Unit,
     onOpenItem: () -> Unit,
 ) {
     val display = previewDisplay(boardItem)
@@ -154,7 +174,7 @@ private fun TaskCard(
         thumbnailUrl = display.thumbnailUrl,
         onClick = onOpenItem,
         trailing = {
-            HoldToCompleteButton(completed = isCompleted, onCompleted = onComplete)
+            HoldToCompleteButton(completed = isCompleted, onCompleted = onComplete, onUndo = onUndo)
         },
     )
 }

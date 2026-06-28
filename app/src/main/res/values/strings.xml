@@ -6,7 +6,9 @@
     <string name="share_target_label">Save to SideQuest</string>
     <string name="capture_title">Save to a bucket</string>
     <string name="capture_new_task_title">New task</string>
-    <string name="capture_task_title_label">What do you want to do?</string>
+    <string name="capture_task_title_label">Name your task</string>
+    <string name="capture_task_desc_label">Description / details (optional)</string>
+    <string name="capture_task_link_label">Link (optional)</string>
     <string name="add_chooser_title">Add to SideQuest</string>
     <string name="add_chooser_task">New task</string>
     <string name="add_chooser_task_desc">Add a task under a bucket</string>
@@ -19,6 +21,7 @@
     <string name="capture_confirm">Save</string>
     <string name="capture_select_bucket">Bucket</string>
     <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
+    <string name="capture_new_bucket">New bucket</string>
     <string name="capture_select_timeframe">When do you want to act on this?</string>
     <string name="capture_timeframe_today">Today</string>
     <string name="capture_timeframe_within_a_day">Within a day</string>
@@ -36,6 +39,7 @@
     <string name="board_completion_count_desc">%1$d action items completed</string>
     <string name="board_change_status">Change status</string>
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
+    <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
     <string name="board_view_all">View all</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
 
@@ -50,6 +54,7 @@
     <string name="plan_add_sub_action">Add</string>
     <string name="plan_parent_complete_prompt">All steps are done. Mark this item as completed?</string>
     <string name="plan_mark_parent_complete">Mark completed</string>
+    <string name="plan_undo_complete">Mark as not done</string>
     <string name="plan_sub_action_toggle_desc">Mark step \"%1$s\" complete</string>
     <string name="plan_move_up">Up</string>
     <string name="plan_move_down">Down</string>

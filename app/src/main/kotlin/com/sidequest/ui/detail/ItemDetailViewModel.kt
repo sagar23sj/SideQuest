@@ -10,6 +10,7 @@ import com.sidequest.data.repository.ActionPlanRepository
 import com.sidequest.data.repository.BoardRepository
 import com.sidequest.domain.model.ActionItem
 import com.sidequest.domain.model.ActionPlan
+import com.sidequest.domain.model.ActionStatus
 import com.sidequest.domain.model.TaskReminder
 import com.sidequest.domain.plan.ActionPlanOperations
 import com.sidequest.domain.plan.Progress
@@ -145,6 +146,18 @@ class ItemDetailViewModel @Inject constructor(
         val id = actionItemId.value ?: return
         viewModelScope.launch {
             planRepository.markParentComplete(id)
+        }
+    }
+
+    /**
+     * Reverts a completed Action_Item back to "not started" (undo). The detail
+     * header reflects the change after the [refresh] re-read.
+     */
+    fun onUndoComplete() {
+        val id = actionItemId.value ?: return
+        viewModelScope.launch {
+            boardRepository.changeStatus(id, ActionStatus.NOT_STARTED)
+            refresh.value += 1
         }
     }
 

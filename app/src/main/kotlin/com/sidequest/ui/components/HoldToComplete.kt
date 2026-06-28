@@ -54,6 +54,7 @@ fun HoldToCompleteButton(
     completed: Boolean,
     onCompleted: () -> Unit,
     modifier: Modifier = Modifier,
+    onUndo: (() -> Unit)? = null,
     size: androidx.compose.ui.unit.Dp = 48.dp,
 ) {
     val haptics = LocalHapticFeedback.current
@@ -67,6 +68,7 @@ fun HoldToCompleteButton(
 
     val holdLabel = stringResource(R.string.board_hold_to_complete_desc)
     val doneLabel = stringResource(R.string.status_completed)
+    val undoLabel = stringResource(R.string.board_undo_complete_desc)
 
     Box(
         modifier = modifier
@@ -90,8 +92,14 @@ fun HoldToCompleteButton(
                     )
                 }
             }
-            .pointerInput(completed) {
-                if (completed) return@pointerInput
+            .pointerInput(completed, onUndo) {
+                if (completed) {
+                    // Tap a completed task to undo its completion (Req: undo).
+                    if (onUndo != null) {
+                        detectTapGestures(onTap = { onUndo() })
+                    }
+                    return@pointerInput
+                }
                 detectTapGestures(
                     onPress = {
                         // Begin filling the ring; commit when it reaches 1f.
@@ -115,7 +123,11 @@ fun HoldToCompleteButton(
                 )
             }
             .semantics {
-                contentDescription = if (completed) doneLabel else holdLabel
+                contentDescription = when {
+                    completed && onUndo != null -> undoLabel
+                    completed -> doneLabel
+                    else -> holdLabel
+                }
                 role = Role.Button
             },
         contentAlignment = Alignment.Center,

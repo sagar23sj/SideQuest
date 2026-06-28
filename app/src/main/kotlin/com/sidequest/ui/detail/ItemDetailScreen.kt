@@ -59,6 +59,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import com.sidequest.R
 import com.sidequest.domain.model.SubAction
 import com.sidequest.domain.model.TaskReminder
@@ -81,21 +82,29 @@ fun ItemDetailScreen(
     viewModel: ItemDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    ItemDetailContent(
-        state = state,
-        onAddSubAction = viewModel::onAddSubAction,
-        onToggleSubAction = viewModel::onToggleSubAction,
-        onReorder = viewModel::onReorder,
-        onMarkParentComplete = {
-            // Mark the parent done, then return to the board where the
-            // completion is reflected — otherwise the action looks like a no-op.
-            viewModel.onMarkParentComplete()
-            onNavigateBack()
-        },
-        onSetReminder = viewModel::onSetReminder,
-        onNavigateBack = onNavigateBack,
-        modifier = modifier,
-    )
+    val confetti = com.sidequest.ui.components.rememberConfettiController()
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    Box(modifier = modifier.fillMaxSize()) {
+        ItemDetailContent(
+            state = state,
+            onAddSubAction = viewModel::onAddSubAction,
+            onToggleSubAction = viewModel::onToggleSubAction,
+            onReorder = viewModel::onReorder,
+            onMarkParentComplete = {
+                // Celebrate, then return to the board where the completion shows.
+                viewModel.onMarkParentComplete()
+                confetti.celebrate()
+                scope.launch {
+                    kotlinx.coroutines.delay(900)
+                    onNavigateBack()
+                }
+            },
+            onUndoComplete = viewModel::onUndoComplete,
+            onSetReminder = viewModel::onSetReminder,
+            onNavigateBack = onNavigateBack,
+        )
+        com.sidequest.ui.components.ConfettiOverlay(controller = confetti)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,6 +115,7 @@ fun ItemDetailContent(
     onToggleSubAction: (subActionId: String, completed: Boolean) -> Unit,
     onReorder: (orderedIds: List<String>) -> Unit,
     onMarkParentComplete: () -> Unit,
+    onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
@@ -138,6 +148,7 @@ fun ItemDetailContent(
                 onToggleSubAction = onToggleSubAction,
                 onReorder = onReorder,
                 onMarkParentComplete = onMarkParentComplete,
+                onUndoComplete = onUndoComplete,
                 onSetReminder = onSetReminder,
                 contentPadding = innerPadding,
             )
@@ -164,6 +175,7 @@ private fun ReadyPlan(
     onToggleSubAction: (subActionId: String, completed: Boolean) -> Unit,
     onReorder: (orderedIds: List<String>) -> Unit,
     onMarkParentComplete: () -> Unit,
+    onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
     contentPadding: PaddingValues,
 ) {
@@ -183,6 +195,7 @@ private fun ReadyPlan(
                 item = state.item,
                 bucketName = state.bucketName,
                 bucketImageRef = state.bucketImageRef,
+                onUndoComplete = onUndoComplete,
             )
         }
 
@@ -248,10 +261,12 @@ private fun ItemHeaderCard(
     item: com.sidequest.domain.model.ActionItem?,
     bucketName: String?,
     bucketImageRef: String?,
+    onUndoComplete: () -> Unit = {},
 ) {
     if (item == null) return
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val preview = item.preview
+    val isCompleted = item.status == com.sidequest.domain.model.ActionStatus.COMPLETED
     val statusLabel = when (item.status) {
         com.sidequest.domain.model.ActionStatus.NOT_STARTED -> stringResource(R.string.status_not_started)
         com.sidequest.domain.model.ActionStatus.IN_PROGRESS -> stringResource(R.string.status_in_progress)
@@ -308,6 +323,14 @@ private fun ItemHeaderCard(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
+
+                if (isCompleted) {
+                    SecondaryPillButton(
+                        text = stringResource(R.string.plan_undo_complete),
+                        onClick = onUndoComplete,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
 
                 if (!item.description.isNullOrBlank()) {
                     Text(

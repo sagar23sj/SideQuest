@@ -62,7 +62,7 @@ class ShareTargetActivity : ComponentActivity() {
 
         val manual = intent?.getBooleanExtra(EXTRA_MANUAL, false) == true
         if (manual) {
-            viewModel.startManual()
+            viewModel.startManual(intent?.getStringExtra(EXTRA_BUCKET_ID))
         } else {
             viewModel.onShared(parseSharedIntent(intent))
         }
@@ -75,7 +75,10 @@ class ShareTargetActivity : ComponentActivity() {
                     onBucketSelected = viewModel::onBucketSelected,
                     onTimeframeSelected = viewModel::onTimeframeSelected,
                     onSpecificDatePicked = viewModel::onSpecificDatePicked,
-                    onManualTitleChange = viewModel::onManualTitleChange,
+                    onTitleChange = viewModel::onTitleChange,
+                    onDescriptionChange = viewModel::onDescriptionChange,
+                    onLinkChange = viewModel::onLinkChange,
+                    onCreateBucket = viewModel::createAndSelectBucket,
                     onConfirm = viewModel::onConfirm,
                     onDismiss = ::finish,
                 )
@@ -127,6 +130,9 @@ class ShareTargetActivity : ComponentActivity() {
     companion object {
         /** Intent extra flag: open the capture flow as a manual "new task" entry. */
         const val EXTRA_MANUAL = "com.sidequest.extra.MANUAL"
+
+        /** Intent extra: pre-select this bucket id for a manual task entry. */
+        const val EXTRA_BUCKET_ID = "com.sidequest.extra.BUCKET_ID"
     }
 }
 
@@ -141,7 +147,10 @@ private fun CaptureScreen(
     onBucketSelected: (String) -> Unit,
     onTimeframeSelected: (TimeframeOption) -> Unit,
     onSpecificDatePicked: (java.time.LocalDate) -> Unit,
-    onManualTitleChange: (String) -> Unit,
+    onTitleChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onLinkChange: (String) -> Unit,
+    onCreateBucket: (String) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -168,7 +177,10 @@ private fun CaptureScreen(
                     state = state,
                     onBucketSelected = onBucketSelected,
                     onTimeframeSelected = onTimeframeSelected,
-                    onManualTitleChange = onManualTitleChange,
+                    onTitleChange = onTitleChange,
+                    onDescriptionChange = onDescriptionChange,
+                    onLinkChange = onLinkChange,
+                    onCreateBucket = onCreateBucket,
                     onPickDate = { showDatePicker = true },
                     onConfirm = onConfirm,
                 )

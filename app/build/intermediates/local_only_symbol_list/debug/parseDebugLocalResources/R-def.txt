@@ -23,6 +23,7 @@ string board_link_thumbnail_desc
 string board_loading
 string board_status_indicator_desc
 string board_title
+string board_undo_complete_desc
 string board_view_all
 string buckets_add
 string buckets_add_desc
@@ -46,12 +47,15 @@ string capture_close
 string capture_confirm
 string capture_discard
 string capture_loading
+string capture_new_bucket
 string capture_new_task_title
 string capture_no_buckets
 string capture_pick_date
 string capture_select_bucket
 string capture_select_timeframe
 string capture_selected_bucket_desc
+string capture_task_desc_label
+string capture_task_link_label
 string capture_task_title_label
 string capture_timeframe_specific_date
 string capture_timeframe_today
@@ -151,6 +155,7 @@ string plan_progress_desc
 string plan_progress_label
 string plan_sub_action_toggle_desc
 string plan_title
+string plan_undo_complete
 string profile_account_label
 string profile_buckets
 string profile_buckets_subtitle

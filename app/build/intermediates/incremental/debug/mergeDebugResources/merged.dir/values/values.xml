@@ -124,6 +124,7 @@
     <string name="board_loading">Loading your board…</string>
     <string name="board_status_indicator_desc">Status: %1$s. Tap to change.</string>
     <string name="board_title">Action Board</string>
+    <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
     <string name="board_view_all">View all</string>
     <string name="buckets_add">New bucket</string>
     <string name="buckets_add_desc">Create a new bucket</string>
@@ -154,13 +155,16 @@
     <string name="capture_confirm">Save</string>
     <string name="capture_discard">Discard</string>
     <string name="capture_loading">Preparing your shared content…</string>
+    <string name="capture_new_bucket">New bucket</string>
     <string name="capture_new_task_title">New task</string>
     <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
     <string name="capture_pick_date">Pick a date</string>
     <string name="capture_select_bucket">Bucket</string>
     <string name="capture_select_timeframe">When do you want to act on this?</string>
     <string name="capture_selected_bucket_desc">Bucket %1$s selected</string>
-    <string name="capture_task_title_label">What do you want to do?</string>
+    <string name="capture_task_desc_label">Description / details (optional)</string>
+    <string name="capture_task_link_label">Link (optional)</string>
+    <string name="capture_task_title_label">Name your task</string>
     <string name="capture_timeframe_specific_date">Specific date</string>
     <string name="capture_timeframe_today">Today</string>
     <string name="capture_timeframe_within_a_day">Within a day</string>
@@ -329,6 +333,7 @@
     <string name="plan_progress_label">%1$d / %2$d completed</string>
     <string name="plan_sub_action_toggle_desc">Mark step \"%1$s\" complete</string>
     <string name="plan_title">Action plan</string>
+    <string name="plan_undo_complete">Mark as not done</string>
     <string name="profile_account_label">Account</string>
     <string name="profile_buckets">Buckets</string>
     <string name="profile_buckets_subtitle">Names, colors, and cover images</string>

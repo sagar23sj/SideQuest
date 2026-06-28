@@ -74,6 +74,7 @@ fun BoardScreen(
     BoardContent(
         state = state,
         onComplete = { id -> viewModel.onStatusChange(id, ActionStatus.COMPLETED) },
+        onUndo = { id -> viewModel.onStatusChange(id, ActionStatus.NOT_STARTED) },
         onOpenItem = onOpenItem,
         onManageBuckets = onManageBuckets,
         onOpenBucket = onOpenBucket,
@@ -96,6 +97,7 @@ fun BoardContent(
     state: BoardUiState,
     onComplete: (itemId: String) -> Unit,
     modifier: Modifier = Modifier,
+    onUndo: (itemId: String) -> Unit = {},
     onOpenItem: (String) -> Unit = {},
     onManageBuckets: () -> Unit = {},
     onOpenBucket: (String) -> Unit = {},
@@ -143,6 +145,7 @@ fun BoardContent(
                         confetti.celebrate()
                         onComplete(id)
                     },
+                    onUndo = onUndo,
                     onOpenItem = onOpenItem,
                     onManageBuckets = onManageBuckets,
                     onOpenBucket = onOpenBucket,
@@ -201,6 +204,7 @@ private fun LoadingBoard(contentPadding: PaddingValues) {
 private fun ReadyBoard(
     board: BoardState,
     onComplete: (itemId: String) -> Unit,
+    onUndo: (itemId: String) -> Unit,
     onOpenItem: (String) -> Unit,
     onManageBuckets: () -> Unit,
     onOpenBucket: (String) -> Unit,
@@ -255,6 +259,7 @@ private fun ReadyBoard(
                     ActionItemRow(
                         boardItem = boardItem,
                         onComplete = { onComplete(boardItem.item.id) },
+                        onUndo = { onUndo(boardItem.item.id) },
                         onOpenItem = { onOpenItem(boardItem.item.id) },
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
@@ -391,6 +396,7 @@ private fun EmptyBoard(modifier: Modifier = Modifier) {
 private fun ActionItemRow(
     boardItem: BoardItem,
     onComplete: () -> Unit,
+    onUndo: () -> Unit,
     onOpenItem: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -413,6 +419,7 @@ private fun ActionItemRow(
             HoldToCompleteButton(
                 completed = isCompleted,
                 onCompleted = onComplete,
+                onUndo = onUndo,
             )
         },
     )

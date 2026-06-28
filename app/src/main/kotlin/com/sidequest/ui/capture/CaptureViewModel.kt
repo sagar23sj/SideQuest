@@ -76,7 +76,16 @@ class CaptureViewModel(
             val accountId = accountProvider.currentAccountId()
             when (val result = captureRepository.beginCapture(accountId, intentData)) {
                 is BeginCaptureResult.Draft -> {
-                    _uiState.value = CaptureUiState.Categorizing(draft = result.draft)
+                    val draft = result.draft
+                    val isLink = draft.contentType == com.sidequest.domain.model.ContentType.LINK
+                    _uiState.value = CaptureUiState.Categorizing(
+                        draft = draft,
+                        // Don't use the link/raw payload as the name — let the
+                        // user name the task. Prefill the title only for plain
+                        // shared text; route a shared URL into the link field.
+                        title = if (isLink) "" else draft.title,
+                        link = if (isLink) draft.sourceContent.orEmpty() else "",
+                    )
                     observeBuckets(accountId)
                 }
 
@@ -89,9 +98,11 @@ class CaptureViewModel(
     /**
      * Begins a manual in-app "new task" entry (the capture FAB). There is no
      * shared content, so the user types the task title in the categorization
-     * sheet; bucket + timeframe selection is identical to a shared capture.
+     * sheet; bucket + timeframe selection is identical to a shared capture. When
+     * [preselectedBucketId] is provided (launched from a bucket), it is
+     * pre-selected.
      */
-    fun startManual() {
+    fun startManual(preselectedBucketId: String? = null) {
         if (started) return
         started = true
 
@@ -104,13 +115,47 @@ class CaptureViewModel(
                 sourceContent = null,
                 preview = null,
             )
-            _uiState.value = CaptureUiState.Categorizing(draft = draft, isManual = true)
+            _uiState.value = CaptureUiState.Categorizing(
+                draft = draft,
+                isManual = true,
+                selectedBucketId = preselectedBucketId,
+            )
             observeBuckets(accountId)
         }
     }
 
-    /** Updates the typed title for a manual task entry. */
-    fun onManualTitleChange(value: String) = updateCategorizing { it.copy(manualTitle = value) }
+    /** Updates the typed task name. */
+    fun onTitleChange(value: String) = updateCategorizing { it.copy(title = value) }
+
+    /** Updates the optional description / details. */
+    fun onDescriptionChange(value: String) = updateCategorizing { it.copy(description = value) }
+
+    /** Updates the optional link. */
+    fun onLinkChange(value: String) = updateCategorizing { it.copy(link = value) }
+
+    /**
+     * Creates a new bucket with [name] for the current account and immediately
+     * selects it, so the user can add a task to a brand-new bucket without
+     * leaving the capture flow. Blank names are ignored.
+     */
+    fun createAndSelectBucket(name: String) {
+        val trimmed = name.trim()
+        if (trimmed.isEmpty()) return
+        viewModelScope.launch {
+            val accountId = accountProvider.currentAccountId()
+            when (val result = bucketRepository.createBucket(
+                accountId = accountId,
+                name = trimmed,
+                notStartedColor = "#89726B",
+                inProgressColor = "#6D4EA2",
+                completedColor = "#006A63",
+            )) {
+                is com.sidequest.domain.bucket.BucketResult.Created ->
+                    updateCategorizing { it.copy(selectedBucketId = result.bucket.id) }
+                else -> Unit
+            }
+        }
+    }
 
     private fun observeBuckets(accountId: String) {
         viewModelScope.launch {
@@ -176,16 +221,23 @@ class CaptureViewModel(
 
         updateCategorizing { it.copy(isSaving = true) }
         viewModelScope.launch {
-            // For a manual entry, fold the typed title into the draft as both
-            // the title and the stored content.
-            val draft = if (state.isManual) {
-                state.draft.copy(
-                    title = state.manualTitle.trim(),
-                    sourceContent = state.manualTitle.trim(),
-                )
-            } else {
-                state.draft
-            }
+            // Fold the edited name/description/link into the draft. A non-blank
+            // link makes the item a clickable LINK (and triggers preview
+            // enrichment); otherwise it stays the original content type.
+            val link = state.link.trim()
+            val hasLink = link.isNotBlank()
+            val draft = state.draft.copy(
+                title = state.title.trim(),
+                description = state.description.trim().ifBlank { null },
+                contentType = if (hasLink) {
+                    com.sidequest.domain.model.ContentType.LINK
+                } else if (state.isManual) {
+                    com.sidequest.domain.model.ContentType.TEXT
+                } else {
+                    state.draft.contentType
+                },
+                sourceContent = if (hasLink) link else if (state.isManual) null else state.draft.sourceContent,
+            )
             captureRepository.confirmCapture(draft, bucketId, timeframe)
             _uiState.value = CaptureUiState.Saved
         }

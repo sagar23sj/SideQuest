@@ -72,18 +72,17 @@ import com.sidequest.ui.voice.VoiceReviewScreen
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SideQuestNavHost(
-    onAddTask: () -> Unit,
+    onAddTask: (bucketId: String?) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    // The bottom bar + FAB only show on the top-level tabs; pushed routes use
-    // their own top-bar back affordance and hide the shell.
+    // The bottom bar shows on every top-level tab; the capture FAB is scoped to
+    // the Board only (the bucket detail screen hosts its own per-bucket FAB).
     val showShell = TopLevelDestination.entries.any { it.route == currentRoute }
-
-    var showAddSheet by remember { mutableStateOf(false) }
+    val showFab = currentRoute == Routes.BOARD
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -98,11 +97,11 @@ fun SideQuestNavHost(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = showShell,
+                visible = showFab,
                 enter = scaleIn(),
                 exit = scaleOut(),
             ) {
-                CaptureFab(onClick = { showAddSheet = true })
+                CaptureFab(onClick = { onAddTask(null) })
             }
         },
     ) { innerPadding ->
@@ -139,6 +138,7 @@ fun SideQuestNavHost(
                 ProfileScreen(
                     onOpenReminders = { navController.navigate(Routes.REMINDER_SETTINGS) },
                     onManageBuckets = { navController.navigate(Routes.BUCKETS) },
+                    onCreateBucket = { navController.navigate(Routes.CREATE_BUCKET) },
                     onJoinOrganization = { navController.navigate(Routes.JOIN_ORG) },
                     onSignIn = { navController.navigate(Routes.LOGIN) },
                 )
@@ -166,6 +166,7 @@ fun SideQuestNavHost(
                 com.sidequest.ui.bucket.BucketDetailScreen(
                     onNavigateBack = navController::popBackStack,
                     onOpenItem = { itemId -> navController.navigate(Routes.itemDetail(itemId)) },
+                    onAddTask = { bucketId -> onAddTask(bucketId) },
                 )
             }
 
@@ -217,107 +218,6 @@ fun SideQuestNavHost(
                 com.sidequest.ui.auth.JoinOrganizationScreen(
                     onJoined = navController::popBackStack,
                     onSkip = navController::popBackStack,
-                )
-            }
-        }
-
-        // The capture FAB chooser: create a bucket or a task (Req 1/2). This
-        // replaces the old FAB that launched the share flow with no content
-        // (which errored). "New task" opens the manual capture entry.
-        if (showAddSheet) {
-            androidx.compose.material3.ModalBottomSheet(
-                onDismissRequest = { showAddSheet = false },
-            ) {
-                AddChooserSheet(
-                    onNewBucket = {
-                        showAddSheet = false
-                        navController.navigate(Routes.CREATE_BUCKET)
-                    },
-                    onNewTask = {
-                        showAddSheet = false
-                        onAddTask()
-                    },
-                )
-            }
-        }
-    }
-}
-
-/**
- * The "+" chooser content: two large options — create a new bucket, or add a
- * new task (manual capture). Keeps the FAB scoped to exactly these two actions.
- */
-@Composable
-private fun AddChooserSheet(
-    onNewBucket: () -> Unit,
-    onNewTask: () -> Unit,
-) {
-    androidx.compose.foundation.layout.Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        Text(
-            text = stringResource(com.sidequest.R.string.add_chooser_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp),
-        )
-        AddChooserOption(
-            icon = androidx.compose.material.icons.Icons.Filled.Add,
-            title = stringResource(com.sidequest.R.string.add_chooser_task),
-            subtitle = stringResource(com.sidequest.R.string.add_chooser_task_desc),
-            container = MaterialTheme.colorScheme.primaryContainer,
-            onContainer = MaterialTheme.colorScheme.onPrimaryContainer,
-            onClick = onNewTask,
-        )
-        AddChooserOption(
-            icon = androidx.compose.material.icons.Icons.Filled.Add,
-            title = stringResource(com.sidequest.R.string.add_chooser_bucket),
-            subtitle = stringResource(com.sidequest.R.string.add_chooser_bucket_desc),
-            container = MaterialTheme.colorScheme.secondaryContainer,
-            onContainer = MaterialTheme.colorScheme.onSecondaryContainer,
-            onClick = onNewBucket,
-        )
-        androidx.compose.foundation.layout.Spacer(Modifier.padding(bottom = 8.dp))
-    }
-}
-
-@Composable
-private fun AddChooserOption(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    subtitle: String,
-    container: Color,
-    onContainer: Color,
-    onClick: () -> Unit,
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
-        color = container,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .then(Modifier),
-            ) {
-                Icon(imageVector = icon, contentDescription = null, tint = onContainer)
-            }
-            androidx.compose.foundation.layout.Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = title, style = MaterialTheme.typography.titleMedium, color = onContainer)
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = onContainer.copy(alpha = 0.8f),
                 )
             }
         }

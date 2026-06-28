@@ -50,7 +50,7 @@ object CaptureOperations {
         accountId = draft.accountId,
         bucketId = bucketId,
         title = draft.title,
-        description = null,
+        description = draft.description,
         contentType = draft.contentType,
         sourceContent = draft.sourceContent,
         preview = draft.preview,
