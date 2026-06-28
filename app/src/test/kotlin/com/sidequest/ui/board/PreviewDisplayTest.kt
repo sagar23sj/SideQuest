@@ -61,13 +61,13 @@ class PreviewDisplayTest : StringSpec({
         )
         val display = previewDisplay(boardItem(linkItem(preview = preview)))
 
-        // The preview title is shown (Req 1a.3) ...
-        display.title shouldBe "How to plan a trip to Japan"
+        // The user's name stays the headline (link metadata is supporting info).
+        display.title shouldBe "Saved link"
         // ... the thumbnail is presented (Req 1a.3) ...
         display.hasThumbnail shouldBe true
         display.thumbnailUrl shouldBe "https://cdn.example.com/japan.jpg"
-        // ... and the raw link is not shown in its place.
-        display.rawSource shouldBe null
+        // ... and the link's own page title becomes the subtitle.
+        display.rawSource shouldBe "How to plan a trip to Japan"
     }
 
     "a resolved preview with a blank title falls back to the item title but keeps the thumbnail" {
@@ -94,10 +94,11 @@ class PreviewDisplayTest : StringSpec({
         )
         val display = previewDisplay(boardItem(linkItem(preview = preview)))
 
-        display.title shouldBe "An article with no image"
+        display.title shouldBe "Saved link"
         display.hasThumbnail shouldBe false
         display.thumbnailUrl shouldBe null
-        display.rawSource shouldBe null
+        // With no thumbnail, the link's page title is surfaced as the subtitle.
+        display.rawSource shouldBe "An article with no image"
     }
 
     "an unresolved preview link item shows the raw link instead of a preview" {

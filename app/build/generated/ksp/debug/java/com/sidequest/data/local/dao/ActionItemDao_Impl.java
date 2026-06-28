@@ -1362,6 +1362,43 @@ public final class ActionItemDao_Impl implements ActionItemDao {
     }, $completion);
   }
 
+  @Override
+  public Flow<List<BucketItemCount>> observeBucketItemCounts(final String accountId) {
+    final String _sql = "SELECT bucketId AS bucketId, COUNT(*) AS count FROM action_items WHERE accountId = ? AND deleted = 0 GROUP BY bucketId";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, accountId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"action_items"}, new Callable<List<BucketItemCount>>() {
+      @Override
+      @NonNull
+      public List<BucketItemCount> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfBucketId = 0;
+          final int _cursorIndexOfCount = 1;
+          final List<BucketItemCount> _result = new ArrayList<BucketItemCount>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final BucketItemCount _item;
+            final String _tmpBucketId;
+            _tmpBucketId = _cursor.getString(_cursorIndexOfBucketId);
+            final int _tmpCount;
+            _tmpCount = _cursor.getInt(_cursorIndexOfCount);
+            _item = new BucketItemCount(_tmpBucketId,_tmpCount);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

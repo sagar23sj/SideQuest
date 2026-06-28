@@ -126,6 +126,14 @@ class ItemDetailViewModel @Inject constructor(
         }
     }
 
+    /** Removes the sub-action [subActionId] from the current item's plan. */
+    fun onRemoveSubAction(subActionId: String) {
+        val id = actionItemId.value ?: return
+        viewModelScope.launch {
+            planRepository.removeSubAction(id, subActionId)
+        }
+    }
+
     /**
      * Sets or clears the per-task reminder for the current item (Req 6.2,
      * 6.5–6.8), then triggers a refresh so the detail view reflects it.
@@ -183,7 +191,8 @@ class ItemDetailViewModel @Inject constructor(
                 subActions = subActions.sortedBy { it.order },
                 progress = ActionPlanOperations.progress(this),
                 showParentCompletePrompt =
-                    ActionPlanOperations.shouldPromptParentComplete(this),
+                    ActionPlanOperations.shouldPromptParentComplete(this) &&
+                        item?.status != ActionStatus.COMPLETED,
                 reminder = item?.reminder,
                 item = item,
                 bucketName = bucketName,

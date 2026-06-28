@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#6650A4</color>
+    <!-- App surface (light scheme background) — used as the window background. -->
+    <color name="app_background">#F4FAFF</color>
 </resources>

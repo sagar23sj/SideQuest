@@ -104,38 +104,110 @@ fun BucketCover(
 ) {
     val scheme = MaterialTheme.colorScheme
     val (start, end, onTint) = coverPalette(name, scheme)
+    // The cover to overlay: the user's own image when set, otherwise a topical
+    // stock photo for well-known domains (cooking, travel, …). The themed
+    // gradient + icon is always drawn underneath as the placeholder, so if the
+    // photo is still loading or fails (offline), the bucket still looks themed.
+    val overlay = imageRef?.takeIf { it.isNotBlank() } ?: defaultCoverUrl(name)
     Box(
         modifier = modifier.background(Brush.linearGradient(listOf(start, end))),
         contentAlignment = Alignment.Center,
     ) {
-        if (!imageRef.isNullOrBlank()) {
+        // Themed placeholder: soft translucent circles behind a topical icon.
+        androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+            drawCircle(
+                color = Color.White.copy(alpha = 0.12f),
+                radius = size.minDimension * 0.45f,
+                center = androidx.compose.ui.geometry.Offset(size.width * 0.82f, size.height * 0.2f),
+            )
+            drawCircle(
+                color = Color.Black.copy(alpha = 0.06f),
+                radius = size.minDimension * 0.5f,
+                center = androidx.compose.ui.geometry.Offset(size.width * 0.15f, size.height * 0.95f),
+            )
+        }
+        Icon(
+            imageVector = iconFor(name),
+            contentDescription = null,
+            tint = onTint,
+            modifier = Modifier.size(iconSize),
+        )
+
+        if (overlay != null) {
             coil.compose.AsyncImage(
-                model = if (imageRef.startsWith("content:") || imageRef.startsWith("http")) {
-                    imageRef
+                model = if (overlay.startsWith("content:") || overlay.startsWith("http")) {
+                    overlay
                 } else {
-                    File(imageRef)
+                    File(overlay)
                 },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
-        } else {
-            Icon(
-                imageVector = iconFor(name),
-                contentDescription = null,
-                tint = onTint,
-                modifier = Modifier.size(iconSize),
-            )
         }
     }
 }
 
-/** Deterministic (gradientStart, gradientEnd, onColor) for a themed cover. */
+/**
+ * A stable, topical stock-photo URL for a well-known bucket domain (cooking,
+ * travel, shopping, …) or null for an unrecognized name (which then shows the
+ * themed gradient + icon). Uses LoremFlickr keyword photos with a fixed lock so
+ * each domain gets a consistent image rather than a different one each load.
+ */
+private fun defaultCoverUrl(name: String): String? {
+    val n = name.lowercase()
+    val (keyword, lock) = when {
+        n.contains("travel") || n.contains("trip") || n.contains("flight") -> "travel,landscape" to 11
+        n.contains("cook") || n.contains("food") || n.contains("recipe") -> "cooking,food" to 21
+        n.contains("shop") || n.contains("wishlist") || n.contains("buy") -> "shopping" to 31
+        n.contains("ritual") || n.contains("habit") || n.contains("wellness") -> "wellness,yoga" to 41
+        n.contains("learn") || n.contains("study") || n.contains("read") -> "books,study" to 51
+        n.contains("home") || n.contains("house") -> "home,interior" to 61
+        n.contains("art") || n.contains("design") || n.contains("create") -> "art,painting" to 71
+        n.contains("stock") || n.contains("invest") || n.contains("finance") -> "finance,money" to 81
+        n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> "coffee" to 91
+        else -> return null
+    }
+    return "https://loremflickr.com/640/480/$keyword?lock=$lock"
+}
+
+/**
+ * Deterministic (gradientStart, gradientEnd, onColor) for a themed cover.
+ *
+ * The gradient is keyed off the bucket's *domain* (matched on the same keywords
+ * as [iconFor]) so each life area gets a recognizable, photo-like color theme —
+ * warm tones for cooking, sky tones for travel, greens for finance, and so on.
+ * Unknown buckets fall back to a stable brand-tinted gradient chosen by name.
+ */
 private fun coverPalette(name: String, scheme: ColorScheme): Triple<Color, Color, Color> {
-    val idx = (name.lowercase().hashCode() % 3 + 3) % 3
-    return when (idx) {
-        0 -> Triple(scheme.primary, scheme.primaryContainer, scheme.onPrimary)
-        1 -> Triple(scheme.secondary, scheme.secondaryContainer, scheme.onSecondary)
-        else -> Triple(scheme.tertiary, scheme.tertiaryContainer, scheme.onTertiary)
+    val white = Color.White
+    val n = name.lowercase()
+    return when {
+        n.contains("travel") || n.contains("trip") || n.contains("flight") ->
+            Triple(Color(0xFF1F8FB3), Color(0xFF53BBB1), white) // sky → teal
+        n.contains("cook") || n.contains("food") || n.contains("recipe") ->
+            Triple(Color(0xFFE0552B), Color(0xFFFF8A65), white) // ember → coral
+        n.contains("shop") || n.contains("wishlist") || n.contains("buy") ->
+            Triple(Color(0xFFD2436A), Color(0xFFFF8A8A), white) // berry → blush
+        n.contains("ritual") || n.contains("habit") || n.contains("wellness") ->
+            Triple(Color(0xFF6D4EA2), Color(0xFFC5A3FF), white) // violet
+        n.contains("learn") || n.contains("study") || n.contains("read") ->
+            Triple(Color(0xFF3A4DB3), Color(0xFF7C8CF0), white) // indigo
+        n.contains("home") || n.contains("house") ->
+            Triple(Color(0xFFB5792B), Color(0xFFE8B873), white) // amber/wood
+        n.contains("art") || n.contains("design") || n.contains("create") ->
+            Triple(Color(0xFFA1308F), Color(0xFFE07AD0), white) // magenta
+        n.contains("stock") || n.contains("invest") || n.contains("finance") ->
+            Triple(Color(0xFF1E7D5A), Color(0xFF5FC79A), white) // green
+        n.contains("coffee") || n.contains("cafe") || n.contains("drink") ->
+            Triple(Color(0xFF6F4A2E), Color(0xFFB98B5E), white) // coffee brown
+        else -> {
+            val idx = (n.hashCode() % 3 + 3) % 3
+            when (idx) {
+                0 -> Triple(scheme.primary, scheme.primaryContainer, scheme.onPrimary)
+                1 -> Triple(scheme.secondary, scheme.secondaryContainer, scheme.onSecondary)
+                else -> Triple(scheme.tertiary, scheme.tertiaryContainer, scheme.onTertiary)
+            }
+        }
     }
 }

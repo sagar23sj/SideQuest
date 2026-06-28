@@ -3,21 +3,16 @@ package com.sidequest.ui.navigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -82,10 +77,13 @@ fun SideQuestNavHost(
     // The bottom bar shows on every top-level tab; the capture FAB is scoped to
     // the Board only (the bucket detail screen hosts its own per-bucket FAB).
     val showShell = TopLevelDestination.entries.any { it.route == currentRoute }
-    val showFab = currentRoute == Routes.BOARD
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        // The host contributes no insets of its own; each destination's own
+        // Scaffold/TopAppBar consumes the status-bar inset exactly once, so the
+        // page content sits flush at the top of the screen (no double gap).
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             AnimatedVisibility(
                 visible = showShell,
@@ -93,15 +91,6 @@ fun SideQuestNavHost(
                 exit = fadeOut(),
             ) {
                 BottomNavBar(navController = navController)
-            }
-        },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showFab,
-                enter = scaleIn(),
-                exit = scaleOut(),
-            ) {
-                CaptureFab(onClick = { onAddTask(null) })
             }
         },
     ) { innerPadding ->
@@ -112,6 +101,7 @@ fun SideQuestNavHost(
         ) {
             composable(Routes.BOARD) {
                 BoardScreen(
+                    onAddTask = { onAddTask(null) },
                     onOpenItem = { itemId -> navController.navigate(Routes.itemDetail(itemId)) },
                     onManageBuckets = { navController.navigate(Routes.BUCKETS) },
                     onOpenBucket = { bucketId -> navController.navigate(Routes.bucketDetail(bucketId)) },
@@ -311,25 +301,5 @@ private fun BottomNavItem(
                 )
             }
         }
-    }
-}
-
-/**
- * The center capture FAB: a rounded squircle in the primary coral with an
- * ambient shadow, matching the Home Board design's "add a SideQuest" button.
- */
-@Composable
-private fun CaptureFab(onClick: () -> Unit) {
-    FloatingActionButton(
-        onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp),
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(com.sidequest.R.string.nav_capture_desc),
-        )
     }
 }

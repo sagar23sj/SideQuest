@@ -18,8 +18,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +67,7 @@ import com.sidequest.ui.components.SectionHeader
 fun BoardScreen(
     modifier: Modifier = Modifier,
     onOpenReminderSettings: () -> Unit = {},
+    onAddTask: () -> Unit = {},
     onOpenItem: (String) -> Unit = {},
     onManageBuckets: () -> Unit = {},
     onOpenBucket: (String) -> Unit = {},
@@ -75,6 +80,7 @@ fun BoardScreen(
         state = state,
         onComplete = { id -> viewModel.onStatusChange(id, ActionStatus.COMPLETED) },
         onUndo = { id -> viewModel.onStatusChange(id, ActionStatus.NOT_STARTED) },
+        onAddTask = onAddTask,
         onOpenItem = onOpenItem,
         onManageBuckets = onManageBuckets,
         onOpenBucket = onOpenBucket,
@@ -98,6 +104,7 @@ fun BoardContent(
     onComplete: (itemId: String) -> Unit,
     modifier: Modifier = Modifier,
     onUndo: (itemId: String) -> Unit = {},
+    onAddTask: () -> Unit = {},
     onOpenItem: (String) -> Unit = {},
     onManageBuckets: () -> Unit = {},
     onOpenBucket: (String) -> Unit = {},
@@ -126,10 +133,10 @@ fun BoardContent(
                         AvatarButton(onClick = onOpenProfile)
                     },
                     actions = {
-                        IconButton(onClick = onOpenLeaderboard) {
+                        IconButton(onClick = onAddTask) {
                             Icon(
-                                imageVector = Icons.Filled.EmojiEvents,
-                                contentDescription = stringResource(R.string.leaderboard_title),
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.nav_capture_desc),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                         }
@@ -212,6 +219,9 @@ private fun ReadyBoard(
 ) {
     val totalItems = board.groups.sumOf { it.items.size }
     val progress = if (totalItems == 0) 0f else board.completionCount.toFloat() / totalItems
+    // Per-bucket reveal state for the "Show completed quests" section so the
+    // board stays uncluttered as completed tasks pile up over time.
+    val expandedCompleted = remember { androidx.compose.runtime.mutableStateMapOf<String, Boolean>() }
 
     LazyColumn(
         modifier = Modifier
@@ -242,8 +252,16 @@ private fun ReadyBoard(
                 )
             }
 
-            // Each bucket then lists its rich task cards under a section header.
+            // Each bucket then lists its active task cards under a section
+            // header. Completed quests are tucked behind a per-bucket
+            // "Show completed" reveal so the board stays uncluttered.
             board.groups.forEach { group ->
+                val activeItems = group.items.filter {
+                    it.item.status != ActionStatus.COMPLETED
+                }
+                val completedItems = group.items.filter {
+                    it.item.status == ActionStatus.COMPLETED
+                }
                 item(key = "section-${group.bucket.id}") {
                     SectionHeader(
                         title = group.bucket.name,
@@ -253,7 +271,7 @@ private fun ReadyBoard(
                     )
                 }
                 items(
-                    items = group.items,
+                    items = activeItems,
                     key = { it.item.id },
                 ) { boardItem ->
                     ActionItemRow(
@@ -263,6 +281,33 @@ private fun ReadyBoard(
                         onOpenItem = { onOpenItem(boardItem.item.id) },
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
+                }
+                if (completedItems.isNotEmpty()) {
+                    val expanded = expandedCompleted[group.bucket.id] == true
+                    item(key = "completed-toggle-${group.bucket.id}") {
+                        CompletedToggle(
+                            count = completedItems.size,
+                            expanded = expanded,
+                            onToggle = {
+                                expandedCompleted[group.bucket.id] = !expanded
+                            },
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                        )
+                    }
+                    if (expanded) {
+                        items(
+                            items = completedItems,
+                            key = { it.item.id },
+                        ) { boardItem ->
+                            ActionItemRow(
+                                boardItem = boardItem,
+                                onComplete = { onComplete(boardItem.item.id) },
+                                onUndo = { onUndo(boardItem.item.id) },
+                                onOpenItem = { onOpenItem(boardItem.item.id) },
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -413,17 +458,66 @@ private fun ActionItemRow(
         statusColor = statusColor,
         icon = Icons.Filled.Bolt,
         thumbnailUrl = display.thumbnailUrl,
+        completed = isCompleted,
         onClick = onOpenItem,
+        onHoldComplete = onComplete,
+        onUndo = onUndo,
         modifier = modifier,
-        trailing = {
-            HoldToCompleteButton(
-                completed = isCompleted,
-                onCompleted = onComplete,
-                onUndo = onUndo,
-            )
-        },
     )
 }
+
+/**
+ * A tappable "Show / Hide completed quests" row that reveals a bucket's
+ * completed tasks on demand, keeping finished work out of the way until asked.
+ */
+@Composable
+private fun CompletedToggle(
+    count: Int,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        onClick = onToggle,
+        modifier = modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = null,
+                tint = CompletedGreen,
+                modifier = Modifier.size(18.dp),
+            )
+            Text(
+                text = stringResource(
+                    if (expanded) R.string.board_hide_completed else R.string.board_show_completed,
+                    count,
+                ),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                imageVector = if (expanded) {
+                    Icons.Filled.KeyboardArrowUp
+                } else {
+                    Icons.Filled.KeyboardArrowDown
+                },
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+/** A clear "done" green used for the completed-quests affordance. */
+private val CompletedGreen = androidx.compose.ui.graphics.Color(0xFF2E7D32)
 
 /** Maps an [ActionStatus] to its user-facing display label resource. */
 @StringRes

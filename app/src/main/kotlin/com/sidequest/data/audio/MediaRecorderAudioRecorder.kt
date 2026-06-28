@@ -49,8 +49,11 @@ class MediaRecorderAudioRecorder @Inject constructor(
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setAudioEncodingBitRate(AUDIO_ENCODING_BIT_RATE)
-            setAudioSamplingRate(AUDIO_SAMPLING_RATE)
+            setAudioChannels(AUDIO_CHANNELS)
+            // Note: sample rate and bit rate are intentionally NOT forced.
+            // Forcing 44.1 kHz when the capture device runs at 48 kHz produces
+            // garbled/"static" speech; letting the framework choose a
+            // device-appropriate rate avoids the mismatch.
             setOutputFile(outputFile.absolutePath)
         }
 
@@ -124,10 +127,7 @@ class MediaRecorderAudioRecorder @Inject constructor(
         /** File extension for the MPEG-4/AAC recordings. */
         const val FILE_EXTENSION = "m4a"
 
-        /** AAC encoding bit rate (128 kbps) — good quality for spoken audio. */
-        const val AUDIO_ENCODING_BIT_RATE = 128_000
-
-        /** Sampling rate (44.1 kHz) suitable for voice capture. */
-        const val AUDIO_SAMPLING_RATE = 44_100
+        /** Mono — voice journaling needs a single channel. */
+        const val AUDIO_CHANNELS = 1
     }
 }

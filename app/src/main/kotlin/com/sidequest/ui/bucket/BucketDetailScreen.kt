@@ -68,21 +68,6 @@ fun BucketDetailScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
-            floatingActionButton = {
-                if (bucketId != null) {
-                    androidx.compose.material3.FloatingActionButton(
-                        onClick = { onAddTask(bucketId) },
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                    ) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.nav_capture_desc),
-                        )
-                    }
-                }
-            },
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -101,6 +86,17 @@ fun BucketDetailScreen(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.reminder_back),
                             )
+                        }
+                    },
+                    actions = {
+                        if (bucketId != null) {
+                            IconButton(onClick = { onAddTask(bucketId) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(R.string.nav_capture_desc),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            }
                         }
                     },
                 )
@@ -172,10 +168,10 @@ private fun TaskCard(
         statusColor = statusColor,
         icon = Icons.Filled.Bolt,
         thumbnailUrl = display.thumbnailUrl,
+        completed = isCompleted,
         onClick = onOpenItem,
-        trailing = {
-            HoldToCompleteButton(completed = isCompleted, onCompleted = onComplete, onUndo = onUndo)
-        },
+        onHoldComplete = onComplete,
+        onUndo = onUndo,
     )
 }
 

@@ -28,6 +28,10 @@ class UserPreferences @Inject constructor(
     /** The chosen display name, or null when not yet set. */
     val displayName: StateFlow<String?> = _displayName.asStateFlow()
 
+    private val _avatarRef = MutableStateFlow(prefs.getString(KEY_AVATAR, null))
+    /** Local file path of the chosen profile photo, or null when not set. */
+    val avatarRef: StateFlow<String?> = _avatarRef.asStateFlow()
+
     /** Whether the user has been asked for their name at least once. */
     val hasSeenNamePrompt: Boolean
         get() = prefs.getBoolean(KEY_NAME_PROMPTED, false)
@@ -38,6 +42,12 @@ class UserPreferences @Inject constructor(
         _displayName.value = trimmed
     }
 
+    /** Stores the local file [path] of the player's profile photo. */
+    fun setAvatarRef(path: String?) {
+        prefs.edit().putString(KEY_AVATAR, path).apply()
+        _avatarRef.value = path
+    }
+
     fun markNamePromptSeen() {
         prefs.edit().putBoolean(KEY_NAME_PROMPTED, true).apply()
     }
@@ -45,6 +55,7 @@ class UserPreferences @Inject constructor(
     private companion object {
         const val PREFS_NAME = "sidequest_user_prefs"
         const val KEY_NAME = "display_name"
+        const val KEY_AVATAR = "avatar_ref"
         const val KEY_NAME_PROMPTED = "name_prompted"
         const val MAX_NAME_LENGTH = 40
     }

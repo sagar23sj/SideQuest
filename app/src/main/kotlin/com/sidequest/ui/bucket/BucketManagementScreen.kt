@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +23,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +51,7 @@ import com.sidequest.R
 import com.sidequest.data.repository.BucketDeleteResult
 import com.sidequest.domain.bucket.BucketDeletionStrategy
 import com.sidequest.domain.model.Bucket
-import com.sidequest.ui.board.parseStatusColor
+import com.sidequest.ui.board.bucketVisual
 
 /**
  * Bucket management list (Req 2.1–2.6). Lists the account's buckets, each with
@@ -91,20 +90,16 @@ fun BucketManagementScreen(
                         )
                     }
                 },
+                actions = {
+                    IconButton(onClick = onCreateBucket) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = stringResource(R.string.buckets_add_desc),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                },
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onCreateBucket,
-                shape = RoundedCornerShape(20.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.buckets_add_desc),
-                )
-            }
         },
     ) { innerPadding ->
         when {
@@ -133,12 +128,19 @@ fun BucketManagementScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 24.dp,
+                ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(state.buckets, key = { it.id }) { bucket ->
+                itemsIndexed(state.buckets, key = { _, b -> b.id }) { index, bucket ->
                     BucketRow(
                         bucket = bucket,
+                        index = index,
+                        itemCount = state.itemCounts[bucket.id] ?: 0,
                         onEdit = { onEditBucket(bucket.id) },
                         onDelete = {
                             viewModel.deleteBucket(bucket.id) { result ->
@@ -173,41 +175,63 @@ private data class PendingDelete(val bucket: Bucket, val itemCount: Int)
 @Composable
 private fun BucketRow(
     bucket: Bucket,
+    index: Int,
+    itemCount: Int,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    val visual = bucketVisual(bucket.name, index, MaterialTheme.colorScheme)
     Surface(
+        onClick = onEdit,
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        shape = MaterialTheme.shapes.medium,
+        color = visual.container,
+        contentColor = visual.onContainer,
+        shape = RoundedCornerShape(24.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            // Circular topical icon avatar.
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(visual.iconContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = visual.icon,
+                    contentDescription = null,
+                    tint = visual.onIconContainer,
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = bucket.name,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 )
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    ColorDot(bucket.notStartedColor)
-                    ColorDot(bucket.inProgressColor)
-                    ColorDot(bucket.completedColor)
-                }
+                Text(
+                    text = pluralItemCount(itemCount),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = visual.onContainer.copy(alpha = 0.8f),
+                )
             }
 
             Box {
                 val overflowDesc = stringResource(R.string.buckets_overflow_desc, bucket.name)
-                TextButton(
+                IconButton(
                     onClick = { menuExpanded = true },
                     modifier = Modifier.semantics { contentDescription = overflowDesc },
                 ) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = null)
+                    Icon(Icons.Filled.MoreVert, contentDescription = null, tint = visual.onContainer)
                 }
                 DropdownMenu(
                     expanded = menuExpanded,
@@ -233,16 +257,14 @@ private fun BucketRow(
     }
 }
 
+/** "N item" / "N items" label for a bucket's contained action count. */
 @Composable
-private fun ColorDot(colorHex: String) {
-    val fallback = MaterialTheme.colorScheme.outline
-    Box(
-        modifier = Modifier
-            .size(14.dp)
-            .clip(CircleShape)
-            .background(parseStatusColor(colorHex, fallback)),
-    )
-}
+private fun pluralItemCount(count: Int): String =
+    if (count == 1) {
+        stringResource(R.string.buckets_item_count_one)
+    } else {
+        stringResource(R.string.buckets_item_count_other, count)
+    }
 
 /**
  * The reassign-or-delete dialog shown when deleting a non-empty bucket

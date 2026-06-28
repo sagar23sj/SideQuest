@@ -12,13 +12,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -158,23 +166,32 @@ fun VoiceJournalContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            item(key = "record") {
+            item(key = "hero") {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.voice_journal_hint),
+                        text = stringResource(R.string.voice_journal_hero_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                    Text(
+                        text = stringResource(R.string.voice_journal_hero_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 24.dp),
                     )
 
                     if (state.showPermissionRationale) {
                         PermissionDeniedCard(onOpenSettings = onOpenSettings)
                     }
 
+                    androidx.compose.foundation.layout.Spacer(Modifier.size(8.dp))
                     RecordControl(
                         isRecording = state.isRecording,
                         onRecordClick = onRecordClick,
@@ -185,15 +202,8 @@ fun VoiceJournalContent(
                         Text(
                             text = stringResource(R.string.voice_journal_recording),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                        )
-                    }
-                    if (state.lastSavedEntryId != null && !state.isRecording) {
-                        SecondaryPillButton(
-                            text = stringResource(R.string.voice_review_title),
-                            onClick = { onReviewEntry(state.lastSavedEntryId) },
-                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                     if (state.isTranscribing) {
@@ -215,7 +225,7 @@ fun VoiceJournalContent(
             if (state.journalGroups.isNotEmpty()) {
                 item(key = "journals-header") {
                     com.sidequest.ui.components.SectionHeader(
-                        title = stringResource(R.string.voice_journal_history),
+                        title = stringResource(R.string.voice_journal_recent),
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     )
                 }
@@ -224,14 +234,14 @@ fun VoiceJournalContent(
                         Text(
                             text = group.dateLabel,
                             style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
                     items(group.entries, key = { it.id }) { entry ->
                         JournalEntryCard(
                             entry = entry,
-                            onClick = { onReviewEntry(entry.id) },
+                            onExtract = { onReviewEntry(entry.id) },
                         )
                     }
                 }
@@ -240,11 +250,15 @@ fun VoiceJournalContent(
     }
 }
 
-/** A past journal entry card: the time, a transcript snippet, and a chevron. */
+/**
+ * A past journal entry card (Stitch "Recent Logs"): a time chip, a quoted
+ * transcript with a tertiary left accent, a play control, and an "Extract
+ * actions" pill that opens the review/extraction flow.
+ */
 @Composable
 private fun JournalEntryCard(
     entry: com.sidequest.domain.model.VoiceJournalEntry,
-    onClick: () -> Unit,
+    onExtract: () -> Unit,
 ) {
     val time = remember(entry.createdAt) {
         java.time.Instant.ofEpochMilli(entry.createdAt)
@@ -254,31 +268,78 @@ private fun JournalEntryCard(
     com.sidequest.ui.components.SoftCard(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
-        onClick = onClick,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = time,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                text = entry.transcript?.takeIf { it.isNotBlank() }
-                    ?: stringResource(R.string.voice_journal_no_transcript_yet),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-            )
-            AudioPlayerButton(
-                audioPath = entry.audioRef,
-                modifier = Modifier.padding(top = 4.dp),
-            )
+            Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant) {
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                )
+            }
+
+            // Quoted transcript with a tertiary left accent bar.
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surface),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(4.dp)
+                        .fillMaxHeight()
+                        .background(MaterialTheme.colorScheme.tertiaryContainer),
+                )
+                Text(
+                    text = entry.transcript?.takeIf { it.isNotBlank() }
+                        ?: stringResource(R.string.voice_journal_no_transcript_yet),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(12.dp),
+                    maxLines = 4,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                AudioPlayerButton(audioPath = entry.audioRef)
+                Surface(
+                    onClick = onExtract,
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Filled.AutoAwesome,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            text = stringResource(R.string.voice_journal_extract),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -296,43 +357,52 @@ private fun RecordControl(
     onStopClick: () -> Unit,
 ) {
     val pulse = rememberInfiniteTransition(label = "recordPulse")
-    val scale by pulse.animateFloat(
-        initialValue = 1f,
-        targetValue = if (isRecording) 1.08f else 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(700),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "recordPulseScale",
+    // Expanding ring while recording (the "reflective" pulse from the design).
+    val ringScale by pulse.animateFloat(
+        initialValue = 0.85f,
+        targetValue = 1.35f,
+        animationSpec = infiniteRepeatable(animation = tween(2200), repeatMode = RepeatMode.Restart),
+        label = "ringScale",
     )
-    val container = if (isRecording) {
-        MaterialTheme.colorScheme.error
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
-    val onContainer = if (isRecording) {
-        MaterialTheme.colorScheme.onError
-    } else {
-        MaterialTheme.colorScheme.onPrimary
-    }
+    val ringAlpha by pulse.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(animation = tween(2200), repeatMode = RepeatMode.Restart),
+        label = "ringAlpha",
+    )
+    // Violet record cluster (matches the Stitch voice screen).
+    val container = MaterialTheme.colorScheme.secondary
+    val onContainer = MaterialTheme.colorScheme.onSecondary
     val description = stringResource(
         if (isRecording) R.string.voice_journal_stop_desc else R.string.voice_journal_record_desc,
     )
 
     Box(
-        modifier = Modifier
-            .scale(scale)
-            .size(180.dp)
-            .clip(CircleShape)
-            .background(container.copy(alpha = 0.12f)),
+        modifier = Modifier.size(200.dp),
         contentAlignment = Alignment.Center,
     ) {
+        if (isRecording) {
+            Box(
+                modifier = Modifier
+                    .size(160.dp)
+                    .scale(ringScale)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = ringAlpha)),
+            )
+        }
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)),
+        )
         Surface(
             onClick = { if (isRecording) onStopClick() else onRecordClick() },
             shape = CircleShape,
             color = container,
+            shadowElevation = 8.dp,
             modifier = Modifier
-                .size(120.dp)
+                .size(96.dp)
                 .semantics {
                     contentDescription = description
                     role = Role.Button
@@ -343,7 +413,7 @@ private fun RecordControl(
                     imageVector = if (isRecording) Icons.Filled.Stop else Icons.Filled.Mic,
                     contentDescription = null,
                     tint = onContainer,
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(40.dp),
                 )
             }
         }

@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
  */
 data class BucketManagementUiState(
     val buckets: List<Bucket> = emptyList(),
+    val itemCounts: Map<String, Int> = emptyMap(),
     val loading: Boolean = true,
 )
 
@@ -45,8 +46,12 @@ class BucketManagementViewModel @Inject constructor(
     private val accountId: String = accountProvider.currentAccountId()
 
     val uiState: StateFlow<BucketManagementUiState> =
-        bucketRepository.observeBuckets(accountId)
-            .map { BucketManagementUiState(buckets = it, loading = false) }
+        combine(
+            bucketRepository.observeBuckets(accountId),
+            bucketRepository.observeBucketItemCounts(accountId),
+        ) { buckets, counts ->
+            BucketManagementUiState(buckets = buckets, itemCounts = counts, loading = false)
+        }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),

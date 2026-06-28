@@ -25,7 +25,7 @@ private const val LIST_SEP = "|"
 internal fun todayEpochDay(): Long = LocalDate.now().toEpochDay()
 
 /** Maximum Word Guess attempts per day (shared by the game and the hub). */
-internal const val WORD_GUESS_MAX_ATTEMPTS = 5
+internal const val WORD_GUESS_MAX_ATTEMPTS = 6
 
 private fun prefs(context: Context) =
     context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -118,10 +118,10 @@ internal fun todaySpellingBeeProgress(context: Context): SpellingBeeProgress? =
 // --- Daily puzzles ----------------------------------------------------------
 
 /**
- * The deterministic word of the day. Mixes 5- and 6-letter words for variety;
- * the board sizes itself to the chosen word's length. Selection is by epoch-day
- * so every player gets the same word on the same calendar day (matching the
- * backend's "one shared word per day" intent).
+ * The deterministic word of the day. Mixes 5-, 6-, and 7-letter words for
+ * variety; the board sizes itself to the chosen word's length. Selection is by
+ * epoch-day so every player gets the same word on the same calendar day
+ * (matching the backend's "one shared word per day" intent).
  */
 internal fun dailyWord(epochDay: Long): String {
     val words = listOf(
@@ -131,7 +131,10 @@ internal fun dailyWord(epochDay: Long): String {
         // 6-letter
         "ROCKET", "GROWTH", "ACTION", "THRIVE", "WONDER",
         "ENERGY", "MASTER", "INTENT", "STREAK", "REWARD",
-    )
+        // 7-letter
+        "JOURNEY", "MOMENTS", "BALANCE", "EXPLORE", "TRIUMPH",
+        "PERSIST", "RESOLVE", "MISSION", "INSPIRE", "ACHIEVE",
+    ).filter { it.length in 5..7 }
     val index = Math.floorMod(epochDay, words.size.toLong()).toInt()
     return words[index]
 }

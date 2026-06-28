@@ -126,20 +126,23 @@ class CreateBucketViewModel @Inject constructor(
         _uiState.update { it.copy(shoppingEnabled = enabled) }
 
     /**
-     * Copies the picked image [uri] into app-internal storage and records its
-     * path as the bucket's cover. Copying (rather than holding the content URI)
-     * makes the image durable across restarts and avoids URI-permission issues.
-     * A null [uri] clears any chosen image.
+     * Records the picked image [uri] for the cover. The URI is stored as-is so
+     * the preview shows immediately (Coil loads content URIs); the durable copy
+     * into app storage happens at [save] time to avoid a copy/save race.
      */
     fun onImagePicked(uri: Uri?) {
-        if (uri == null) {
-            _uiState.update { it.copy(imageRef = null) }
-            return
-        }
-        viewModelScope.launch {
-            val path = withContext(Dispatchers.IO) { copyImageToStorage(uri) }
-            if (path != null) _uiState.update { it.copy(imageRef = path) }
-        }
+        _uiState.update { it.copy(imageRef = uri?.toString()) }
+    }
+
+    /**
+     * If [ref] is a freshly-picked content URI, copy it into app-internal
+     * storage and return the file path; otherwise return it unchanged (an
+     * existing file path) or null.
+     */
+    private suspend fun persistImageIfNeeded(ref: String?): String? {
+        if (ref.isNullOrBlank()) return null
+        if (!ref.startsWith("content:")) return ref
+        return withContext(Dispatchers.IO) { copyImageToStorage(Uri.parse(ref)) }
     }
 
     private fun copyImageToStorage(uri: Uri): String? = runCatching {
@@ -162,11 +165,12 @@ class CreateBucketViewModel @Inject constructor(
         if (!state.canSave) return
 
         viewModelScope.launch {
+            val persistedImage = persistImageIfNeeded(state.imageRef)
             val bucketId = editingBucketId
             if (bucketId != null) {
                 // Persist any newly picked cover image + color changes.
-                if (state.imageRef != null) {
-                    bucketRepository.setBucketImage(bucketId, state.imageRef)
+                if (persistedImage != null) {
+                    bucketRepository.setBucketImage(bucketId, persistedImage)
                 }
                 bucketRepository.updateBucketColors(
                     bucketId = bucketId,
@@ -189,7 +193,7 @@ class CreateBucketViewModel @Inject constructor(
                     notStartedColor = state.notStartedColor,
                     inProgressColor = state.inProgressColor,
                     completedColor = state.completedColor,
-                    imageRef = state.imageRef,
+                    imageRef = persistedImage,
                 )
                 when (result) {
                     is BucketResult.Created -> _uiState.update { it.copy(saved = true) }

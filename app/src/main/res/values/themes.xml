@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base theme used before the Compose theme takes over. -->
-    <style name="Theme.SideQuest" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+      Base theme used before the Compose theme takes over. Edge-to-edge: the
+      window background matches the app's surface (so the status-bar area never
+      shows a mismatched band), system bars are transparent (the activity calls
+      enableEdgeToEdge), and status-bar icons are dark for the light surface.
+    -->
+    <style name="Theme.SideQuest" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
 </resources>

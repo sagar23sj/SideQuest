@@ -58,13 +58,17 @@ fun AudioPlayerButton(
             runCatching {
                 if (!prepared) {
                     player.reset()
-                    player.setDataSource(audioPath)
+                    // Use a file descriptor rather than a raw path — more robust
+                    // across devices for app-internal files.
+                    java.io.FileInputStream(File(audioPath)).use { fis ->
+                        player.setDataSource(fis.fd)
+                    }
                     player.prepare()
                     prepared = true
                 }
                 player.start()
                 isPlaying = true
-            }
+            }.onFailure { isPlaying = false }
         }
     }
 

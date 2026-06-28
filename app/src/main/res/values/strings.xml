@@ -19,6 +19,7 @@
     <string name="capture_discard">Discard</string>
     <string name="capture_close">Close</string>
     <string name="capture_confirm">Save</string>
+    <string name="capture_add_to_actions">Add to my actions</string>
     <string name="capture_select_bucket">Bucket</string>
     <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
     <string name="capture_new_bucket">New bucket</string>
@@ -41,6 +42,8 @@
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
     <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
     <string name="board_view_all">View all</string>
+    <string name="board_show_completed">Show completed quests (%1$d)</string>
+    <string name="board_hide_completed">Hide completed quests (%1$d)</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
 
     <!-- Action_Item detail / Action_Plan screen. -->
@@ -60,6 +63,7 @@
     <string name="plan_move_down">Down</string>
     <string name="plan_move_up_desc">Move step \"%1$s\" up</string>
     <string name="plan_move_down_desc">Move step \"%1$s\" down</string>
+    <string name="plan_remove_sub_action_desc">Remove step \"%1$s\"</string>
 
     <!-- Action statuses (display labels). -->
     <string name="status_not_started">Not started</string>
@@ -95,6 +99,10 @@
 
     <!-- Voice journaling (Req 10.1, 10.2, 10.4). -->
     <string name="voice_journal_title">Voice journal</string>
+    <string name="voice_journal_hero_title">Clear your mind.</string>
+    <string name="voice_journal_hero_subtitle">Tap to record your thoughts. Let\'s unpack them together.</string>
+    <string name="voice_journal_recent">Recent logs</string>
+    <string name="voice_journal_extract">Extract actions</string>
     <string name="voice_journal_history">Your journals</string>
     <string name="voice_play">Play</string>
     <string name="voice_pause">Pause</string>
@@ -126,6 +134,8 @@
     <string name="buckets_add">New bucket</string>
     <string name="buckets_add_desc">Create a new bucket</string>
     <string name="buckets_item_count">%1$d items</string>
+    <string name="buckets_item_count_one">1 item</string>
+    <string name="buckets_item_count_other">%1$d items</string>
     <string name="buckets_shopping_enabled">Shopping features enabled</string>
     <string name="buckets_rename">Rename</string>
     <string name="buckets_edit">Edit</string>
@@ -231,9 +241,9 @@
     <string name="leaderboard_weekly">Weekly</string>
     <string name="leaderboard_monthly">Monthly</string>
     <string name="leaderboard_rank_desc">Rank %1$d, %2$s, %3$d points</string>
-    <string name="leaderboard_no_org_title">Join an organization</string>
-    <string name="leaderboard_no_org_message">Leaderboards are shared within an organization. Join one to compete with others.</string>
-    <string name="leaderboard_join_org">Join organization</string>
+    <string name="leaderboard_no_org_title">Join a guild</string>
+    <string name="leaderboard_no_org_message">Leaderboards are shared within a guild. Join one to compete with others.</string>
+    <string name="leaderboard_join_org">Join a guild</string>
     <string name="leaderboard_subtitle">Guild Rankings</string>
     <string name="leaderboard_period_day">Day</string>
     <string name="leaderboard_period_week">Week</string>
@@ -241,7 +251,7 @@
     <string name="leaderboard_you">You</string>
     <string name="leaderboard_points_short">%1$d pt</string>
     <string name="leaderboard_cta_title">Quest Better Together</string>
-    <string name="leaderboard_cta_message">Join an organization to pool your points and unlock epic weekly rewards.</string>
+    <string name="leaderboard_cta_message">Join a guild to pool your points and unlock epic weekly rewards.</string>
     <string name="leaderboard_cta_button">Explore Guilds</string>
 
     <!-- Auth: login. -->
@@ -256,9 +266,9 @@
     <string name="login_skip">Continue offline</string>
 
     <!-- Auth: join organization. -->
-    <string name="join_org_title">Join an organization</string>
-    <string name="join_org_subtitle">Enter an invite code to join your team\'s leaderboards.</string>
-    <string name="join_org_code_label">Invite code</string>
+    <string name="join_org_title">Join a guild</string>
+    <string name="join_org_subtitle">Enter a guild code to join your team\'s leaderboards.</string>
+    <string name="join_org_code_label">Guild code</string>
     <string name="join_org_join">Join</string>
     <string name="join_org_skip">Skip for now</string>
 
@@ -266,13 +276,15 @@
     <string name="profile_title">Profile</string>
     <string name="profile_account_label">Account</string>
     <string name="profile_signed_out">Signed in offline (local account)</string>
-    <string name="profile_organization_label">Organization</string>
-    <string name="profile_no_organization">Not in an organization</string>
+    <string name="profile_organization_label">Guild</string>
+    <string name="profile_no_organization">Not in a guild yet</string>
     <string name="profile_local_subtitle">Adventurer</string>
     <string name="profile_set_name">Set your name</string>
     <string name="profile_edit_name">Edit your name</string>
     <string name="profile_name_dialog_title">What should we call you?</string>
     <string name="profile_name_dialog_label">Your name</string>
+    <string name="profile_save_name">Save</string>
+    <string name="profile_change_photo">Change profile photo</string>
     <string name="profile_reminders">Daily reminders</string>
     <string name="profile_reminders_subtitle">Per-task and evening nudges</string>
     <string name="profile_buckets">Buckets</string>

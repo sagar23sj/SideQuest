@@ -16,26 +16,24 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
-import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 
 /**
- * A lively confetti celebration overlay (Req 6c.3), drawn on a full-screen
- * [Canvas] so it floats above content without affecting layout. Trigger it via
- * [ConfettiController.celebrate]: two staggered bursts of mixed circle/rectangle
- * confetti fan upward like a popper, tumble with rotation and a little
- * horizontal drift, then fall under gravity and fade out.
+ * A confetti **shower** overlay (Req 6c.3): mixed circle/rectangle confetti rain
+ * down from above the top edge, drifting side to side with a gentle sway and
+ * tumbling as they fall, then fade near the bottom. Drawn on a full-screen
+ * [Canvas] so it floats above content without affecting layout. Trigger via
+ * [ConfettiController.celebrate].
  *
- * Implemented with Compose animation + Canvas (no third-party dependency) to
- * keep the build lean and fully offline.
+ * Pure Compose animation + Canvas (no third-party dependency).
  */
 class ConfettiController {
     internal var trigger by mutableStateOf(0)
         private set
 
-    /** Fires a confetti burst. */
+    /** Fires a confetti shower. */
     fun celebrate() {
         trigger++
     }
@@ -44,22 +42,24 @@ class ConfettiController {
 @Composable
 fun rememberConfettiController(): ConfettiController = remember { ConfettiController() }
 
-private data class Particle(
-    val originXFraction: Float,
-    val angleRad: Float,
-    val speed: Float,
+private data class Flake(
+    val xFraction: Float,
+    val delay: Float,
+    val fallSpeed: Float,
+    val swayAmplitude: Float,
+    val swayFreq: Float,
+    val swayPhase: Float,
     val color: Color,
     val size: Float,
     val isRect: Boolean,
-    val rotationSpeed: Float,
-    val drift: Float,
     val spin: Float,
+    val spinSpeed: Float,
 )
 
 /**
- * Renders the confetti overlay. Place it as the last child of a screen's root
- * Box so it draws on top. Each time [controller]'s trigger changes, a fresh
- * burst animates.
+ * Renders the confetti shower. Place it as the last child of a screen's root Box
+ * so it draws on top. Each time [controller]'s trigger changes, a fresh shower
+ * rains down.
  */
 @Composable
 fun ConfettiOverlay(
@@ -69,68 +69,64 @@ fun ConfettiOverlay(
 ) {
     val scope = rememberCoroutineScope()
     val progress = remember { Animatable(0f) }
-    var particles by remember { mutableStateOf<List<Particle>>(emptyList()) }
+    var flakes by remember { mutableStateOf<List<Flake>>(emptyList()) }
 
     androidx.compose.runtime.LaunchedEffect(controller.trigger) {
         if (controller.trigger == 0) return@LaunchedEffect
-        particles = buildList {
-            // Two launch points (left-of-center, right-of-center) for a fuller,
-            // popper-like spread.
-            repeat(180) { i ->
-                val fromLeft = i % 2 == 0
-                // Upward-biased fan: angles roughly between -160° and -20°.
-                val baseDeg = if (fromLeft) -120f else -60f
-                val spreadDeg = (Random.nextFloat() - 0.5f) * 120f
-                add(
-                    Particle(
-                        originXFraction = if (fromLeft) 0.35f else 0.65f,
-                        angleRad = Math.toRadians((baseDeg + spreadDeg).toDouble()).toFloat(),
-                        speed = 0.55f + Random.nextFloat() * 0.85f,
-                        color = colors[Random.nextInt(colors.size)],
-                        size = 10f + Random.nextFloat() * 14f,
-                        isRect = Random.nextBoolean(),
-                        rotationSpeed = (Random.nextFloat() - 0.5f) * 8f,
-                        drift = (Random.nextFloat() - 0.5f) * 0.4f,
-                        spin = Random.nextFloat() * 360f,
-                    ),
-                )
-            }
+        flakes = List(160) {
+            Flake(
+                xFraction = Random.nextFloat(),
+                delay = Random.nextFloat() * 0.45f,
+                fallSpeed = 0.8f + Random.nextFloat() * 0.5f,
+                swayAmplitude = 12f + Random.nextFloat() * 26f,
+                swayFreq = 2f + Random.nextFloat() * 3f,
+                swayPhase = Random.nextFloat() * 6.28f,
+                color = colors[Random.nextInt(colors.size)],
+                size = 9f + Random.nextFloat() * 13f,
+                isRect = Random.nextBoolean(),
+                spin = Random.nextFloat() * 360f,
+                spinSpeed = (Random.nextFloat() - 0.5f) * 6f,
+            )
         }
         scope.launch {
             progress.snapTo(0f)
-            progress.animateTo(1f, tween(1700, easing = LinearEasing))
-            particles = emptyList()
+            progress.animateTo(1f, tween(2200, easing = LinearEasing))
+            flakes = emptyList()
         }
     }
 
-    if (particles.isEmpty()) return
+    if (flakes.isEmpty()) return
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val t = progress.value
-        val originY = size.height * 0.55f
-        val launch = size.minDimension * 1.15f
-        // Fade only in the last third so the burst stays vivid.
-        val alpha = if (t < 0.66f) 1f else ((1f - t) / 0.34f).coerceIn(0f, 1f)
+        val h = size.height
+        val w = size.width
 
-        particles.forEach { p ->
-            val originX = size.width * p.originXFraction
-            val distance = launch * p.speed * t
-            // Gravity pulls everything down over time (quadratic).
-            val gravity = size.height * 1.1f * t * t
-            val x = originX + (cos(p.angleRad) * distance).toFloat() + p.drift * size.width * t
-            val y = originY + (sin(p.angleRad) * distance).toFloat() + gravity
-            val rot = p.spin + p.rotationSpeed * t * 360f
-            val color = p.color.copy(alpha = alpha)
-            if (p.isRect) {
+        flakes.forEach { f ->
+            // Each flake has its own staggered window so they keep arriving.
+            val span = (1f - f.delay).coerceAtLeast(0.2f)
+            val localT = ((t - f.delay) / span).coerceIn(0f, 1f)
+            if (localT <= 0f) return@forEach
+
+            // Fall from just above the top to just past the bottom.
+            val y = -f.size + (h + f.size * 2f) * localT * f.fallSpeed
+            if (y > h + f.size) return@forEach
+            val x = w * f.xFraction + f.swayAmplitude * sin(f.swayPhase + localT * f.swayFreq * 6.28f)
+            val rot = f.spin + f.spinSpeed * localT * 360f
+            // Fade only in the last 12% of the flake's travel.
+            val alpha = if (localT < 0.88f) 1f else ((1f - localT) / 0.12f).coerceIn(0f, 1f)
+            val color = f.color.copy(alpha = alpha)
+
+            if (f.isRect) {
                 rotate(degrees = rot, pivot = Offset(x, y)) {
                     drawRect(
                         color = color,
-                        topLeft = Offset(x - p.size / 2f, y - p.size / 4f),
-                        size = Size(p.size, p.size / 2f),
+                        topLeft = Offset(x - f.size / 2f, y - f.size / 4f),
+                        size = Size(f.size, f.size / 2f),
                     )
                 }
             } else {
-                drawCircle(color = color, radius = p.size / 2f, center = Offset(x, y))
+                drawCircle(color = color, radius = f.size / 2f, center = Offset(x, y))
             }
         }
     }

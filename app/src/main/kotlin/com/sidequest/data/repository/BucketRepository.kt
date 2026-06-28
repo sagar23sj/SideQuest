@@ -91,6 +91,15 @@ class BucketRepository(
         bucketDao.observeByAccount(accountId).map { it.toBuckets() }
 
     /**
+     * Observes the live item count per bucket for [accountId], keyed by bucket
+     * id, so the management list can show each bucket's "N items" stat. Buckets
+     * with no items are simply absent from the map (callers default to 0).
+     */
+    fun observeBucketItemCounts(accountId: String): Flow<Map<String, Int>> =
+        actionItemDao.observeBucketItemCounts(accountId)
+            .map { rows -> rows.associate { it.bucketId to it.count } }
+
+    /**
      * Creates a bucket for [accountId] with the user-provided [name] (Req 2.1,
      * 2.2). The name is validated for per-account uniqueness (normalized, trim +
      * case-insensitive) before writing; a duplicate is rejected with an in-use

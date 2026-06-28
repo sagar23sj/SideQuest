@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -124,10 +125,12 @@ fun GamesHubScreen(
                 badgeContainer = MaterialTheme.colorScheme.primary,
                 onBadge = MaterialTheme.colorScheme.onPrimary,
                 cardContainer = MaterialTheme.colorScheme.surfaceContainerHigh,
+                accent = MaterialTheme.colorScheme.primary,
                 gradientStart = MaterialTheme.colorScheme.primary,
                 gradientEnd = MaterialTheme.colorScheme.surfaceTint,
                 onGradient = MaterialTheme.colorScheme.onPrimary,
                 onPlay = onPlayWordGuess,
+                preview = { WordGuessMiniPreview() },
             )
 
             // --- Spelling Bee status (open-ended: started, never "done") ---
@@ -156,10 +159,12 @@ fun GamesHubScreen(
                 badgeContainer = MaterialTheme.colorScheme.secondary,
                 onBadge = MaterialTheme.colorScheme.onSecondary,
                 cardContainer = MaterialTheme.colorScheme.surfaceContainerHigh,
+                accent = MaterialTheme.colorScheme.secondary,
                 gradientStart = MaterialTheme.colorScheme.secondary,
                 gradientEnd = MaterialTheme.colorScheme.onSecondaryContainer,
                 onGradient = MaterialTheme.colorScheme.onSecondary,
                 onPlay = onPlaySpellingBee,
+                preview = { SpellingBeeMiniPreview() },
             )
 
             StreakCard(onOpenLeaderboard = onOpenLeaderboard)
@@ -229,10 +234,12 @@ private fun GameCard(
     badgeContainer: Color,
     onBadge: Color,
     cardContainer: Color,
+    accent: Color,
     gradientStart: Color,
     gradientEnd: Color,
     onGradient: Color,
     onPlay: () -> Unit,
+    preview: @Composable () -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -243,56 +250,141 @@ private fun GameCard(
             MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
         ),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+        Box {
+            // Decorative corner orb, clipped by the card's rounded shape.
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 40.dp, y = (-40).dp)
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(accent.copy(alpha = 0.18f)),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(badgeContainer),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(imageVector = icon, contentDescription = null, tint = onBadge)
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = tagline.uppercase(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    if (statusBadge != null) {
+                        StatusBadge(label = statusBadge)
+                    }
+                }
+
+                // Mini puzzle preview.
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(badgeContainer),
+                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(imageVector = icon, contentDescription = null, tint = onBadge)
+                    preview()
                 }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Text(
-                        text = tagline.uppercase(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                if (statusBadge != null) {
-                    StatusBadge(label = statusBadge)
-                }
+
+                Text(
+                    text = statusLine,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                GradientPillButton(
+                    text = buttonText,
+                    onClick = onPlay,
+                    startColor = gradientStart,
+                    endColor = gradientEnd,
+                    contentColor = onGradient,
+                    icon = Icons.Filled.PlayArrow,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
-            Text(
-                text = statusLine,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            GradientPillButton(
-                text = buttonText,
-                onClick = onPlay,
-                startColor = gradientStart,
-                endColor = gradientEnd,
-                contentColor = onGradient,
-                icon = Icons.Filled.PlayArrow,
-                modifier = Modifier.fillMaxWidth(),
-            )
         }
+    }
+}
+
+/** A row of sample Word Guess tiles (decorative preview on the hub card). */
+@Composable
+private fun WordGuessMiniPreview() {
+    val game = com.sidequest.ui.theme.LocalGameColors.current
+    val tiles = listOf(
+        "Q" to MaterialTheme.colorScheme.surfaceContainerHighest,
+        "U" to game.guessPresent,
+        "E" to game.guessCorrect,
+        "S" to MaterialTheme.colorScheme.surfaceContainerHighest,
+        "T" to game.guessCorrect,
+    )
+    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        tiles.forEach { (letter, bg) ->
+            val onBg = if (bg == MaterialTheme.colorScheme.surfaceContainerHighest) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                Color.White
+            }
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(bg),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(letter, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = onBg)
+            }
+        }
+    }
+}
+
+/** A small honeycomb of letter dots (decorative preview on the hub card). */
+@Composable
+private fun SpellingBeeMiniPreview() {
+    val outer = listOf("R", "T", "L", "N", "E", "C")
+    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+        outer.take(3).forEach { MiniDot(it, highlighted = false) }
+        MiniDot("A", highlighted = true)
+        outer.drop(3).forEach { MiniDot(it, highlighted = false) }
+    }
+}
+
+@Composable
+private fun MiniDot(letter: String, highlighted: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(if (highlighted) 40.dp else 34.dp)
+            .clip(CircleShape)
+            .background(
+                if (highlighted) MaterialTheme.colorScheme.secondary
+                else MaterialTheme.colorScheme.surfaceContainerHighest,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            letter,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = if (highlighted) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+        )
     }
 }
 

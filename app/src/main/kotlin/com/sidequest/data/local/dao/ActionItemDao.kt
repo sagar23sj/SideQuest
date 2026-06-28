@@ -48,6 +48,16 @@ interface ActionItemDao {
     @Query("SELECT COUNT(*) FROM action_items WHERE bucketId = :bucketId AND deleted = 0")
     suspend fun countByBucket(bucketId: String): Int
 
+    /**
+     * Live count of (non-tombstoned) items per bucket for an account, so the
+     * bucket-management list can show each bucket's "N items" stat reactively.
+     */
+    @Query(
+        "SELECT bucketId AS bucketId, COUNT(*) AS count FROM action_items " +
+            "WHERE accountId = :accountId AND deleted = 0 GROUP BY bucketId",
+    )
+    fun observeBucketItemCounts(accountId: String): Flow<List<BucketItemCount>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: ActionItemEntity)
 
@@ -72,3 +82,9 @@ interface ActionItemDao {
     @Query("DELETE FROM action_items")
     suspend fun clear()
 }
+
+/** Row projection for [ActionItemDao.observeBucketItemCounts]: a bucket id and its live item count. */
+data class BucketItemCount(
+    val bucketId: String,
+    val count: Int,
+)

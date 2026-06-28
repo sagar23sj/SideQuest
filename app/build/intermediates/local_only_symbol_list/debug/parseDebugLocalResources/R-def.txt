@@ -1,5 +1,6 @@
 R_DEF: Internal format may change without notice
 local
+color app_background
 color ic_launcher_background
 drawable ic_launcher_background
 drawable ic_launcher_foreground
@@ -18,9 +19,11 @@ string board_change_status
 string board_completion_count_desc
 string board_completion_label
 string board_empty
+string board_hide_completed
 string board_hold_to_complete_desc
 string board_link_thumbnail_desc
 string board_loading
+string board_show_completed
 string board_status_indicator_desc
 string board_title
 string board_undo_complete_desc
@@ -38,11 +41,14 @@ string buckets_delete_reassign
 string buckets_edit
 string buckets_empty
 string buckets_item_count
+string buckets_item_count_one
+string buckets_item_count_other
 string buckets_overflow_desc
 string buckets_reassign_target
 string buckets_rename
 string buckets_shopping_enabled
 string buckets_title
+string capture_add_to_actions
 string capture_close
 string capture_confirm
 string capture_discard
@@ -153,12 +159,14 @@ string plan_move_up_desc
 string plan_parent_complete_prompt
 string plan_progress_desc
 string plan_progress_label
+string plan_remove_sub_action_desc
 string plan_sub_action_toggle_desc
 string plan_title
 string plan_undo_complete
 string profile_account_label
 string profile_buckets
 string profile_buckets_subtitle
+string profile_change_photo
 string profile_edit_name
 string profile_local_subtitle
 string profile_name_dialog_label
@@ -167,6 +175,7 @@ string profile_no_organization
 string profile_organization_label
 string profile_reminders
 string profile_reminders_subtitle
+string profile_save_name
 string profile_set_name
 string profile_sign_out
 string profile_signed_out
@@ -215,11 +224,15 @@ string status_completed
 string status_in_progress
 string status_not_started
 string voice_journal_error_dismiss
+string voice_journal_extract
+string voice_journal_hero_subtitle
+string voice_journal_hero_title
 string voice_journal_hint
 string voice_journal_history
 string voice_journal_no_transcript_yet
 string voice_journal_open_settings
 string voice_journal_permission_denied
+string voice_journal_recent
 string voice_journal_record
 string voice_journal_record_desc
 string voice_journal_recording

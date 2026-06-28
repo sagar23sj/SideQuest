@@ -16,12 +16,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CorporateFare
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -68,7 +68,12 @@ fun ProfileScreen(
 ) {
     var useSystemColors by remember { mutableStateOf(false) }
     val displayName by viewModel.displayName.collectAsStateWithLifecycle()
+    val avatarRef by viewModel.avatarRef.collectAsStateWithLifecycle()
     var showNameDialog by remember { mutableStateOf(false) }
+
+    val avatarPicker = androidx.activity.compose.rememberLauncherForActivityResult(
+        contract = androidx.activity.result.contract.ActivityResultContracts.GetContent(),
+    ) { uri -> viewModel.onAvatarPicked(uri) }
 
     // First-run: gently ask for a name so the experience feels personal even
     // before signing in.
@@ -120,7 +125,9 @@ fun ProfileScreen(
         ) {
             ProfileHero(
                 displayName = displayName,
+                avatarRef = avatarRef,
                 onEditName = { showNameDialog = true },
+                onChangePhoto = { avatarPicker.launch("image/*") },
             )
 
             SettingsGroup {
@@ -151,7 +158,7 @@ fun ProfileScreen(
                     iconContainer = MaterialTheme.colorScheme.primaryContainer,
                     onIconContainer = MaterialTheme.colorScheme.onPrimaryContainer,
                     onClick = onManageBuckets,
-                    trailing = { AddBucketButton(onClick = onCreateBucket) },
+                    trailing = { Chevron() },
                 )
                 RowDivider()
                 SettingsRow(
@@ -177,25 +184,58 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun ProfileHero(displayName: String?, onEditName: () -> Unit) {
+private fun ProfileHero(
+    displayName: String?,
+    avatarRef: String?,
+    onEditName: () -> Unit,
+    onChangePhoto: () -> Unit,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.padding(top = 8.dp),
     ) {
-        Box(contentAlignment = Alignment.BottomCenter) {
-            Box(
-                modifier = Modifier
-                    .size(112.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center,
+        Box(contentAlignment = Alignment.BottomEnd) {
+            Surface(
+                onClick = onChangePhoto,
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.size(112.dp),
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    if (!avatarRef.isNullOrBlank()) {
+                        coil.compose.AsyncImage(
+                            model = if (avatarRef.startsWith("content:") || avatarRef.startsWith("http")) {
+                                avatarRef
+                            } else {
+                                java.io.File(avatarRef)
+                            },
+                            contentDescription = stringResource(R.string.profile_change_photo),
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize().clip(CircleShape),
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(56.dp),
+                        )
+                    }
+                }
+            }
+            // Small camera badge overlapping the avatar to invite changing it.
+            Surface(
+                onClick = onChangePhoto,
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary,
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.background),
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(56.dp),
+                    imageVector = Icons.Filled.PhotoCamera,
+                    contentDescription = stringResource(R.string.profile_change_photo),
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(7.dp).size(18.dp),
                 )
             }
         }
@@ -253,7 +293,7 @@ private fun NameDialog(
         },
         confirmButton = {
             androidx.compose.material3.TextButton(onClick = { onConfirm(text) }) {
-                Text(stringResource(R.string.create_bucket_save))
+                Text(stringResource(R.string.profile_save_name))
             }
         },
         dismissButton = {
@@ -294,22 +334,6 @@ private fun Chevron() {
 }
 
 /** A circular "+" button on the Buckets row to create a new bucket. */
-@Composable
-private fun AddBucketButton(onClick: () -> Unit) {
-    Surface(
-        onClick = onClick,
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.primary,
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(R.string.buckets_add),
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(6.dp),
-        )
-    }
-}
-
 @Composable
 private fun JoinPill(onClick: () -> Unit) {
     Surface(

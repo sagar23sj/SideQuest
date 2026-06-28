@@ -90,6 +90,7 @@ fun ItemDetailScreen(
             onAddSubAction = viewModel::onAddSubAction,
             onToggleSubAction = viewModel::onToggleSubAction,
             onReorder = viewModel::onReorder,
+            onRemoveSubAction = viewModel::onRemoveSubAction,
             onMarkParentComplete = {
                 // Celebrate, then return to the board where the completion shows.
                 viewModel.onMarkParentComplete()
@@ -114,6 +115,7 @@ fun ItemDetailContent(
     onAddSubAction: (String) -> Unit,
     onToggleSubAction: (subActionId: String, completed: Boolean) -> Unit,
     onReorder: (orderedIds: List<String>) -> Unit,
+    onRemoveSubAction: (String) -> Unit,
     onMarkParentComplete: () -> Unit,
     onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
@@ -147,6 +149,7 @@ fun ItemDetailContent(
                 onAddSubAction = onAddSubAction,
                 onToggleSubAction = onToggleSubAction,
                 onReorder = onReorder,
+                onRemoveSubAction = onRemoveSubAction,
                 onMarkParentComplete = onMarkParentComplete,
                 onUndoComplete = onUndoComplete,
                 onSetReminder = onSetReminder,
@@ -174,6 +177,7 @@ private fun ReadyPlan(
     onAddSubAction: (String) -> Unit,
     onToggleSubAction: (subActionId: String, completed: Boolean) -> Unit,
     onReorder: (orderedIds: List<String>) -> Unit,
+    onRemoveSubAction: (String) -> Unit,
     onMarkParentComplete: () -> Unit,
     onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
@@ -181,7 +185,7 @@ private fun ReadyPlan(
 ) {
     val subActions = state.subActions
     val hasChecklist = subActions.isNotEmpty()
-    var showAddField by remember { mutableStateOf(false) }
+    var showChecklist by remember(hasChecklist) { mutableStateOf(hasChecklist) }
 
     LazyColumn(
         modifier = Modifier
@@ -195,12 +199,18 @@ private fun ReadyPlan(
                 item = state.item,
                 bucketName = state.bucketName,
                 bucketImageRef = state.bucketImageRef,
-                onUndoComplete = onUndoComplete,
             )
         }
 
-        item(key = "reminder") {
-            ReminderCard(reminder = state.reminder, onSetReminder = onSetReminder)
+        // Compact icon actions: tap the bell to set a reminder, the checklist
+        // icon to start/show a checklist — no big always-on cards.
+        item(key = "quick-actions") {
+            QuickActions(
+                reminder = state.reminder,
+                checklistActive = showChecklist,
+                onSetReminder = onSetReminder,
+                onToggleChecklist = { showChecklist = !showChecklist },
+            )
         }
 
         if (hasChecklist) {
@@ -215,22 +225,16 @@ private fun ReadyPlan(
             }
         }
 
-        // Section header for the optional checklist.
-        item(key = "checklist-header") {
-            ChecklistHeader(
-                hasChecklist = hasChecklist,
-                onAddClick = { showAddField = true },
-            )
-        }
-
-        if (showAddField || hasChecklist) {
-            item(key = "add-sub-action") {
-                AddSubActionInput(
-                    onAddSubAction = {
-                        onAddSubAction(it)
-                        showAddField = true
-                    },
+        if (showChecklist) {
+            item(key = "checklist-title") {
+                Text(
+                    text = stringResource(R.string.plan_checklist_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
+            }
+            item(key = "add-sub-action") {
+                AddSubActionInput(onAddSubAction = onAddSubAction)
             }
         }
 
@@ -245,6 +249,128 @@ private fun ReadyPlan(
                 onToggle = { completed -> onToggleSubAction(subAction.id, completed) },
                 onMoveUp = { onReorder(moveUp(subActions, index)) },
                 onMoveDown = { onReorder(moveDown(subActions, index)) },
+                onDelete = { onRemoveSubAction(subAction.id) },
+            )
+        }
+    }
+}
+
+/**
+ * Compact per-task actions shown as small icon chips: a reminder bell (opens the
+ * time/date picker; shows a summary + filled state when set) and a checklist
+ * toggle. Replaces the previous big always-visible reminder card and checklist
+ * call-to-action.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun QuickActions(
+    reminder: TaskReminder?,
+    checklistActive: Boolean,
+    onSetReminder: (TaskReminder?) -> Unit,
+    onToggleChecklist: () -> Unit,
+) {
+    var showTimePicker by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var draftHour by remember { mutableStateOf(9) }
+    var draftMinute by remember { mutableStateOf(0) }
+    var recurring by remember { mutableStateOf(reminder?.recurring ?: false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            ActionChip(
+                icon = Icons.Filled.NotificationsActive,
+                label = stringResource(R.string.reminder_task_title),
+                active = reminder != null,
+                onClick = {
+                    if (reminder != null) {
+                        draftHour = reminder.hour
+                        draftMinute = reminder.minute
+                        recurring = reminder.recurring
+                    } else {
+                        draftHour = 9
+                        draftMinute = 0
+                        recurring = false
+                    }
+                    showTimePicker = true
+                },
+            )
+            ActionChip(
+                icon = Icons.Filled.Checklist,
+                label = stringResource(R.string.plan_checklist_title),
+                active = checklistActive,
+                onClick = onToggleChecklist,
+            )
+            if (reminder != null) {
+                ActionChip(
+                    icon = Icons.Filled.Close,
+                    label = stringResource(R.string.reminder_task_remove),
+                    active = false,
+                    onClick = { onSetReminder(null) },
+                )
+            }
+        }
+        if (reminder != null) {
+            val timeText = "%02d:%02d".format(reminder.hour, reminder.minute)
+            Text(
+                text = stringResource(
+                    if (reminder.recurring) R.string.reminder_task_summary_recurring
+                    else R.string.reminder_task_summary_once,
+                    timeText,
+                    reminder.untilDate.toString(),
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+
+    ReminderPickers(
+        showTimePicker = showTimePicker,
+        showDatePicker = showDatePicker,
+        draftHour = draftHour,
+        draftMinute = draftMinute,
+        recurring = recurring,
+        onRecurringChange = { recurring = it },
+        onTimeChosen = { h, m -> draftHour = h; draftMinute = m; showTimePicker = false; showDatePicker = true },
+        onTimeDismiss = { showTimePicker = false },
+        onDateConfirm = { date ->
+            onSetReminder(
+                TaskReminder(hour = draftHour, minute = draftMinute, untilDate = date, recurring = recurring),
+            )
+            showDatePicker = false
+        },
+        onDateDismiss = { showDatePicker = false },
+    )
+}
+
+/** A small pill icon-chip used for the per-task quick actions. */
+@Composable
+private fun ActionChip(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    active: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(50),
+        color = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = if (active) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = if (active) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             )
         }
     }
@@ -261,12 +387,10 @@ private fun ItemHeaderCard(
     item: com.sidequest.domain.model.ActionItem?,
     bucketName: String?,
     bucketImageRef: String?,
-    onUndoComplete: () -> Unit = {},
 ) {
     if (item == null) return
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val preview = item.preview
-    val isCompleted = item.status == com.sidequest.domain.model.ActionStatus.COMPLETED
     val statusLabel = when (item.status) {
         com.sidequest.domain.model.ActionStatus.NOT_STARTED -> stringResource(R.string.status_not_started)
         com.sidequest.domain.model.ActionStatus.IN_PROGRESS -> stringResource(R.string.status_in_progress)
@@ -323,14 +447,6 @@ private fun ItemHeaderCard(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
-
-                if (isCompleted) {
-                    SecondaryPillButton(
-                        text = stringResource(R.string.plan_undo_complete),
-                        onClick = onUndoComplete,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
 
                 if (!item.description.isNullOrBlank()) {
                     Text(
@@ -433,50 +549,6 @@ private fun ChecklistProgressCard(progress: Progress) {
     }
 }
 
-/**
- * The checklist section header. When the item has no checklist yet, it presents
- * the optional "add a checklist" call-to-action (Req 6c.5 / 9.1); once steps
- * exist, it's a simple section title.
- */
-@Composable
-private fun ChecklistHeader(hasChecklist: Boolean, onAddClick: () -> Unit) {
-    if (hasChecklist) {
-        Text(
-            text = stringResource(R.string.plan_checklist_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    } else {
-        SoftCard(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Checklist,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    text = stringResource(R.string.plan_empty),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                PillButton(
-                    text = stringResource(R.string.plan_add_checklist),
-                    onClick = onAddClick,
-                    icon = Icons.Filled.Add,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-    }
-}
-
 @Composable
 private fun ParentCompletePrompt(onMarkParentComplete: () -> Unit) {
     SoftCard(
@@ -545,6 +617,7 @@ private fun SubActionRow(
     onToggle: (Boolean) -> Unit,
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     val toggleDescription = stringResource(
         R.string.plan_sub_action_toggle_desc,
@@ -559,7 +632,7 @@ private fun SubActionRow(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Checkbox(
                 checked = subAction.completed,
@@ -589,6 +662,13 @@ private fun SubActionRow(
                     contentDescription = stringResource(R.string.plan_move_down_desc, subAction.text),
                 )
             }
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.plan_remove_sub_action_desc, subAction.text),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }
@@ -608,99 +688,27 @@ private fun moveDown(subActions: List<SubAction>, index: Int): List<String> {
 }
 
 /**
- * The optional per-task reminder card (Req 6.2, 6.5–6.8). When no reminder is
- * set it offers an "add reminder" action; once set it shows the time, the
- * until-date, and whether it recurs, with edit and remove controls. Editing
- * opens a time picker then a date picker, and a recurrence toggle.
+ * The reminder time + date pickers, shown when triggered from the reminder
+ * quick-action chip. Step 1 picks the time; step 2 picks the until-date with a
+ * "repeat daily" toggle (Req 6.2, 6.5–6.8).
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ReminderCard(
-    reminder: TaskReminder?,
-    onSetReminder: (TaskReminder?) -> Unit,
+private fun ReminderPickers(
+    showTimePicker: Boolean,
+    showDatePicker: Boolean,
+    draftHour: Int,
+    draftMinute: Int,
+    recurring: Boolean,
+    onRecurringChange: (Boolean) -> Unit,
+    onTimeChosen: (Int, Int) -> Unit,
+    onTimeDismiss: () -> Unit,
+    onDateConfirm: (java.time.LocalDate) -> Unit,
+    onDateDismiss: () -> Unit,
 ) {
-    var showTimePicker by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var draftHour by remember { mutableStateOf(9) }
-    var draftMinute by remember { mutableStateOf(0) }
-    var recurring by remember { mutableStateOf(reminder?.recurring ?: false) }
-
-    SoftCard(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.NotificationsActive,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    text = stringResource(R.string.reminder_task_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f),
-                )
-                if (reminder != null) {
-                    IconButton(onClick = { onSetReminder(null) }) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.reminder_task_remove),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
-            }
-
-            if (reminder == null) {
-                Text(
-                    text = stringResource(R.string.reminder_task_none),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                PillButton(
-                    text = stringResource(R.string.reminder_task_add),
-                    onClick = {
-                        draftHour = 9
-                        draftMinute = 0
-                        showTimePicker = true
-                    },
-                    icon = Icons.Filled.Add,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            } else {
-                val timeText = "%02d:%02d".format(reminder.hour, reminder.minute)
-                Text(
-                    text = stringResource(
-                        if (reminder.recurring) R.string.reminder_task_summary_recurring
-                        else R.string.reminder_task_summary_once,
-                        timeText,
-                        reminder.untilDate.toString(),
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                SecondaryPillButton(
-                    text = stringResource(R.string.reminder_task_edit),
-                    onClick = {
-                        draftHour = reminder.hour
-                        draftMinute = reminder.minute
-                        recurring = reminder.recurring
-                        showTimePicker = true
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-    }
-
-    // Step 1: pick the time.
     if (showTimePicker) {
         val timeState = rememberTimePickerState(initialHour = draftHour, initialMinute = draftMinute)
-        androidx.compose.ui.window.Dialog(onDismissRequest = { showTimePicker = false }) {
+        androidx.compose.ui.window.Dialog(onDismissRequest = onTimeDismiss) {
             SoftCard(color = MaterialTheme.colorScheme.surfaceContainerLowest) {
                 Column(
                     modifier = Modifier.padding(20.dp),
@@ -716,15 +724,10 @@ private fun ReminderCard(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End,
                     ) {
-                        TextButton(onClick = { showTimePicker = false }) {
+                        TextButton(onClick = onTimeDismiss) {
                             Text(stringResource(R.string.create_bucket_cancel))
                         }
-                        TextButton(onClick = {
-                            draftHour = timeState.hour
-                            draftMinute = timeState.minute
-                            showTimePicker = false
-                            showDatePicker = true
-                        }) {
+                        TextButton(onClick = { onTimeChosen(timeState.hour, timeState.minute) }) {
                             Text(stringResource(R.string.reminder_task_next))
                         }
                     }
@@ -733,32 +736,23 @@ private fun ReminderCard(
         }
     }
 
-    // Step 2: pick the until-date (today or later) + recurrence.
     if (showDatePicker) {
         val todayMillis = System.currentTimeMillis()
         val dateState = rememberDatePickerState(initialSelectedDateMillis = todayMillis)
         DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
+            onDismissRequest = onDateDismiss,
             confirmButton = {
                 TextButton(onClick = {
                     val millis = dateState.selectedDateMillis ?: todayMillis
                     val date = java.time.Instant.ofEpochMilli(millis)
                         .atZone(java.time.ZoneOffset.UTC).toLocalDate()
-                    onSetReminder(
-                        TaskReminder(
-                            hour = draftHour,
-                            minute = draftMinute,
-                            untilDate = date,
-                            recurring = recurring,
-                        ),
-                    )
-                    showDatePicker = false
+                    onDateConfirm(date)
                 }) {
                     Text(stringResource(R.string.reminder_task_save))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
+                TextButton(onClick = onDateDismiss) {
                     Text(stringResource(R.string.create_bucket_cancel))
                 }
             },
@@ -776,7 +770,7 @@ private fun ReminderCard(
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
-                    Switch(checked = recurring, onCheckedChange = { recurring = it })
+                    Switch(checked = recurring, onCheckedChange = onRecurringChange)
                 }
             }
         }

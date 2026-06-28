@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -298,34 +297,47 @@ private fun GuessGrid(
     current: String,
     wordLength: Int,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.widthIn(max = 340.dp),
+    val gap = 8.dp
+    androidx.compose.foundation.layout.BoxWithConstraints(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
-        for (row in 0 until MAX_ATTEMPTS) {
-            val guess = guesses.getOrNull(row)
-            val isCurrentRow = guess == null && row == guesses.size
-            val text = guess ?: if (isCurrentRow) current else ""
-            val rowDesc = stringResource(R.string.word_guess_row_desc, row + 1)
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics { contentDescription = rowDesc },
-            ) {
-                for (col in 0 until wordLength) {
-                    val letter = text.getOrNull(col)
-                    val feedback = if (guess != null && letter != null) {
-                        feedbackFor(answer, guess, col)
-                    } else {
-                        LetterFeedback.EMPTY
+        // Size each square tile so the whole grid (wordLength columns ×
+        // MAX_ATTEMPTS rows) fits the available area without overlapping,
+        // bounded by both width and height and capped for very large screens.
+        val byWidth = (maxWidth - gap * (wordLength - 1)) / wordLength
+        val byHeight = (maxHeight - gap * (MAX_ATTEMPTS - 1)) / MAX_ATTEMPTS
+        val tile = minOf(byWidth, byHeight).coerceIn(28.dp, 60.dp)
+        val fontSize = (tile.value * 0.46f).sp
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(gap),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            for (row in 0 until MAX_ATTEMPTS) {
+                val guess = guesses.getOrNull(row)
+                val isCurrentRow = guess == null && row == guesses.size
+                val text = guess ?: if (isCurrentRow) current else ""
+                val rowDesc = stringResource(R.string.word_guess_row_desc, row + 1)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(gap),
+                    modifier = Modifier.semantics { contentDescription = rowDesc },
+                ) {
+                    for (col in 0 until wordLength) {
+                        val letter = text.getOrNull(col)
+                        val feedback = if (guess != null && letter != null) {
+                            feedbackFor(answer, guess, col)
+                        } else {
+                            LetterFeedback.EMPTY
+                        }
+                        GuessTile(
+                            letter = letter,
+                            feedback = feedback,
+                            isActiveRow = isCurrentRow,
+                            tileSize = tile,
+                            fontSize = fontSize,
+                        )
                     }
-                    GuessTile(
-                        letter = letter,
-                        feedback = feedback,
-                        isActiveRow = isCurrentRow,
-                        modifier = Modifier.weight(1f),
-                    )
                 }
             }
         }
@@ -337,7 +349,8 @@ private fun GuessTile(
     letter: Char?,
     feedback: LetterFeedback,
     isActiveRow: Boolean,
-    modifier: Modifier = Modifier,
+    tileSize: androidx.compose.ui.unit.Dp,
+    fontSize: androidx.compose.ui.unit.TextUnit,
 ) {
     val gameColors = LocalGameColors.current
     val scored = feedback != LetterFeedback.EMPTY
@@ -352,8 +365,6 @@ private fun GuessTile(
     val animatedContainer by animateColorAsState(container, label = "tileColor")
     val onContainer = if (scored) Color.White else MaterialTheme.colorScheme.onSurface
 
-    // Filled-but-unscored cells in the active row get a primary border; empty
-    // active cells get a soft outline, matching the design's entry row.
     val borderColor = when {
         scored -> Color.Transparent
         isActiveRow && letter != null -> MaterialTheme.colorScheme.primary
@@ -362,8 +373,8 @@ private fun GuessTile(
     }
 
     Box(
-        modifier = modifier
-            .aspectRatio(1f)
+        modifier = Modifier
+            .size(tileSize)
             .clip(RoundedCornerShape(12.dp))
             .background(animatedContainer)
             .then(
@@ -379,7 +390,7 @@ private fun GuessTile(
             text = letter?.toString() ?: "",
             color = onContainer,
             fontWeight = FontWeight.Bold,
-            fontSize = 28.sp,
+            fontSize = fontSize,
         )
     }
 }

@@ -46,12 +46,16 @@ fun previewDisplay(boardItem: BoardItem): PreviewDisplay {
         item.contentType == ContentType.LINK && preview != null && preview.resolved
 
     if (showResolvedPreview && preview != null) {
-        val previewTitle = preview.title?.takeIf { it.isNotBlank() } ?: item.title
         val thumbnailUrl = preview.thumbnailUrl?.takeIf { it.isNotBlank() }
+        // The user-entered name is always the headline. The link's own page
+        // title (or its URL) becomes the supporting subtitle — link metadata is
+        // additional info, never a replacement for the name the user chose.
+        val subtitle = preview.title?.takeIf { it.isNotBlank() }
+            ?: item.sourceContent?.takeIf { it.isNotBlank() }
         return PreviewDisplay(
-            title = previewTitle,
+            title = item.title,
             thumbnailUrl = thumbnailUrl,
-            rawSource = null,
+            rawSource = subtitle,
         )
     }
 

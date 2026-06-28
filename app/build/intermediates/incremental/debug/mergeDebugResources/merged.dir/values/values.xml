@@ -7,6 +7,7 @@
     <bool name="workmanager_test_configuration">false</bool>
     <color name="androidx_core_ripple_material_light">#1f000000</color>
     <color name="androidx_core_secondary_text_default_material_light">#8a000000</color>
+    <color name="app_background">#F4FAFF</color>
     <color name="call_notification_answer_color">#1d873b</color>
     <color name="call_notification_decline_color">#d93025</color>
     <color name="ic_launcher_background">#6650A4</color>
@@ -119,9 +120,11 @@
     <string name="board_completion_count_desc">%1$d action items completed</string>
     <string name="board_completion_label">Completed</string>
     <string name="board_empty">No action items yet. Share content into SideQuest to get started.</string>
+    <string name="board_hide_completed">Hide completed quests (%1$d)</string>
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
     <string name="board_loading">Loading your board…</string>
+    <string name="board_show_completed">Show completed quests (%1$d)</string>
     <string name="board_status_indicator_desc">Status: %1$s. Tap to change.</string>
     <string name="board_title">Action Board</string>
     <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
@@ -139,6 +142,8 @@
     <string name="buckets_edit">Edit</string>
     <string name="buckets_empty">No buckets yet. Create your first bucket to start organizing items.</string>
     <string name="buckets_item_count">%1$d items</string>
+    <string name="buckets_item_count_one">1 item</string>
+    <string name="buckets_item_count_other">%1$d items</string>
     <string name="buckets_overflow_desc">More options for bucket %1$s</string>
     <string name="buckets_reassign_target">Move to</string>
     <string name="buckets_rename">Rename</string>
@@ -151,6 +156,7 @@
     <string name="call_notification_incoming_text">Incoming call</string>
     <string name="call_notification_ongoing_text">Ongoing call</string>
     <string name="call_notification_screening_text">Screening an incoming call</string>
+    <string name="capture_add_to_actions">Add to my actions</string>
     <string name="capture_close">Close</string>
     <string name="capture_confirm">Save</string>
     <string name="capture_discard">Discard</string>
@@ -218,19 +224,19 @@
     <string name="games_word_guess_tag">Daily Puzzle</string>
     <string name="in_progress">In progress</string>
     <string name="indeterminate">Partially checked</string>
-    <string name="join_org_code_label">Invite code</string>
+    <string name="join_org_code_label">Guild code</string>
     <string name="join_org_join">Join</string>
     <string name="join_org_skip">Skip for now</string>
-    <string name="join_org_subtitle">Enter an invite code to join your team\'s leaderboards.</string>
-    <string name="join_org_title">Join an organization</string>
+    <string name="join_org_subtitle">Enter a guild code to join your team\'s leaderboards.</string>
+    <string name="join_org_title">Join a guild</string>
     <string name="leaderboard_cta_button">Explore Guilds</string>
-    <string name="leaderboard_cta_message">Join an organization to pool your points and unlock epic weekly rewards.</string>
+    <string name="leaderboard_cta_message">Join a guild to pool your points and unlock epic weekly rewards.</string>
     <string name="leaderboard_cta_title">Quest Better Together</string>
     <string name="leaderboard_daily">Daily</string>
-    <string name="leaderboard_join_org">Join organization</string>
+    <string name="leaderboard_join_org">Join a guild</string>
     <string name="leaderboard_monthly">Monthly</string>
-    <string name="leaderboard_no_org_message">Leaderboards are shared within an organization. Join one to compete with others.</string>
-    <string name="leaderboard_no_org_title">Join an organization</string>
+    <string name="leaderboard_no_org_message">Leaderboards are shared within a guild. Join one to compete with others.</string>
+    <string name="leaderboard_no_org_title">Join a guild</string>
     <string name="leaderboard_period_day">Day</string>
     <string name="leaderboard_period_month">Month</string>
     <string name="leaderboard_period_week">Week</string>
@@ -331,20 +337,23 @@
     <string name="plan_parent_complete_prompt">All steps are done. Mark this item as completed?</string>
     <string name="plan_progress_desc">%1$d of %2$d sub-actions completed</string>
     <string name="plan_progress_label">%1$d / %2$d completed</string>
+    <string name="plan_remove_sub_action_desc">Remove step \"%1$s\"</string>
     <string name="plan_sub_action_toggle_desc">Mark step \"%1$s\" complete</string>
     <string name="plan_title">Action plan</string>
     <string name="plan_undo_complete">Mark as not done</string>
     <string name="profile_account_label">Account</string>
     <string name="profile_buckets">Buckets</string>
     <string name="profile_buckets_subtitle">Names, colors, and cover images</string>
+    <string name="profile_change_photo">Change profile photo</string>
     <string name="profile_edit_name">Edit your name</string>
     <string name="profile_local_subtitle">Adventurer</string>
     <string name="profile_name_dialog_label">Your name</string>
     <string name="profile_name_dialog_title">What should we call you?</string>
-    <string name="profile_no_organization">Not in an organization</string>
-    <string name="profile_organization_label">Organization</string>
+    <string name="profile_no_organization">Not in a guild yet</string>
+    <string name="profile_organization_label">Guild</string>
     <string name="profile_reminders">Daily reminders</string>
     <string name="profile_reminders_subtitle">Per-task and evening nudges</string>
+    <string name="profile_save_name">Save</string>
     <string name="profile_set_name">Set your name</string>
     <string name="profile_sign_out">Sign out</string>
     <string name="profile_signed_out">Signed in offline (local account)</string>
@@ -405,11 +414,15 @@
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
     <string name="voice_journal_error_dismiss">Dismiss</string>
+    <string name="voice_journal_extract">Extract actions</string>
+    <string name="voice_journal_hero_subtitle">Tap to record your thoughts. Let\'s unpack them together.</string>
+    <string name="voice_journal_hero_title">Clear your mind.</string>
     <string name="voice_journal_hint">Tap record and speak. Your recording is saved when you stop.</string>
     <string name="voice_journal_history">Your journals</string>
     <string name="voice_journal_no_transcript_yet">Transcribing your recording…</string>
     <string name="voice_journal_open_settings">Open app settings</string>
     <string name="voice_journal_permission_denied">Microphone access is turned off, so recording is unavailable. Enable the microphone permission in system settings to record voice journal entries.</string>
+    <string name="voice_journal_recent">Recent logs</string>
     <string name="voice_journal_record">Record</string>
     <string name="voice_journal_record_desc">Start voice journal recording</string>
     <string name="voice_journal_recording">Recording…</string>
@@ -474,7 +487,13 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
     <style name="TextAppearance.Compat.Notification.Title" parent="@android:style/TextAppearance.StatusBar.EventContent.Title"/>
-    <style name="Theme.SideQuest" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.SideQuest" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
     <style name="Widget.Compat.NotificationActionContainer" parent=""/>
     <style name="Widget.Compat.NotificationActionText" parent=""/>
     <declare-styleable name="ActivityNavigator">

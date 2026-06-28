@@ -1,5 +1,6 @@
 package com.sidequest.ui.profile;
 
+import android.content.Context;
 import com.sidequest.data.local.UserPreferences;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -9,7 +10,7 @@ import javax.annotation.processing.Generated;
 import javax.inject.Provider;
 
 @ScopeMetadata
-@QualifierMetadata
+@QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
 @DaggerGenerated
 @Generated(
     value = "dagger.internal.codegen.ComponentProcessor",
@@ -26,20 +27,25 @@ import javax.inject.Provider;
 public final class ProfileViewModel_Factory implements Factory<ProfileViewModel> {
   private final Provider<UserPreferences> userPreferencesProvider;
 
-  public ProfileViewModel_Factory(Provider<UserPreferences> userPreferencesProvider) {
+  private final Provider<Context> appContextProvider;
+
+  public ProfileViewModel_Factory(Provider<UserPreferences> userPreferencesProvider,
+      Provider<Context> appContextProvider) {
     this.userPreferencesProvider = userPreferencesProvider;
+    this.appContextProvider = appContextProvider;
   }
 
   @Override
   public ProfileViewModel get() {
-    return newInstance(userPreferencesProvider.get());
+    return newInstance(userPreferencesProvider.get(), appContextProvider.get());
   }
 
-  public static ProfileViewModel_Factory create(Provider<UserPreferences> userPreferencesProvider) {
-    return new ProfileViewModel_Factory(userPreferencesProvider);
+  public static ProfileViewModel_Factory create(Provider<UserPreferences> userPreferencesProvider,
+      Provider<Context> appContextProvider) {
+    return new ProfileViewModel_Factory(userPreferencesProvider, appContextProvider);
   }
 
-  public static ProfileViewModel newInstance(UserPreferences userPreferences) {
-    return new ProfileViewModel(userPreferences);
+  public static ProfileViewModel newInstance(UserPreferences userPreferences, Context appContext) {
+    return new ProfileViewModel(userPreferences, appContext);
   }
 }

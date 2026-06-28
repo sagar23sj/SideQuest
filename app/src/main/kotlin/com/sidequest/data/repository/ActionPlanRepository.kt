@@ -121,6 +121,23 @@ class ActionPlanRepository(
     }
 
     /**
+     * Removes the sub-action [subActionId] from [actionItemId]'s plan and
+     * re-numbers the remaining steps so their order stays contiguous. Returns
+     * the persisted plan, or null when the item has no plan.
+     */
+    suspend fun removeSubAction(
+        actionItemId: String,
+        subActionId: String,
+    ): ActionPlan? {
+        val current = actionPlanDao.getByActionItem(actionItemId)?.toDomain() ?: return null
+        val remaining = current.subActions
+            .filterNot { it.id == subActionId }
+            .sortedBy { it.order }
+            .mapIndexed { index, sub -> sub.copy(order = index) }
+        return persist(current.copy(subActions = remaining))
+    }
+
+    /**
      * Computes the [Progress] (completed / total) of [actionItemId]'s plan
      * (Req 9.3). An item with no plan yields zero progress.
      */
