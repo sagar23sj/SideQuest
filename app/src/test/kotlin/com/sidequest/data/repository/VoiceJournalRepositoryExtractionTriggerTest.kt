@@ -5,6 +5,7 @@ import com.sidequest.data.llm.LlmService
 import com.sidequest.data.local.dao.ActionItemDao
 import com.sidequest.data.local.dao.VoiceJournalDao
 import com.sidequest.data.local.entity.VoiceJournalEntryEntity
+import com.sidequest.data.transcription.LiveTranscriber
 import com.sidequest.data.transcription.TranscriptionService
 import com.sidequest.domain.llm.ExtractedAction
 import com.sidequest.domain.llm.LlmResult
@@ -60,6 +61,7 @@ class VoiceJournalRepositoryExtractionTriggerTest : StringSpec({
             audioRecorder = mockk<AudioRecorder>(),
             voiceJournalDao = voiceJournalDao,
             transcriptionService = mockk<TranscriptionService>(),
+            liveTranscriber = mockk<LiveTranscriber>(),
             llmService = llmService,
             actionItemDao = mockk<ActionItemDao>(),
             clock = { fixedNow },

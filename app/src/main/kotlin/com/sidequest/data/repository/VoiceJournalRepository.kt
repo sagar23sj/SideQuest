@@ -6,6 +6,7 @@ import com.sidequest.data.local.dao.ActionItemDao
 import com.sidequest.data.local.dao.VoiceJournalDao
 import com.sidequest.data.local.entity.toDomain
 import com.sidequest.data.local.entity.toEntity
+import com.sidequest.data.transcription.LiveTranscriber
 import com.sidequest.data.transcription.TranscriptionService
 import com.sidequest.domain.llm.ExtractedAction
 import com.sidequest.domain.llm.LlmFailSoft
@@ -16,6 +17,7 @@ import com.sidequest.domain.transcription.TranscriptionOutcome
 import com.sidequest.domain.transcription.TranscriptionResult
 import com.sidequest.domain.voice.ConfirmedExtraction
 import com.sidequest.domain.voice.ExtractionConfirmationResult
+import com.sidequest.domain.voice.HeuristicActionExtraction
 import com.sidequest.domain.voice.VoiceActionExtraction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -44,6 +46,7 @@ class VoiceJournalRepository(
     private val audioRecorder: AudioRecorder,
     private val voiceJournalDao: VoiceJournalDao,
     private val transcriptionService: TranscriptionService,
+    private val liveTranscriber: LiveTranscriber,
     private val llmService: LlmService,
     private val actionItemDao: ActionItemDao,
     private val clock: () -> Long,
@@ -52,21 +55,23 @@ class VoiceJournalRepository(
 
     /**
      * Hilt-visible constructor. Hilt supplies the [AudioRecorder],
-     * [VoiceJournalDao], [TranscriptionService], [LlmService], and
-     * [ActionItemDao]; this delegates to the primary constructor with the real
-     * wall-clock and UUID generators.
+     * [VoiceJournalDao], [TranscriptionService], [LiveTranscriber], [LlmService],
+     * and [ActionItemDao]; this delegates to the primary constructor with the
+     * real wall-clock and UUID generators.
      */
     @Inject
     constructor(
         audioRecorder: AudioRecorder,
         voiceJournalDao: VoiceJournalDao,
         transcriptionService: TranscriptionService,
+        liveTranscriber: LiveTranscriber,
         llmService: LlmService,
         actionItemDao: ActionItemDao,
     ) : this(
         audioRecorder = audioRecorder,
         voiceJournalDao = voiceJournalDao,
         transcriptionService = transcriptionService,
+        liveTranscriber = liveTranscriber,
         llmService = llmService,
         actionItemDao = actionItemDao,
         clock = System::currentTimeMillis,
@@ -78,11 +83,16 @@ class VoiceJournalRepository(
         get() = audioRecorder.isRecording
 
     /**
-     * Starts capturing audio (Req 10.2). Capture continues until
-     * [stopRecording] is called. Returns the path the audio is being written to
-     * (the eventual `audioRef`).
+     * Starts capturing audio (Req 10.2) and, when on-device live transcription
+     * is available, begins listening to the microphone in parallel so the
+     * transcript can be produced offline. The live transcriber is fail-soft and
+     * never affects the audio capture path. Returns the audio file path.
      */
-    suspend fun startRecording(): String = audioRecorder.start()
+    suspend fun startRecording(): String {
+        val path = audioRecorder.start()
+        runCatching { liveTranscriber.start() }
+        return path
+    }
 
     /**
      * Stops the in-progress recording and persists a [VoiceJournalEntry] for
@@ -95,12 +105,17 @@ class VoiceJournalRepository(
      */
     suspend fun stopRecording(accountId: String): VoiceJournalEntry {
         val audioRef = audioRecorder.stop()
+        // Pull the on-device live transcript, if any. Null means on-device
+        // recognition was unavailable/empty, and the caller can fall back to the
+        // file-based backend transcription.
+        val liveTranscript = runCatching { liveTranscriber.stop() }.getOrNull()
+            ?.takeIf { it.isNotBlank() }
         val now = clock()
         val entry = VoiceJournalEntry(
             id = idGenerator(),
             accountId = accountId,
             audioRef = audioRef,
-            transcript = null,
+            transcript = liveTranscript,
             transcriptionFailed = false,
             createdAt = now,
             extractedActionItemIds = emptyList(),
@@ -169,8 +184,19 @@ class VoiceJournalRepository(
     suspend fun requestExtraction(entryId: String): LlmOutcome<ExtractedAction>? {
         val entry = voiceJournalDao.getById(entryId)?.toDomain() ?: return null
         val transcript = entry.transcript ?: return null
-        val result = llmService.extractActions(transcript)
-        return LlmFailSoft.listOrUnavailable(result)
+        val outcome = LlmFailSoft.listOrUnavailable(llmService.extractActions(transcript))
+        if (!outcome.unavailable && outcome.values.isNotEmpty()) {
+            return outcome
+        }
+        // LLM unavailable (or produced nothing): fall back to the pure on-device
+        // heuristic so extraction still works fully offline. We surface its
+        // candidates as available, since they were produced successfully.
+        val heuristic = HeuristicActionExtraction.extract(transcript)
+        return if (heuristic.isNotEmpty()) {
+            LlmOutcome(values = heuristic, unavailable = false)
+        } else {
+            outcome
+        }
     }
 
     /**
@@ -215,6 +241,7 @@ class VoiceJournalRepository(
      */
     suspend fun cancelRecording() {
         audioRecorder.cancel()
+        runCatching { liveTranscriber.cancel() }
     }
 
     /**

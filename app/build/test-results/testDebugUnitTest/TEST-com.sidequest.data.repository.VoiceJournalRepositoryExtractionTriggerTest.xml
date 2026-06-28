@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sidequest.data.repository.VoiceJournalRepositoryExtractionTriggerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-28T12:28:59" hostname="INLPF5TK6XC" time="2.074">
+  <properties/>
+  <testcase name="a generated transcript triggers LLM extraction with that transcript" classname="com.sidequest.data.repository.VoiceJournalRepositoryExtractionTriggerTest" time="2.052"/>
+  <testcase name="an entry with no transcript never triggers LLM extraction" classname="com.sidequest.data.repository.VoiceJournalRepositoryExtractionTriggerTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

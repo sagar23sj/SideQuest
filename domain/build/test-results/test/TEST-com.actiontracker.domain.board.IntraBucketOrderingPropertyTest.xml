@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.board.IntraBucketOrderingPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-25T22:40:57" hostname="INLPF5TK6XC" time="0.014">
-  <properties/>
-  <testcase name="Property 9: each bucket group is sorted in non-decreasing createdAt order" classname="com.actiontracker.domain.board.IntraBucketOrderingPropertyTest" time="0.014"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

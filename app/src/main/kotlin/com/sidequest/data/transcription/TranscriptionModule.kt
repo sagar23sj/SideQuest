@@ -36,6 +36,12 @@ abstract class TranscriptionModule {
         impl: RetrofitTranscriptionService,
     ): TranscriptionService
 
+    @Binds
+    @Singleton
+    abstract fun bindLiveTranscriber(
+        impl: SpeechRecognizerLiveTranscriber,
+    ): LiveTranscriber
+
     companion object {
 
         /**

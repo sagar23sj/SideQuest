@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.actiontracker.domain.preview.UnresolvedPreviewPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-25T22:40:58" hostname="INLPF5TK6XC" time="0.023">
-  <properties/>
-  <testcase name="Property 4: an unresolved preview falls back to the raw link without blocking capture" classname="com.actiontracker.domain.preview.UnresolvedPreviewPropertyTest" time="0.023"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

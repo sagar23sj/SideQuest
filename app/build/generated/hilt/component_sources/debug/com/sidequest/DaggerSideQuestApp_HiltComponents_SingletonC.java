@@ -54,6 +54,7 @@ import com.sidequest.data.repository.CaptureRepository;
 import com.sidequest.data.repository.VoiceJournalRepository;
 import com.sidequest.data.seed.PreviewSeeder;
 import com.sidequest.data.transcription.RetrofitTranscriptionService;
+import com.sidequest.data.transcription.SpeechRecognizerLiveTranscriber;
 import com.sidequest.data.transcription.TranscriptionModule_Companion_ProvideTranscriptionProxyApiFactory;
 import com.sidequest.data.transcription.TranscriptionProxyApi;
 import com.sidequest.di.DispatchersModule_ProvideIoDispatcherFactory;
@@ -471,65 +472,65 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
-
-      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
-
-      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
-
-      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
-
-      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
-
-      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
 
       static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
 
+      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
+
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+
       static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
 
-      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
-
-      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
-
-      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
 
       static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
 
-      @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
 
-      @KeepFieldType
-      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
 
-      @KeepFieldType
-      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
-      @KeepFieldType
-      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
+      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
 
-      @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
-
-      @KeepFieldType
-      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
-
-      @KeepFieldType
-      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
-
-      @KeepFieldType
-      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
-
-      @KeepFieldType
-      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
 
       @KeepFieldType
       NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
 
       @KeepFieldType
-      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
 
       @KeepFieldType
       BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+
+      @KeepFieldType
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+
+      @KeepFieldType
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+
+      @KeepFieldType
+      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
     }
   }
 
@@ -605,65 +606,65 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
       static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
 
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
       static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
-
-      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
-
-      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
 
       static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
 
-      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
-
-      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
-
-      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
-
-      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
-
       static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
 
       static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
 
-      @KeepFieldType
-      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
 
-      @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
 
-      @KeepFieldType
-      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
 
-      @KeepFieldType
-      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
-
-      @KeepFieldType
-      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
-
-      @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
 
       @KeepFieldType
       CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
 
       @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+
+      @KeepFieldType
       BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
 
       @KeepFieldType
-      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
 
       @KeepFieldType
-      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
 
       @KeepFieldType
       StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
 
       @KeepFieldType
+      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
+
+      @KeepFieldType
       ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -857,6 +858,8 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     private Provider<RetrofitTranscriptionService> retrofitTranscriptionServiceProvider;
 
+    private Provider<SpeechRecognizerLiveTranscriber> speechRecognizerLiveTranscriberProvider;
+
     private Provider<VoiceJournalRepository> voiceJournalRepositoryProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
@@ -924,6 +927,7 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
     private void initialize2(final ApplicationContextModule applicationContextModuleParam) {
       this.provideTranscriptionProxyApiProvider = DoubleCheck.provider(new SwitchingProvider<TranscriptionProxyApi>(singletonCImpl, 27));
       this.retrofitTranscriptionServiceProvider = DoubleCheck.provider(new SwitchingProvider<RetrofitTranscriptionService>(singletonCImpl, 26));
+      this.speechRecognizerLiveTranscriberProvider = DoubleCheck.provider(new SwitchingProvider<SpeechRecognizerLiveTranscriber>(singletonCImpl, 28));
       this.voiceJournalRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<VoiceJournalRepository>(singletonCImpl, 24));
     }
 
@@ -1070,7 +1074,7 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
           return (T) new WorkManagerReminderScheduler(singletonCImpl.provideWorkManagerProvider.get(), singletonCImpl.provideClockProvider.get());
 
           case 24: // com.sidequest.data.repository.VoiceJournalRepository 
-          return (T) new VoiceJournalRepository(singletonCImpl.mediaRecorderAudioRecorderProvider.get(), singletonCImpl.voiceJournalDao(), singletonCImpl.retrofitTranscriptionServiceProvider.get(), singletonCImpl.retrofitLlmServiceProvider.get(), singletonCImpl.actionItemDao());
+          return (T) new VoiceJournalRepository(singletonCImpl.mediaRecorderAudioRecorderProvider.get(), singletonCImpl.voiceJournalDao(), singletonCImpl.retrofitTranscriptionServiceProvider.get(), singletonCImpl.speechRecognizerLiveTranscriberProvider.get(), singletonCImpl.retrofitLlmServiceProvider.get(), singletonCImpl.actionItemDao());
 
           case 25: // com.sidequest.data.audio.MediaRecorderAudioRecorder 
           return (T) new MediaRecorderAudioRecorder(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), DispatchersModule_ProvideIoDispatcherFactory.provideIoDispatcher());
@@ -1080,6 +1084,9 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
           case 27: // com.sidequest.data.transcription.TranscriptionProxyApi 
           return (T) TranscriptionModule_Companion_ProvideTranscriptionProxyApiFactory.provideTranscriptionProxyApi(singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 28: // com.sidequest.data.transcription.SpeechRecognizerLiveTranscriber 
+          return (T) new SpeechRecognizerLiveTranscriber(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }

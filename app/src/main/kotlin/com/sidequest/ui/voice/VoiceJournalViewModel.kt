@@ -120,7 +120,12 @@ class VoiceJournalViewModel @Inject constructor(
                         transcriptionFailed = false,
                     )
                 }
-                transcribe(entry.id)
+                // On-device live transcription may have already produced the
+                // transcript while recording; only fall back to the file-based
+                // backend transcription when it didn't.
+                if (entry.transcript.isNullOrBlank()) {
+                    transcribe(entry.id)
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(isRecording = false, errorMessage = e.message)
