@@ -82,6 +82,17 @@ dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
 drawable abc_vector_test
+drawable bucket_photo_art
+drawable bucket_photo_coffee
+drawable bucket_photo_cooking
+drawable bucket_photo_default
+drawable bucket_photo_finance
+drawable bucket_photo_home
+drawable bucket_photo_learning
+drawable bucket_photo_movies
+drawable bucket_photo_shopping
+drawable bucket_photo_travel
+drawable bucket_photo_wellness
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -230,6 +241,8 @@ string board_status_indicator_desc
 string board_title
 string board_undo_complete_desc
 string board_view_all
+string bucket_hide_completed
+string bucket_show_completed
 string buckets_add
 string buckets_add_desc
 string buckets_delete

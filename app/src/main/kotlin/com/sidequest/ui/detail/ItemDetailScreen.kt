@@ -95,6 +95,7 @@ fun ItemDetailScreen(
                 // Celebrate, then return to the board where the completion shows.
                 viewModel.onMarkParentComplete()
                 confetti.celebrate()
+                com.sidequest.ui.components.CompletionSound.play()
                 scope.launch {
                     kotlinx.coroutines.delay(900)
                     onNavigateBack()

@@ -48,3 +48,21 @@ private fun classifyText(text: String?): ClassificationResult {
 private val URL_REGEX = Regex("""\bhttps?://\S+""", RegexOption.IGNORE_CASE)
 
 private fun containsUrl(text: String): Boolean = URL_REGEX.containsMatchIn(text)
+
+/**
+ * Extracts the first `http(s)://` URL from shared [text], reading from the
+ * scheme until the next whitespace or the end of the string, and trimming
+ * trailing punctuation that commonly clings to a URL in prose (e.g. a closing
+ * paren or period). Returns null when [text] is null/contains no URL.
+ *
+ * This lets a share that arrives as a sentence — e.g.
+ * `"See this instagram post by @x https://www.instagram.com/p/abc/"` — still
+ * yield a clean link the preview fetcher can resolve, rather than treating the
+ * whole sentence as the URL.
+ */
+fun firstUrlOrNull(text: String?): String? {
+    if (text.isNullOrBlank()) return null
+    val raw = URL_REGEX.find(text)?.value ?: return null
+    return raw.trimEnd('.', ',', ';', ':', '!', '?', ')', ']', '}', '"', '\'', '>')
+        .takeIf { it.isNotBlank() }
+}

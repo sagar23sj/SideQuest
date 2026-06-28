@@ -11,3 +11,8 @@ local.properties
 
 # Local MCP server config — contains API keys/credentials, never commit.
 .kiro/settings/mcp.json
+
+# Release signing secrets — never commit. See docs/SHIPPING.md.
+keystore.properties
+*.jks
+*.keystore

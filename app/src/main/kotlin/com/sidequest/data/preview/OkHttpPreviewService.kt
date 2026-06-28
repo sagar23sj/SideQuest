@@ -84,12 +84,23 @@ class OkHttpPreviewService @Inject constructor(
         val thumbnailUrl = metas["og:image"] ?: metas["twitter:image"]
         val sourceName = metas["og:site_name"] ?: hostOf(url)
 
+        // Decode HTML entities so numeric/emoji references (e.g. &#x2014; em
+        // dash, &#x1f917; emoji) and named entities (&amp; &quot; …) render as
+        // real characters instead of their raw codes. URLs are decoded too so a
+        // thumbnail link with &amp; resolves correctly.
         return PreviewResult.Success(
-            title = title,
-            thumbnailUrl = thumbnailUrl,
-            sourceName = sourceName,
+            title = decodeHtml(title),
+            thumbnailUrl = thumbnailUrl?.let { decodeHtml(it) },
+            sourceName = decodeHtml(sourceName),
         )
     }
+
+    /** Decodes HTML character references (named, decimal, hex) into plain text. */
+    private fun decodeHtml(text: String): String =
+        androidx.core.text.HtmlCompat
+            .fromHtml(text, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY)
+            .toString()
+            .trim()
 
     /**
      * Parses a single `<meta>` tag into a (key, content) pair, where the key is

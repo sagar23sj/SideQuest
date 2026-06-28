@@ -1,4 +1,4 @@
-package com.sidequest.ui.bucket
+﻿package com.sidequest.ui.bucket
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +68,7 @@ fun BucketDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val confetti = rememberConfettiController()
     val bucketId = state.bucketId
+    var showCompleted by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
@@ -130,21 +136,99 @@ fun BucketDetailScreen(
                             iconSize = 56.dp,
                         )
                     }
-                    items(state.group!!.items, key = { it.item.id }) { boardItem ->
+
+                    // Open quests first (oldest-created first), then a
+                    // collapsible "Completed" section so finished work stays out
+                    // of the way until asked for.
+                    val allItems = state.group!!.items.sortedBy { it.item.createdAt }
+                    val openItems = allItems.filter { it.item.status != ActionStatus.COMPLETED }
+                    val completedItems = allItems.filter { it.item.status == ActionStatus.COMPLETED }
+
+                    items(openItems, key = { it.item.id }) { boardItem ->
                         TaskCard(
                             boardItem = boardItem,
                             onComplete = {
                                 confetti.celebrate()
+                                com.sidequest.ui.components.CompletionSound.play()
                                 viewModel.complete(boardItem.item.id)
                             },
                             onUndo = { viewModel.uncomplete(boardItem.item.id) },
                             onOpenItem = { onOpenItem(boardItem.item.id) },
                         )
                     }
+
+                    if (completedItems.isNotEmpty()) {
+                        item(key = "completed-toggle") {
+                            CompletedSectionToggle(
+                                count = completedItems.size,
+                                expanded = showCompleted,
+                                onToggle = { showCompleted = !showCompleted },
+                            )
+                        }
+                        if (showCompleted) {
+                            items(completedItems, key = { it.item.id }) { boardItem ->
+                                TaskCard(
+                                    boardItem = boardItem,
+                                    onComplete = {
+                                        confetti.celebrate()
+                                        com.sidequest.ui.components.CompletionSound.play()
+                                        viewModel.complete(boardItem.item.id)
+                                    },
+                                    onUndo = { viewModel.uncomplete(boardItem.item.id) },
+                                    onOpenItem = { onOpenItem(boardItem.item.id) },
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
         ConfettiOverlay(controller = confetti)
+    }
+}
+
+/**
+ * A tappable "Show / Hide completed" row separating finished quests from the
+ * open ones, so completed work is available but out of the way by default.
+ */
+@Composable
+private fun CompletedSectionToggle(
+    count: Int,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+) {
+    Surface(
+        onClick = onToggle,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        androidx.compose.foundation.layout.Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = null,
+                tint = androidx.compose.ui.graphics.Color(0xFF2E7D32),
+                modifier = Modifier.size(18.dp),
+            )
+            Text(
+                text = stringResource(
+                    if (expanded) R.string.bucket_hide_completed else R.string.bucket_show_completed,
+                    count,
+                ),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
@@ -217,3 +301,4 @@ private fun ActionStatus.statusLabelRes(): Int = when (this) {
     ActionStatus.IN_PROGRESS -> R.string.status_in_progress
     ActionStatus.COMPLETED -> R.string.status_completed
 }
+

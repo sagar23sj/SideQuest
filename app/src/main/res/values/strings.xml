@@ -5,15 +5,15 @@
     <!-- Share target / capture flow. -->
     <string name="share_target_label">Save to SideQuest</string>
     <string name="capture_title">Save to a bucket</string>
-    <string name="capture_new_task_title">New task</string>
-    <string name="capture_task_title_label">Name your task</string>
-    <string name="capture_task_desc_label">Description / details (optional)</string>
+    <string name="capture_new_task_title">New quest</string>
+    <string name="capture_task_title_label">Quest name</string>
+    <string name="capture_task_desc_label">Description (optional)</string>
     <string name="capture_task_link_label">Link (optional)</string>
     <string name="add_chooser_title">Add to SideQuest</string>
-    <string name="add_chooser_task">New task</string>
-    <string name="add_chooser_task_desc">Add a task under a bucket</string>
+    <string name="add_chooser_task">New quest</string>
+    <string name="add_chooser_task_desc">Add a quest under a bucket</string>
     <string name="add_chooser_bucket">New bucket</string>
-    <string name="add_chooser_bucket_desc">Create a category for your tasks</string>
+    <string name="add_chooser_bucket_desc">Create a category for your quests</string>
     <string name="capture_unsupported_title">Content type not supported</string>
     <string name="capture_unsupported_message">SideQuest can\'t save this kind of content. Try sharing a link, text, image, or video.</string>
     <string name="capture_discard">Discard</string>
@@ -143,6 +143,8 @@
     <string name="buckets_item_count">%1$d items</string>
     <string name="buckets_item_count_one">1 item</string>
     <string name="buckets_item_count_other">%1$d items</string>
+    <string name="bucket_show_completed">Completed (%1$d)</string>
+    <string name="bucket_hide_completed">Hide completed (%1$d)</string>
     <string name="buckets_shopping_enabled">Shopping features enabled</string>
     <string name="buckets_rename">Rename</string>
     <string name="buckets_edit">Edit</string>

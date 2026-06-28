@@ -2,6 +2,17 @@ R_DEF: Internal format may change without notice
 local
 color app_background
 color ic_launcher_background
+drawable bucket_photo_art
+drawable bucket_photo_coffee
+drawable bucket_photo_cooking
+drawable bucket_photo_default
+drawable bucket_photo_finance
+drawable bucket_photo_home
+drawable bucket_photo_learning
+drawable bucket_photo_movies
+drawable bucket_photo_shopping
+drawable bucket_photo_travel
+drawable bucket_photo_wellness
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_launcher_monochrome
@@ -26,6 +37,8 @@ string board_status_indicator_desc
 string board_title
 string board_undo_complete_desc
 string board_view_all
+string bucket_hide_completed
+string bucket_show_completed
 string buckets_add
 string buckets_add_desc
 string buckets_delete

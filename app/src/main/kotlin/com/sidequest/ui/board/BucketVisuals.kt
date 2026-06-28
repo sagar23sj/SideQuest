@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalCafe
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.ShoppingBag
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.sidequest.R
 import java.io.File
 
 /**
@@ -82,6 +84,7 @@ private fun iconFor(name: String): ImageVector {
         n.contains("art") || n.contains("design") || n.contains("create") -> Icons.Filled.Brush
         n.contains("stock") || n.contains("invest") || n.contains("finance") -> Icons.AutoMirrored.Filled.TrendingUp
         n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> Icons.Filled.LocalCafe
+        n.contains("movie") || n.contains("film") || n.contains("cinema") || n.contains("series") -> Icons.Filled.Movie
         else -> Icons.Filled.Star
     }
 }
@@ -103,42 +106,29 @@ fun BucketCover(
     iconSize: Dp = 40.dp,
 ) {
     val scheme = MaterialTheme.colorScheme
-    val (start, end, onTint) = coverPalette(name, scheme)
-    // The cover to overlay: the user's own image when set, otherwise a topical
-    // stock photo for well-known domains (cooking, travel, …). The themed
-    // gradient + icon is always drawn underneath as the placeholder, so if the
-    // photo is still loading or fails (offline), the bucket still looks themed.
-    val overlay = imageRef?.takeIf { it.isNotBlank() } ?: defaultCoverUrl(name)
+    val (start, end, _) = coverPalette(name, scheme)
+    val userImage = imageRef?.takeIf { it.isNotBlank() }
     Box(
         modifier = modifier.background(Brush.linearGradient(listOf(start, end))),
         contentAlignment = Alignment.Center,
     ) {
-        // Themed placeholder: soft translucent circles behind a topical icon.
-        androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
-            drawCircle(
-                color = Color.White.copy(alpha = 0.12f),
-                radius = size.minDimension * 0.45f,
-                center = androidx.compose.ui.geometry.Offset(size.width * 0.82f, size.height * 0.2f),
+        if (userImage == null) {
+            // Bundled topical photo for the domain (a branded default for
+            // unknown names). Ships in the app, so it's offline and instant; the
+            // gradient shows underneath only while the bitmap decodes.
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(coverDrawableFor(name)),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
             )
-            drawCircle(
-                color = Color.Black.copy(alpha = 0.06f),
-                radius = size.minDimension * 0.5f,
-                center = androidx.compose.ui.geometry.Offset(size.width * 0.15f, size.height * 0.95f),
-            )
-        }
-        Icon(
-            imageVector = iconFor(name),
-            contentDescription = null,
-            tint = onTint,
-            modifier = Modifier.size(iconSize),
-        )
-
-        if (overlay != null) {
+        } else {
+            // A user-chosen photo overrides the default cover entirely.
             coil.compose.AsyncImage(
-                model = if (overlay.startsWith("content:") || overlay.startsWith("http")) {
-                    overlay
+                model = if (userImage.startsWith("content:") || userImage.startsWith("http")) {
+                    userImage
                 } else {
-                    File(overlay)
+                    File(userImage)
                 },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -149,26 +139,27 @@ fun BucketCover(
 }
 
 /**
- * A stable, topical stock-photo URL for a well-known bucket domain (cooking,
- * travel, shopping, …) or null for an unrecognized name (which then shows the
- * themed gradient + icon). Uses LoremFlickr keyword photos with a fixed lock so
- * each domain gets a consistent image rather than a different one each load.
+ * The bundled illustrated cover drawable for a bucket [name], matched on the
+ * same domain keywords as [iconFor]. Always returns a drawable (a branded
+ * default for unrecognized names), so every bucket has an attractive,
+ * ship-with-the-app cover even offline.
  */
-private fun defaultCoverUrl(name: String): String? {
+private fun coverDrawableFor(name: String): Int {
     val n = name.lowercase()
-    val (keyword, lock) = when {
-        n.contains("travel") || n.contains("trip") || n.contains("flight") -> "travel,landscape" to 11
-        n.contains("cook") || n.contains("food") || n.contains("recipe") -> "cooking,food" to 21
-        n.contains("shop") || n.contains("wishlist") || n.contains("buy") -> "shopping" to 31
-        n.contains("ritual") || n.contains("habit") || n.contains("wellness") -> "wellness,yoga" to 41
-        n.contains("learn") || n.contains("study") || n.contains("read") -> "books,study" to 51
-        n.contains("home") || n.contains("house") -> "home,interior" to 61
-        n.contains("art") || n.contains("design") || n.contains("create") -> "art,painting" to 71
-        n.contains("stock") || n.contains("invest") || n.contains("finance") -> "finance,money" to 81
-        n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> "coffee" to 91
-        else -> return null
+    return when {
+        n.contains("travel") || n.contains("trip") || n.contains("flight") -> R.drawable.bucket_photo_travel
+        n.contains("cook") || n.contains("food") || n.contains("recipe") -> R.drawable.bucket_photo_cooking
+        n.contains("shop") || n.contains("wishlist") || n.contains("buy") -> R.drawable.bucket_photo_shopping
+        n.contains("ritual") || n.contains("habit") || n.contains("wellness") ||
+            n.contains("fitness") || n.contains("workout") || n.contains("exercise") -> R.drawable.bucket_photo_wellness
+        n.contains("learn") || n.contains("study") || n.contains("read") -> R.drawable.bucket_photo_learning
+        n.contains("home") || n.contains("house") -> R.drawable.bucket_photo_home
+        n.contains("art") || n.contains("design") || n.contains("create") -> R.drawable.bucket_photo_art
+        n.contains("stock") || n.contains("invest") || n.contains("finance") -> R.drawable.bucket_photo_finance
+        n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> R.drawable.bucket_photo_coffee
+        n.contains("movie") || n.contains("film") || n.contains("cinema") || n.contains("series") -> R.drawable.bucket_photo_movies
+        else -> R.drawable.bucket_photo_default
     }
-    return "https://loremflickr.com/640/480/$keyword?lock=$lock"
 }
 
 /**

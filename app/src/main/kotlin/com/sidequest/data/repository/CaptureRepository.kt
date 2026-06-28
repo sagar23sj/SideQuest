@@ -151,7 +151,12 @@ class CaptureRepository(
         contentType: ContentType,
     ): CaptureDraft {
         val sourceContent = when (contentType) {
-            ContentType.LINK, ContentType.TEXT -> intentData.text
+            // For a link share, pull out the clean URL so a sentence-style share
+            // ("caption … https://…") still resolves a fetchable link rather
+            // than storing the whole sentence as the URL.
+            ContentType.LINK -> com.sidequest.domain.capture.firstUrlOrNull(intentData.text)
+                ?: intentData.text
+            ContentType.TEXT -> intentData.text
             ContentType.IMAGE, ContentType.VIDEO_REF -> intentData.uri
         }
         return CaptureDraft(

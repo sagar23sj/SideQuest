@@ -149,6 +149,7 @@ fun BoardContent(
                     board = state.board,
                     onComplete = { id ->
                         confetti.celebrate()
+                        com.sidequest.ui.components.CompletionSound.play()
                         onComplete(id)
                     },
                     onUndo = onUndo,
@@ -264,8 +265,6 @@ private fun ReadyBoard(
                     item(key = "section-${group.bucket.id}") {
                         SectionHeader(
                             title = group.bucket.name,
-                            actionLabel = stringResource(R.string.board_view_all),
-                            onAction = { onOpenBucket(group.bucket.id) },
                             modifier = Modifier.padding(horizontal = 20.dp),
                         )
                     }
@@ -364,8 +363,6 @@ private fun QuestsCarousel(
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(
             title = "Your Quests",
-            actionLabel = stringResource(R.string.buckets_title),
-            onAction = onManageBuckets,
             modifier = Modifier.padding(horizontal = 20.dp),
         )
         LazyRow(
