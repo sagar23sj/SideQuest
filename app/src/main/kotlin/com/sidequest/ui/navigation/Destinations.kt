@@ -43,6 +43,7 @@ object Routes {
     const val SPELLING_BEE = "spelling_bee"
     const val WORD_GUESS = "word_guess"
     const val LEADERBOARD = "leaderboard"
+    const val STATS = "stats"
 
     const val LOGIN = "login"
     const val JOIN_ORG = "join_org"

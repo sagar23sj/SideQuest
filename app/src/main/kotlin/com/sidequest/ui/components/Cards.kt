@@ -5,7 +5,6 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -73,13 +70,16 @@ fun SoftCard(
 @Composable
 private fun completedBorder(completed: Boolean): BorderStroke =
     if (completed) {
-        BorderStroke(2.dp, CompletedGreen)
+        BorderStroke(2.dp, CompleteGreen)
     } else {
         BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
     }
 
-/** A clear, friendly "done" green used for the completed-task highlight border. */
-private val CompletedGreen = Color(0xFF2E7D32)
+/** Hold-to-complete fill + completed border green. */
+private val CompleteGreen = Color(0xFF2E7D32)
+
+/** Hold-to-undo fill: a warm, soft orange signalling "revert". */
+private val UndoOrange = Color(0xFFEF6C00)
 
 /**
  * A small status pill: a colored dot plus its label (e.g. "Not started",
@@ -136,25 +136,22 @@ fun RichTaskCard(
     onUndo: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
-    // Hold-to-complete mode: the whole card is the press target (Req 6c). A
-    // quick tap opens the item; a sustained hold fills a progress overlay and
-    // completes. The trailing status circle shows done-state and undoes on tap.
+    // Whole-card press target (Req 6c). A quick tap opens the item; a sustained
+    // hold fills a progress overlay and toggles completion — green while
+    // completing, warm orange while undoing — so there's no space-eating status
+    // circle and complete/undo feel like one smooth gesture.
     if (onHoldComplete != null) {
         val haptics = LocalHapticFeedback.current
         val scope = rememberCoroutineScope()
         val progress = remember { Animatable(0f) }
         val shape = RoundedCornerShape(28.dp)
-        val ring = MaterialTheme.colorScheme.primary
+        val fill = if (completed) UndoOrange else CompleteGreen
 
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .clip(shape)
                 .pointerInput(completed) {
-                    if (completed) {
-                        detectTapGestures(onTap = { onClick?.invoke() })
-                        return@pointerInput
-                    }
                     detectTapGestures(
                         onPress = {
                             val job = scope.launch {
@@ -165,7 +162,8 @@ fun RichTaskCard(
                             job.cancel()
                             if (progress.value >= 1f) {
                                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onHoldComplete()
+                                if (completed) onUndo?.invoke() else onHoldComplete()
+                                scope.launch { progress.animateTo(0f, tween(220)) }
                             } else {
                                 scope.launch { progress.animateTo(0f, tween(180)) }
                                 if (released) onClick?.invoke()
@@ -182,11 +180,11 @@ fun RichTaskCard(
                     statusColor = statusColor,
                     icon = icon,
                     thumbnailUrl = thumbnailUrl,
-                    trailing = { StatusCircle(completed = completed, onUndo = onUndo) },
+                    trailing = null,
                 )
             }
             // Progress fill that grows left→right while holding.
-            if (!completed && progress.value > 0f) {
+            if (progress.value > 0f) {
                 Box(
                     modifier = Modifier
                         .matchParentSize()
@@ -196,7 +194,7 @@ fun RichTaskCard(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(progress.value)
-                            .background(ring.copy(alpha = 0.16f)),
+                            .background(fill.copy(alpha = 0.22f)),
                     )
                 }
             }
@@ -288,41 +286,3 @@ private fun TaskCardRow(
     }
 }
 
-/**
- * The task card's status circle: a filled primary check when completed (tap to
- * undo), or an empty outlined circle when not (the card body is the hold target).
- */
-@Composable
-private fun StatusCircle(completed: Boolean, onUndo: (() -> Unit)?) {
-    val tapMod = if (completed && onUndo != null) {
-        Modifier.clickable(onClick = onUndo)
-    } else {
-        Modifier
-    }
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .then(tapMod)
-            .background(
-                if (completed) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.surfaceContainerHighest,
-            )
-            .then(
-                if (completed) {
-                    Modifier
-                } else {
-                    Modifier.border(2.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                },
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        if (completed) {
-            Icon(
-                imageVector = Icons.Filled.Check,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
-            )
-        }
-    }
-}

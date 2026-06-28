@@ -23,6 +23,7 @@ import com.sidequest.ui.detail.ItemDetailViewModel_HiltModules;
 import com.sidequest.ui.profile.ProfileViewModel_HiltModules;
 import com.sidequest.ui.reminder.NotificationPermissionViewModel_HiltModules;
 import com.sidequest.ui.reminder.ReminderSettingsViewModel_HiltModules;
+import com.sidequest.ui.stats.StatsViewModel_HiltModules;
 import com.sidequest.ui.voice.VoiceJournalViewModel_HiltModules;
 import com.sidequest.ui.voice.VoiceReviewViewModel_HiltModules;
 import dagger.Binds;
@@ -201,6 +202,7 @@ public final class SideQuestApp_HiltComponents {
           ReminderSettingsViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
+          StatsViewModel_HiltModules.KeyModule.class,
           VoiceJournalViewModel_HiltModules.KeyModule.class,
           VoiceReviewViewModel_HiltModules.KeyModule.class
       }
@@ -249,6 +251,7 @@ public final class SideQuestApp_HiltComponents {
           NotificationPermissionViewModel_HiltModules.BindsModule.class,
           ProfileViewModel_HiltModules.BindsModule.class,
           ReminderSettingsViewModel_HiltModules.BindsModule.class,
+          StatsViewModel_HiltModules.BindsModule.class,
           VoiceJournalViewModel_HiltModules.BindsModule.class,
           VoiceReviewViewModel_HiltModules.BindsModule.class
       }

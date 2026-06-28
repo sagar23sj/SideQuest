@@ -12,11 +12,9 @@
     <string name="board_completion_count_desc">%1$d action items completed</string>
     <string name="board_completion_label">Completed</string>
     <string name="board_empty">No action items yet. Share content into SideQuest to get started.</string>
-    <string name="board_hide_completed">Hide completed quests (%1$d)</string>
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
     <string name="board_loading">Loading your board…</string>
-    <string name="board_show_completed">Show completed quests (%1$d)</string>
     <string name="board_status_indicator_desc">Status: %1$s. Tap to change.</string>
     <string name="board_title">Action Board</string>
     <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
@@ -213,6 +211,14 @@
     <string name="spelling_bee_shuffle">Shuffle</string>
     <string name="spelling_bee_submit">Enter</string>
     <string name="spelling_bee_title">Spelling Bee</string>
+    <string name="stats_back">Back</string>
+    <string name="stats_bucket_breakdown">%1$d done · %2$d open</string>
+    <string name="stats_by_bucket">By bucket</string>
+    <string name="stats_done_label">Done</string>
+    <string name="stats_empty">No quests yet. Add a few and your progress will show up here.</string>
+    <string name="stats_open_label">In play</string>
+    <string name="stats_rate_label">Complete</string>
+    <string name="stats_title">Your progress</string>
     <string name="status_completed">Completed</string>
     <string name="status_in_progress">In progress</string>
     <string name="status_not_started">Not started</string>

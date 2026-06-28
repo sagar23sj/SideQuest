@@ -19,11 +19,9 @@ string board_change_status
 string board_completion_count_desc
 string board_completion_label
 string board_empty
-string board_hide_completed
 string board_hold_to_complete_desc
 string board_link_thumbnail_desc
 string board_loading
-string board_show_completed
 string board_status_indicator_desc
 string board_title
 string board_undo_complete_desc
@@ -220,6 +218,14 @@ string spelling_bee_letter_desc
 string spelling_bee_shuffle
 string spelling_bee_submit
 string spelling_bee_title
+string stats_back
+string stats_bucket_breakdown
+string stats_by_bucket
+string stats_done_label
+string stats_empty
+string stats_open_label
+string stats_rate_label
+string stats_title
 string status_completed
 string status_in_progress
 string status_not_started

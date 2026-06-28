@@ -42,8 +42,15 @@
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
     <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
     <string name="board_view_all">View all</string>
-    <string name="board_show_completed">Show completed quests (%1$d)</string>
-    <string name="board_hide_completed">Hide completed quests (%1$d)</string>
+    <!-- Stats dashboard. -->
+    <string name="stats_title">Your progress</string>
+    <string name="stats_back">Back</string>
+    <string name="stats_done_label">Done</string>
+    <string name="stats_open_label">In play</string>
+    <string name="stats_rate_label">Complete</string>
+    <string name="stats_by_bucket">By bucket</string>
+    <string name="stats_bucket_breakdown">%1$d done · %2$d open</string>
+    <string name="stats_empty">No quests yet. Add a few and your progress will show up here.</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
 
     <!-- Action_Item detail / Action_Plan screen. -->

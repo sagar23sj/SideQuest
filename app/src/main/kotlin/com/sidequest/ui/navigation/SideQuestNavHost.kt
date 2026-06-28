@@ -107,6 +107,7 @@ fun SideQuestNavHost(
                     onOpenBucket = { bucketId -> navController.navigate(Routes.bucketDetail(bucketId)) },
                     onOpenProfile = { navController.navigate(Routes.PROFILE) },
                     onOpenLeaderboard = { navController.navigate(Routes.LEADERBOARD) },
+                    onOpenStats = { navController.navigate(Routes.STATS) },
                 )
             }
 
@@ -194,6 +195,12 @@ fun SideQuestNavHost(
                 LeaderboardScreen(
                     onNavigateBack = navController::popBackStack,
                     onJoinOrganization = { navController.navigate(Routes.JOIN_ORG) },
+                )
+            }
+
+            composable(Routes.STATS) {
+                com.sidequest.ui.stats.StatsScreen(
+                    onNavigateBack = navController::popBackStack,
                 )
             }
 

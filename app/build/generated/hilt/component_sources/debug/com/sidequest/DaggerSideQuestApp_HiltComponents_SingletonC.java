@@ -77,6 +77,8 @@ import com.sidequest.ui.reminder.NotificationPermissionViewModel;
 import com.sidequest.ui.reminder.NotificationPermissionViewModel_HiltModules;
 import com.sidequest.ui.reminder.ReminderSettingsViewModel;
 import com.sidequest.ui.reminder.ReminderSettingsViewModel_HiltModules;
+import com.sidequest.ui.stats.StatsViewModel;
+import com.sidequest.ui.stats.StatsViewModel_HiltModules;
 import com.sidequest.ui.voice.VoiceJournalViewModel;
 import com.sidequest.ui.voice.VoiceJournalViewModel_HiltModules;
 import com.sidequest.ui.voice.VoiceReviewViewModel;
@@ -449,7 +451,7 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(11).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, BoardViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, BucketDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, BucketManagementViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, CaptureViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, CreateBucketViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ItemDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, NotificationPermissionViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ProfileViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ReminderSettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, VoiceJournalViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, VoiceReviewViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(12).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, BoardViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, BucketDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, BucketManagementViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, CaptureViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, CreateBucketViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ItemDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, NotificationPermissionViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ProfileViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ReminderSettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_stats_StatsViewModel, StatsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, VoiceJournalViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, VoiceReviewViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -469,36 +471,53 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
 
       static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
 
-      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
+
+      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
 
       static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
       static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
 
-      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
-
-      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
-
-      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
 
       static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
 
-      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
-
-      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
 
       @KeepFieldType
-      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
 
       @KeepFieldType
       ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
 
       @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
 
       @KeepFieldType
       CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
@@ -507,22 +526,10 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
 
       @KeepFieldType
-      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
-
-      @KeepFieldType
-      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
-
-      @KeepFieldType
-      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
 
       @KeepFieldType
       BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
-
-      @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
-
-      @KeepFieldType
-      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
     }
   }
 
@@ -553,6 +560,8 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     private Provider<ReminderSettingsViewModel> reminderSettingsViewModelProvider;
 
+    private Provider<StatsViewModel> statsViewModelProvider;
+
     private Provider<VoiceJournalViewModel> voiceJournalViewModelProvider;
 
     private Provider<VoiceReviewViewModel> voiceReviewViewModelProvider;
@@ -579,13 +588,14 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       this.notificationPermissionViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
       this.profileViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
       this.reminderSettingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
-      this.voiceJournalViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
-      this.voiceReviewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
+      this.statsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
+      this.voiceJournalViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
+      this.voiceReviewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 11);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(11).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, ((Provider) boardViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, ((Provider) bucketDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, ((Provider) bucketManagementViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, ((Provider) captureViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, ((Provider) createBucketViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ((Provider) itemDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, ((Provider) notificationPermissionViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ((Provider) profileViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ((Provider) reminderSettingsViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, ((Provider) voiceJournalViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, ((Provider) voiceReviewViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(12).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, ((Provider) boardViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, ((Provider) bucketDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, ((Provider) bucketManagementViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, ((Provider) captureViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, ((Provider) createBucketViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ((Provider) itemDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, ((Provider) notificationPermissionViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ((Provider) profileViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ((Provider) reminderSettingsViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_stats_StatsViewModel, ((Provider) statsViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, ((Provider) voiceJournalViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, ((Provider) voiceReviewViewModelProvider)).build());
     }
 
     @Override
@@ -597,58 +607,63 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
 
-      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
-
-      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
-
-      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
 
       static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
 
-      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
 
-      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
 
       static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
-      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
 
       static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
 
-      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
 
       @KeepFieldType
       VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
 
       @KeepFieldType
-      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
-
-      @KeepFieldType
-      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
-
-      @KeepFieldType
-      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
 
       @KeepFieldType
       ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
 
       @KeepFieldType
-      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
 
       @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
 
       @KeepFieldType
       CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
 
       @KeepFieldType
-      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
+      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
 
       @KeepFieldType
       CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
 
       @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -699,10 +714,13 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
           case 8: // com.sidequest.ui.reminder.ReminderSettingsViewModel 
           return (T) new ReminderSettingsViewModel(singletonCImpl.dataStoreReminderSettingsStoreProvider.get(), singletonCImpl.workManagerReminderSchedulerProvider.get());
 
-          case 9: // com.sidequest.ui.voice.VoiceJournalViewModel 
+          case 9: // com.sidequest.ui.stats.StatsViewModel 
+          return (T) new StatsViewModel(singletonCImpl.boardRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 10: // com.sidequest.ui.voice.VoiceJournalViewModel 
           return (T) new VoiceJournalViewModel(singletonCImpl.voiceJournalRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
 
-          case 10: // com.sidequest.ui.voice.VoiceReviewViewModel 
+          case 11: // com.sidequest.ui.voice.VoiceReviewViewModel 
           return (T) new VoiceReviewViewModel(singletonCImpl.voiceJournalRepositoryProvider.get(), singletonCImpl.bucketRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get(), viewModelCImpl.savedStateHandle);
 
           default: throw new AssertionError(id);
