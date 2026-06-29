@@ -111,6 +111,7 @@ fun BoardContent(
     onOpenStats: () -> Unit = {},
 ) {
     val confetti = com.sidequest.ui.components.rememberConfettiController()
+    val context = androidx.compose.ui.platform.LocalContext.current
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -149,7 +150,7 @@ fun BoardContent(
                     board = state.board,
                     onComplete = { id ->
                         confetti.celebrate()
-                        com.sidequest.ui.components.CompletionSound.play()
+                        com.sidequest.ui.components.CompletionSound.play(context)
                         onComplete(id)
                     },
                     onUndo = onUndo,

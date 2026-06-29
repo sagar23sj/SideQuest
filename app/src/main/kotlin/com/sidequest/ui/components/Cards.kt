@@ -78,8 +78,8 @@ private fun completedBorder(completed: Boolean): BorderStroke =
 /** Hold-to-complete fill + completed border green. */
 private val CompleteGreen = Color(0xFF2E7D32)
 
-/** Hold-to-undo fill: a warm, soft orange signalling "revert". */
-private val UndoOrange = Color(0xFFEF6C00)
+/** Hold-to-undo fill: a clear red signalling "send back to to-do". */
+private val UndoRed = Color(0xFFD32F2F)
 
 /**
  * A small status pill: a colored dot plus its label (e.g. "Not started",
@@ -145,7 +145,7 @@ fun RichTaskCard(
         val scope = rememberCoroutineScope()
         val progress = remember { Animatable(0f) }
         val shape = RoundedCornerShape(28.dp)
-        val fill = if (completed) UndoOrange else CompleteGreen
+        val fill = if (completed) UndoRed else CompleteGreen
 
         Box(
             modifier = modifier
@@ -183,18 +183,20 @@ fun RichTaskCard(
                     trailing = null,
                 )
             }
-            // Progress fill that grows left→right while holding.
+            // Progress fill that sweeps while holding: green left→right to
+            // complete, red right→left (reverse) to send a task back to to-do.
             if (progress.value > 0f) {
                 Box(
                     modifier = Modifier
                         .matchParentSize()
                         .clip(shape),
+                    contentAlignment = if (completed) Alignment.CenterEnd else Alignment.CenterStart,
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(progress.value)
-                            .background(fill.copy(alpha = 0.22f)),
+                            .background(fill.copy(alpha = 0.30f)),
                     )
                 }
             }

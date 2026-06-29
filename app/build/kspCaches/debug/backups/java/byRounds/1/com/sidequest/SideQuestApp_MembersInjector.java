@@ -1,6 +1,7 @@
 package com.sidequest;
 
 import androidx.hilt.work.HiltWorkerFactory;
+import com.sidequest.data.seed.DefaultBucketSeeder;
 import com.sidequest.data.seed.PreviewSeeder;
 import dagger.MembersInjector;
 import dagger.internal.DaggerGenerated;
@@ -28,22 +29,28 @@ public final class SideQuestApp_MembersInjector implements MembersInjector<SideQ
 
   private final Provider<PreviewSeeder> previewSeederProvider;
 
+  private final Provider<DefaultBucketSeeder> defaultBucketSeederProvider;
+
   public SideQuestApp_MembersInjector(Provider<HiltWorkerFactory> workerFactoryProvider,
-      Provider<PreviewSeeder> previewSeederProvider) {
+      Provider<PreviewSeeder> previewSeederProvider,
+      Provider<DefaultBucketSeeder> defaultBucketSeederProvider) {
     this.workerFactoryProvider = workerFactoryProvider;
     this.previewSeederProvider = previewSeederProvider;
+    this.defaultBucketSeederProvider = defaultBucketSeederProvider;
   }
 
   public static MembersInjector<SideQuestApp> create(
       Provider<HiltWorkerFactory> workerFactoryProvider,
-      Provider<PreviewSeeder> previewSeederProvider) {
-    return new SideQuestApp_MembersInjector(workerFactoryProvider, previewSeederProvider);
+      Provider<PreviewSeeder> previewSeederProvider,
+      Provider<DefaultBucketSeeder> defaultBucketSeederProvider) {
+    return new SideQuestApp_MembersInjector(workerFactoryProvider, previewSeederProvider, defaultBucketSeederProvider);
   }
 
   @Override
   public void injectMembers(SideQuestApp instance) {
     injectWorkerFactory(instance, workerFactoryProvider.get());
     injectPreviewSeeder(instance, previewSeederProvider.get());
+    injectDefaultBucketSeeder(instance, defaultBucketSeederProvider.get());
   }
 
   @InjectedFieldSignature("com.sidequest.SideQuestApp.workerFactory")
@@ -54,5 +61,11 @@ public final class SideQuestApp_MembersInjector implements MembersInjector<SideQ
   @InjectedFieldSignature("com.sidequest.SideQuestApp.previewSeeder")
   public static void injectPreviewSeeder(SideQuestApp instance, PreviewSeeder previewSeeder) {
     instance.previewSeeder = previewSeeder;
+  }
+
+  @InjectedFieldSignature("com.sidequest.SideQuestApp.defaultBucketSeeder")
+  public static void injectDefaultBucketSeeder(SideQuestApp instance,
+      DefaultBucketSeeder defaultBucketSeeder) {
+    instance.defaultBucketSeeder = defaultBucketSeeder;
   }
 }

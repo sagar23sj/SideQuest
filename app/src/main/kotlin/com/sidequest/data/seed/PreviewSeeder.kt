@@ -24,7 +24,8 @@ import javax.inject.Singleton
 /**
  * Populates the local database with a rich, coherent set of preview data so the
  * whole app can be explored in a working state: several default buckets
- * (Travel, Cooking, Shopping, Daily Rituals, Learning), action items spanning
+ * (Travel, Cooking, Shopping, Daily Rituals, Learning, Vault, Movies & Shows,
+ * Appointments, Bills), action items spanning
  * every content type / status / timeframe, action plans with sub-actions, and a
  * transcribed voice-journal entry.
  *
@@ -73,13 +74,9 @@ class PreviewSeeder @Inject constructor(
      * The default starter buckets, each with a distinct three-color status
      * palette drawn from the SideQuest tonal scheme so the board reads clearly.
      */
-    private fun defaultBuckets(): List<Bucket> = listOf(
-        bucket("Travel", "#FFB59E", "#FF8A65", "#9F4122"),
-        bucket("Cooking", "#FFD8A8", "#FF922B", "#B85C00"),
-        bucket("Shopping", "#C5A3FF", "#9775FA", "#6D4EA2"),
-        bucket("Daily Rituals", "#8EF4E9", "#53BBB1", "#006A63"),
-        bucket("Learning", "#A5D8FF", "#4DABF7", "#1971C2"),
-    )
+    private fun defaultBuckets(): List<Bucket> = DEFAULT_BUCKETS.map { spec ->
+        bucket(spec.name, spec.notStartedColor, spec.inProgressColor, spec.completedColor)
+    }
 
     private fun bucket(
         name: String,
@@ -104,6 +101,10 @@ class PreviewSeeder @Inject constructor(
         val shopping = buckets.getValue("Shopping").id
         val rituals = buckets.getValue("Daily Rituals").id
         val learning = buckets.getValue("Learning").id
+        val vault = buckets.getValue("Vault").id
+        val movies = buckets.getValue("Movies & Shows").id
+        val appointments = buckets.getValue("Appointments").id
+        val bills = buckets.getValue("Bills").id
 
         var offset = 0L
         fun created(): Long = now - (offset++ * 3_600_000L) // stagger by an hour
@@ -278,6 +279,65 @@ class PreviewSeeder @Inject constructor(
                 ),
                 timeframe = Timeframe.WithinAWeek,
                 status = ActionStatus.IN_PROGRESS,
+                createdAt = created(),
+                sync = cleanSync(),
+            ),
+
+            // Vault — stored reference info (a saved bus ticket), no rush.
+            ActionItem(
+                id = UUID.randomUUID().toString(),
+                accountId = accountId,
+                bucketId = vault,
+                title = "Bus ticket — Pune to Mumbai",
+                description = "PNR 8842193 · Seat 14A · Shivneri, 6:30 AM.",
+                contentType = ContentType.TEXT,
+                sourceContent = null,
+                timeframe = Timeframe.WithinAWeek,
+                status = ActionStatus.NOT_STARTED,
+                createdAt = created(),
+                sync = cleanSync(),
+            ),
+
+            // Movies & Shows — a watchlist item.
+            ActionItem(
+                id = UUID.randomUUID().toString(),
+                accountId = accountId,
+                bucketId = movies,
+                title = "Watch Dune: Part Two",
+                contentType = ContentType.TEXT,
+                sourceContent = "Recommended by a friend.",
+                timeframe = Timeframe.WithinAWeek,
+                status = ActionStatus.NOT_STARTED,
+                createdAt = created(),
+                sync = cleanSync(),
+            ),
+
+            // Appointments — a time-bound event.
+            ActionItem(
+                id = UUID.randomUUID().toString(),
+                accountId = accountId,
+                bucketId = appointments,
+                title = "Dentist checkup",
+                description = "Dr. Mehta, 11:00 AM.",
+                contentType = ContentType.TEXT,
+                sourceContent = null,
+                timeframe = Timeframe.SpecificDate(LocalDate.now().plusDays(5)),
+                status = ActionStatus.NOT_STARTED,
+                createdAt = created(),
+                sync = cleanSync(),
+            ),
+
+            // Bills — a recurring payment due soon.
+            ActionItem(
+                id = UUID.randomUUID().toString(),
+                accountId = accountId,
+                bucketId = bills,
+                title = "Pay electricity bill",
+                description = "Due this week.",
+                contentType = ContentType.TEXT,
+                sourceContent = null,
+                timeframe = Timeframe.WithinAWeek,
+                status = ActionStatus.NOT_STARTED,
                 createdAt = created(),
                 sync = cleanSync(),
             ),

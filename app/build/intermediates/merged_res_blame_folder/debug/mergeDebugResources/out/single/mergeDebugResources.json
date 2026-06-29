@@ -4,12 +4,8 @@
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_shopping.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_finance.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_finance.jpg"
-    },
-    {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_movies.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_movies.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_art.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_art.jpg"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_ic_launcher_foreground.xml.flat",
@@ -20,36 +16,36 @@
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_cooking.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_home.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_home.jpg"
-    },
-    {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_bucket_cover_travel.xml.flat",
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_travel.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_wellness.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_wellness.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_wellness.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_wellness.jpg"
+    },
+    {
+        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_vault.jpg.flat",
+        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_vault.jpg"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_bucket_cover_learning.xml.flat",
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_learning.xml"
     },
     {
-        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_bucket_cover_coffee.xml.flat",
-        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_coffee.xml"
-    },
-    {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_ic_launcher_monochrome.xml.flat",
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\ic_launcher_monochrome.xml"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_bucket_cover_coffee.xml.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_coffee.xml"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_travel.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_travel.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\raw_completion_tune.mp3.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\raw\\completion_tune.mp3"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\font_inter.ttf.flat",
@@ -68,16 +64,36 @@
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_coffee.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_coffee.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_learning.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_learning.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_shopping.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_shopping.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_default.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_default.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_finance.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_finance.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_travel.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_travel.jpg"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\xml_network_security_config.xml.flat",
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-73:\\xml\\network_security_config.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_default.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_default.jpg"
+        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_appointments.jpg.flat",
+        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_appointments.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_movies.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_movies.jpg"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\font_outfit.ttf.flat",
@@ -92,12 +108,16 @@
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_home.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_cooking.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_cooking.jpg"
+        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_bills.jpg.flat",
+        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_bills.jpg"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_art.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_art.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_cooking.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_cooking.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_coffee.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_coffee.jpg"
     },
     {
         "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable_bucket_cover_default.xml.flat",
@@ -108,11 +128,7 @@
         "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable\\bucket_cover_wellness.xml"
     },
     {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_shopping.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_shopping.jpg"
-    },
-    {
-        "merged": "com.sidequest.app-debug-72:/drawable-nodpi_bucket_photo_learning.jpg.flat",
-        "source": "com.sidequest.app-main-74:/drawable-nodpi/bucket_photo_learning.jpg"
+        "merged": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-debug-72:\\drawable-nodpi_bucket_photo_home.jpg.flat",
+        "source": "C:\\Users\\Sagar.Sonwane\\.gradle\\daemon\\8.11\\com.sidequest.app-main-74:\\drawable-nodpi\\bucket_photo_home.jpg"
     }
 ]

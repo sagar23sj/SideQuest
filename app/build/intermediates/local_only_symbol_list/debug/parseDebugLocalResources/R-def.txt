@@ -2,7 +2,9 @@ R_DEF: Internal format may change without notice
 local
 color app_background
 color ic_launcher_background
+drawable bucket_photo_appointments
 drawable bucket_photo_art
+drawable bucket_photo_bills
 drawable bucket_photo_coffee
 drawable bucket_photo_cooking
 drawable bucket_photo_default
@@ -12,6 +14,7 @@ drawable bucket_photo_learning
 drawable bucket_photo_movies
 drawable bucket_photo_shopping
 drawable bucket_photo_travel
+drawable bucket_photo_vault
 drawable bucket_photo_wellness
 drawable ic_launcher_background
 drawable ic_launcher_foreground
@@ -20,6 +23,7 @@ font inter
 font outfit
 mipmap ic_launcher
 mipmap ic_launcher_round
+raw completion_tune
 string add_chooser_bucket
 string add_chooser_bucket_desc
 string add_chooser_task

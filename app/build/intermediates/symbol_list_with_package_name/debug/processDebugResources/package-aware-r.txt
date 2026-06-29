@@ -82,7 +82,9 @@ dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
 drawable abc_vector_test
+drawable bucket_photo_appointments
 drawable bucket_photo_art
+drawable bucket_photo_bills
 drawable bucket_photo_coffee
 drawable bucket_photo_cooking
 drawable bucket_photo_default
@@ -92,6 +94,7 @@ drawable bucket_photo_learning
 drawable bucket_photo_movies
 drawable bucket_photo_shopping
 drawable bucket_photo_travel
+drawable bucket_photo_vault
 drawable bucket_photo_wellness
 drawable ic_call_answer
 drawable ic_call_answer_low
@@ -223,6 +226,7 @@ layout notification_template_part_chronometer
 layout notification_template_part_time
 mipmap ic_launcher
 mipmap ic_launcher_round
+raw completion_tune
 string add_chooser_bucket
 string add_chooser_bucket_desc
 string add_chooser_task

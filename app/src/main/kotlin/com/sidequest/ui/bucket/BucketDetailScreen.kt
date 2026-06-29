@@ -67,6 +67,7 @@ fun BucketDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val confetti = rememberConfettiController()
+    val context = androidx.compose.ui.platform.LocalContext.current
     val bucketId = state.bucketId
     var showCompleted by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
@@ -149,7 +150,7 @@ fun BucketDetailScreen(
                             boardItem = boardItem,
                             onComplete = {
                                 confetti.celebrate()
-                                com.sidequest.ui.components.CompletionSound.play()
+                                com.sidequest.ui.components.CompletionSound.play(context)
                                 viewModel.complete(boardItem.item.id)
                             },
                             onUndo = { viewModel.uncomplete(boardItem.item.id) },
@@ -171,7 +172,7 @@ fun BucketDetailScreen(
                                     boardItem = boardItem,
                                     onComplete = {
                                         confetti.celebrate()
-                                        com.sidequest.ui.components.CompletionSound.play()
+                                        com.sidequest.ui.components.CompletionSound.play(context)
                                         viewModel.complete(boardItem.item.id)
                                     },
                                     onUndo = { viewModel.uncomplete(boardItem.item.id) },
@@ -301,4 +302,5 @@ private fun ActionStatus.statusLabelRes(): Int = when (this) {
     ActionStatus.IN_PROGRESS -> R.string.status_in_progress
     ActionStatus.COMPLETED -> R.string.status_completed
 }
+
 

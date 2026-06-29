@@ -8,10 +8,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Brush
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LocalCafe
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.ShoppingBag
@@ -85,6 +88,9 @@ private fun iconFor(name: String): ImageVector {
         n.contains("stock") || n.contains("invest") || n.contains("finance") -> Icons.AutoMirrored.Filled.TrendingUp
         n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> Icons.Filled.LocalCafe
         n.contains("movie") || n.contains("film") || n.contains("cinema") || n.contains("series") -> Icons.Filled.Movie
+        n.contains("vault") || n.contains("keep") || n.contains("ticket") || n.contains("document") -> Icons.Filled.Lock
+        n.contains("appointment") || n.contains("calendar") || n.contains("schedule") || n.contains("meeting") -> Icons.Filled.Event
+        n.contains("bill") || n.contains("payment") || n.contains("subscription") -> Icons.Filled.ReceiptLong
         else -> Icons.Filled.Star
     }
 }
@@ -158,6 +164,9 @@ private fun coverDrawableFor(name: String): Int {
         n.contains("stock") || n.contains("invest") || n.contains("finance") -> R.drawable.bucket_photo_finance
         n.contains("coffee") || n.contains("cafe") || n.contains("drink") -> R.drawable.bucket_photo_coffee
         n.contains("movie") || n.contains("film") || n.contains("cinema") || n.contains("series") -> R.drawable.bucket_photo_movies
+        n.contains("vault") || n.contains("keep") || n.contains("ticket") || n.contains("document") -> R.drawable.bucket_photo_vault
+        n.contains("appointment") || n.contains("calendar") || n.contains("schedule") || n.contains("meeting") -> R.drawable.bucket_photo_appointments
+        n.contains("bill") || n.contains("payment") || n.contains("subscription") -> R.drawable.bucket_photo_bills
         else -> R.drawable.bucket_photo_default
     }
 }
@@ -192,6 +201,12 @@ private fun coverPalette(name: String, scheme: ColorScheme): Triple<Color, Color
             Triple(Color(0xFF1E7D5A), Color(0xFF5FC79A), white) // green
         n.contains("coffee") || n.contains("cafe") || n.contains("drink") ->
             Triple(Color(0xFF6F4A2E), Color(0xFFB98B5E), white) // coffee brown
+        n.contains("vault") || n.contains("keep") || n.contains("ticket") || n.contains("document") ->
+            Triple(Color(0xFF37474F), Color(0xFF78909C), white) // slate / steel
+        n.contains("appointment") || n.contains("calendar") || n.contains("schedule") || n.contains("meeting") ->
+            Triple(Color(0xFF2B6CB0), Color(0xFF6FA8DC), white) // calendar blue
+        n.contains("bill") || n.contains("payment") || n.contains("subscription") ->
+            Triple(Color(0xFF8A6D1F), Color(0xFFD4B45A), white) // gold / receipt
         else -> {
             val idx = (n.hashCode() % 3 + 3) % 3
             when (idx) {

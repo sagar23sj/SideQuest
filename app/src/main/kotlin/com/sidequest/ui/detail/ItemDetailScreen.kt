@@ -84,6 +84,7 @@ fun ItemDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val confetti = com.sidequest.ui.components.rememberConfettiController()
     val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val context = androidx.compose.ui.platform.LocalContext.current
     Box(modifier = modifier.fillMaxSize()) {
         ItemDetailContent(
             state = state,
@@ -95,7 +96,7 @@ fun ItemDetailScreen(
                 // Celebrate, then return to the board where the completion shows.
                 viewModel.onMarkParentComplete()
                 confetti.celebrate()
-                com.sidequest.ui.components.CompletionSound.play()
+                com.sidequest.ui.components.CompletionSound.play(context)
                 scope.launch {
                     kotlinx.coroutines.delay(900)
                     onNavigateBack()

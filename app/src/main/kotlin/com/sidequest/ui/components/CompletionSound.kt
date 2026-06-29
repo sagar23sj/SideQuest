@@ -1,55 +1,76 @@
 package com.sidequest.ui.components
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.media.MediaPlayer
+import com.sidequest.R
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.sin
 
 /**
- * Plays a short, celebratory cue when a quest is completed: a soft confetti
- * "pop" transient followed by a bright ascending sparkle (a major arpeggio with
- * a shimmer). The audio is *synthesized* into PCM at runtime and played through
- * [AudioTrack], so there's no sound file to ship and it works on every device.
+ * Plays a short, celebratory cue when a quest is completed.
  *
- * Fully fail-soft: synthesis and playback are guarded and run on a short-lived
- * background thread, so a busy/unavailable audio path never throws and never
- * blocks completion — you just don't hear the chime.
+ * Primary cue is the bundled tune in `res/raw/completion_tune.mp3` (played via
+ * [MediaPlayer]). If that can't be loaded/played for any reason, it falls back
+ * to a synthesized bell arpeggio rendered through [AudioTrack], so a completion
+ * always gets a cue and nothing ever throws or blocks the UI.
  */
 object CompletionSound {
 
     private const val SAMPLE_RATE = 44_100
     private const val DURATION_SEC = 1.0
 
-    /** Plays the celebration cue (best-effort; never throws, never blocks UI). */
-    fun play() {
+    /**
+     * Plays the celebration cue (best-effort; never throws, never blocks UI).
+     * Loads/plays the bundled tune on a short-lived background thread; on any
+     * failure it plays the synthesized fallback.
+     */
+    fun play(context: Context) {
         Thread {
-            runCatching {
-                val samples = synthesize()
-                val track = AudioTrack(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .build(),
-                    AudioFormat.Builder()
-                        .setSampleRate(SAMPLE_RATE)
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build(),
-                    samples.size * 2,
-                    AudioTrack.MODE_STATIC,
-                    AudioManager.AUDIO_SESSION_ID_GENERATE,
-                )
-                track.write(samples, 0, samples.size)
-                track.play()
-                Thread.sleep((DURATION_SEC * 1000).toLong() + 150)
-                runCatching { track.stop() }
-                runCatching { track.release() }
-            }
+            val played = runCatching {
+                val player = MediaPlayer.create(context.applicationContext, R.raw.completion_tune)
+                if (player != null) {
+                    player.setOnCompletionListener { mp -> runCatching { mp.release() } }
+                    player.setOnErrorListener { mp, _, _ -> runCatching { mp.release() }; true }
+                    player.start()
+                    true
+                } else {
+                    false
+                }
+            }.getOrDefault(false)
+            if (!played) playSynthesized()
         }.apply { isDaemon = true }.start()
+    }
+
+    /** Renders and plays the synthesized fallback chime via [AudioTrack]. */
+    private fun playSynthesized() {
+        runCatching {
+            val samples = synthesize()
+            val track = AudioTrack(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build(),
+                AudioFormat.Builder()
+                    .setSampleRate(SAMPLE_RATE)
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                    .build(),
+                samples.size * 2,
+                AudioTrack.MODE_STATIC,
+                AudioManager.AUDIO_SESSION_ID_GENERATE,
+            )
+            track.write(samples, 0, samples.size)
+            track.play()
+            Thread.sleep((DURATION_SEC * 1000).toLong() + 150)
+            runCatching { track.stop() }
+            runCatching { track.release() }
+        }
     }
 
     /**
