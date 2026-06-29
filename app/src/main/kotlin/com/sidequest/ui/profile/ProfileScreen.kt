@@ -131,16 +131,18 @@ fun ProfileScreen(
             )
 
             SettingsGroup {
-                SettingsRow(
-                    title = stringResource(R.string.profile_organization_label),
-                    subtitle = stringResource(R.string.profile_no_organization),
-                    icon = Icons.Filled.CorporateFare,
-                    iconContainer = MaterialTheme.colorScheme.secondaryContainer,
-                    onIconContainer = MaterialTheme.colorScheme.onSecondaryContainer,
-                    onClick = onJoinOrganization,
-                    trailing = { JoinPill(onClick = onJoinOrganization) },
-                )
-                RowDivider()
+                if (com.sidequest.FeatureFlags.GUILDS_ENABLED) {
+                    SettingsRow(
+                        title = stringResource(R.string.profile_organization_label),
+                        subtitle = stringResource(R.string.profile_no_organization),
+                        icon = Icons.Filled.CorporateFare,
+                        iconContainer = MaterialTheme.colorScheme.secondaryContainer,
+                        onIconContainer = MaterialTheme.colorScheme.onSecondaryContainer,
+                        onClick = onJoinOrganization,
+                        trailing = { JoinPill(onClick = onJoinOrganization) },
+                    )
+                    RowDivider()
+                }
                 SettingsRow(
                     title = stringResource(R.string.profile_reminders),
                     subtitle = stringResource(R.string.profile_reminders_subtitle),

@@ -23,15 +23,17 @@ type Pinger interface {
 
 // Server holds the HTTP server, its dependencies, and tunables.
 type Server struct {
-	httpServer    *http.Server
-	logger        *slog.Logger
-	db            Pinger
-	llm           provider.LLMProvider
-	transcription provider.TranscriptionProvider
-	accounts      AccountService
-	tokens        TokenIssuer
-	sync          SyncStore
-	leaderboards  LeaderboardStore
+	httpServer     *http.Server
+	logger         *slog.Logger
+	db             Pinger
+	llm            provider.LLMProvider
+	transcription  provider.TranscriptionProvider
+	accounts       AccountService
+	tokens         TokenIssuer
+	sync           SyncStore
+	leaderboards   LeaderboardStore
+	deviceAccounts DeviceAccountStore
+	backups        BackupStore
 
 	addr                string
 	readHeaderTimeout   time.Duration
@@ -87,6 +89,16 @@ func WithSyncStore(st SyncStore) Option {
 // WithLeaderboardStore injects the leaderboard read store (Req 12.x).
 func WithLeaderboardStore(st LeaderboardStore) Option {
 	return func(s *Server) { s.leaderboards = st }
+}
+
+// WithDeviceAccountStore injects silent device-account provisioning.
+func WithDeviceAccountStore(st DeviceAccountStore) Option {
+	return func(s *Server) { s.deviceAccounts = st }
+}
+
+// WithBackupStore injects the per-account snapshot backup store.
+func WithBackupStore(st BackupStore) Option {
+	return func(s *Server) { s.backups = st }
 }
 
 // WithReadHeaderTimeout sets the header read timeout.
@@ -191,6 +203,13 @@ func (s *Server) routes() http.Handler {
 	mux.HandleFunc("POST /auth/login", s.handleLogin)
 	mux.HandleFunc("POST /auth/refresh", s.handleRefresh)
 
+	// Silent device account (offline-first onboarding): provisions/re-attaches
+	// an anonymous account from a device id and returns tokens, so a fresh
+	// install is signed in without any sign-up step.
+	if s.deviceAccounts != nil && s.tokens != nil {
+		mux.HandleFunc("POST /accounts/device", s.handleDeviceAccount)
+	}
+
 	// Feature endpoints (sync=24, games=25, leaderboards=26) are added by
 	// later tasks. Their routes are intentionally not registered here yet.
 
@@ -204,6 +223,16 @@ func (s *Server) routes() http.Handler {
 		})
 		mux.Handle("POST /sync/push", requireAccount(http.HandlerFunc(s.handleSyncPush)))
 		mux.Handle("GET /sync/pull", requireAccount(http.HandlerFunc(s.handleSyncPull)))
+	}
+
+	// Per-account snapshot backup/restore (offline-first data durability).
+	// Authenticated; the account id from the token scopes all reads/writes.
+	if s.backups != nil && s.tokens != nil {
+		requireAccount := auth.RequireAccount(s.tokens, func(w http.ResponseWriter, status int, message string) {
+			writeError(w, s.logger, status, message)
+		})
+		mux.Handle("PUT /backup", requireAccount(http.HandlerFunc(s.handlePutBackup)))
+		mux.Handle("GET /backup", requireAccount(http.HandlerFunc(s.handleGetBackup)))
 	}
 
 	// Organization leaderboards (task 26; Req 12.x, 13.5). Authenticated; a

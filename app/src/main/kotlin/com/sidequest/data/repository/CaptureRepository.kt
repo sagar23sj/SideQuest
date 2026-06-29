@@ -3,6 +3,7 @@ package com.sidequest.data.repository
 import com.sidequest.data.local.dao.ActionItemDao
 import com.sidequest.data.local.entity.toEntity
 import com.sidequest.data.preview.PreviewEnqueuer
+import com.sidequest.data.reminder.TaskReminderScheduler
 import com.sidequest.domain.capture.CaptureDraft
 import com.sidequest.domain.capture.CaptureOperations
 import com.sidequest.domain.capture.ClassificationResult
@@ -11,6 +12,9 @@ import com.sidequest.domain.capture.classify
 import com.sidequest.domain.model.ActionItem
 import com.sidequest.domain.model.ContentType
 import com.sidequest.domain.model.Timeframe
+import com.sidequest.domain.reminder.TaskReminderDefaults
+import java.time.Instant
+import java.time.ZoneId
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,23 +56,27 @@ sealed interface BeginCaptureResult {
 class CaptureRepository(
     private val actionItemDao: ActionItemDao,
     private val previewEnqueuer: PreviewEnqueuer,
+    private val taskReminderScheduler: TaskReminderScheduler,
     private val clock: () -> Long,
     private val idGenerator: () -> String,
 ) {
 
     /**
-     * Hilt-visible constructor. Hilt can only supply the injectable DAOs and the
-     * [PreviewEnqueuer], so it delegates to the primary constructor with the real
-     * wall-clock and UUID generators. Tests use the primary constructor to inject
-     * deterministic [clock]/[idGenerator] functions and a fake [previewEnqueuer].
+     * Hilt-visible constructor. Hilt can only supply the injectable DAOs, the
+     * [PreviewEnqueuer], and the [TaskReminderScheduler], so it delegates to the
+     * primary constructor with the real wall-clock and UUID generators. Tests
+     * use the primary constructor to inject deterministic [clock]/[idGenerator]
+     * functions and fakes.
      */
     @Inject
     constructor(
         actionItemDao: ActionItemDao,
         previewEnqueuer: PreviewEnqueuer,
+        taskReminderScheduler: TaskReminderScheduler,
     ) : this(
         actionItemDao = actionItemDao,
         previewEnqueuer = previewEnqueuer,
+        taskReminderScheduler = taskReminderScheduler,
         clock = System::currentTimeMillis,
         idGenerator = { UUID.randomUUID().toString() },
     )
@@ -117,13 +125,20 @@ class CaptureRepository(
         bucketId: String,
         timeframe: Timeframe,
     ): ActionItem {
-        val item = CaptureOperations.buildActionItem(
+        val nowMs = clock()
+        val base = CaptureOperations.buildActionItem(
             draft = draft,
             bucketId = bucketId,
             timeframe = timeframe,
             id = idGenerator(),
-            now = clock(),
+            now = nowMs,
         )
+
+        // Give every captured quest a concrete default reminder derived from the
+        // vague timeframe the user picked, so a reminder is actually configured
+        // (the user can edit/remove it later on the detail screen).
+        val zonedNow = Instant.ofEpochMilli(nowMs).atZone(ZoneId.systemDefault())
+        val item = base.copy(reminder = TaskReminderDefaults.forTimeframe(timeframe, zonedNow))
 
         actionItemDao.upsert(item.toEntity())
 
@@ -135,6 +150,9 @@ class CaptureRepository(
                 previewEnqueuer.enqueue(actionItemId = item.id, url = url)
             }
         }
+
+        // Arm the default reminder's alarm (no-op when it has no future trigger).
+        taskReminderScheduler.schedule(item)
 
         return item
     }
@@ -151,12 +169,10 @@ class CaptureRepository(
         contentType: ContentType,
     ): CaptureDraft {
         val sourceContent = when (contentType) {
-            // For a link share, pull out the clean URL so a sentence-style share
-            // ("caption … https://…") still resolves a fetchable link rather
-            // than storing the whole sentence as the URL.
-            ContentType.LINK -> com.sidequest.domain.capture.firstUrlOrNull(intentData.text)
-                ?: intentData.text
-            ContentType.TEXT -> intentData.text
+            // Keep the full shared text intact for both links and plain text;
+            // the capture flow puts the whole text in the description and pulls
+            // out the first URL for the link field.
+            ContentType.LINK, ContentType.TEXT -> intentData.text
             ContentType.IMAGE, ContentType.VIDEO_REF -> intentData.uri
         }
         return CaptureDraft(

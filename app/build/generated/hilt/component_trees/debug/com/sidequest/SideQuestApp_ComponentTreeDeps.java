@@ -30,6 +30,8 @@ import hilt_aggregated_deps._com_sidequest_data_reminder_BootCompletedReceiver_B
 import hilt_aggregated_deps._com_sidequest_data_reminder_DailyReminderWorker_HiltModule;
 import hilt_aggregated_deps._com_sidequest_data_reminder_ReminderModule;
 import hilt_aggregated_deps._com_sidequest_data_reminder_TaskReminderReceiver_ReceiverEntryPoint;
+import hilt_aggregated_deps._com_sidequest_data_sync_BackupWorker_HiltModule;
+import hilt_aggregated_deps._com_sidequest_data_sync_SyncModule;
 import hilt_aggregated_deps._com_sidequest_data_transcription_TranscriptionModule;
 import hilt_aggregated_deps._com_sidequest_di_DispatchersModule;
 import hilt_aggregated_deps._com_sidequest_ui_board_BoardViewModel_HiltModules_BindsModule;
@@ -110,6 +112,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_sidequest_data_reminder_DailyReminderWorker_HiltModule.class,
         _com_sidequest_data_reminder_ReminderModule.class,
         _com_sidequest_data_reminder_TaskReminderReceiver_ReceiverEntryPoint.class,
+        _com_sidequest_data_sync_BackupWorker_HiltModule.class,
+        _com_sidequest_data_sync_SyncModule.class,
         _com_sidequest_data_transcription_TranscriptionModule.class,
         _com_sidequest_di_DispatchersModule.class,
         _com_sidequest_ui_board_BoardViewModel_HiltModules_BindsModule.class,

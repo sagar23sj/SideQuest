@@ -163,26 +163,28 @@ fun CreateBucketScreen(
                 onColorChange = viewModel::onCompletedColorChange,
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.create_bucket_shopping_label),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Text(
-                        text = stringResource(R.string.create_bucket_shopping_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+            if (com.sidequest.FeatureFlags.SHOPPING_BUCKETS_ENABLED) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.create_bucket_shopping_label),
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            text = stringResource(R.string.create_bucket_shopping_desc),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Switch(
+                        checked = state.shoppingEnabled,
+                        onCheckedChange = viewModel::onShoppingToggle,
                     )
                 }
-                Switch(
-                    checked = state.shoppingEnabled,
-                    onCheckedChange = viewModel::onShoppingToggle,
-                )
             }
 
             PillButton(

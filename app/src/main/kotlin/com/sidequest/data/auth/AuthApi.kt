@@ -29,7 +29,26 @@ interface AuthApi {
      */
     @POST("auth/refresh")
     fun refresh(@Body request: RefreshRequest): Call<TokenPairResponse>
+
+    /**
+     * Provisions (or re-attaches to) a silent, password-less account for this
+     * device and returns a token pair. No credentials required — this is the
+     * zero-friction onboarding path that enables background backup.
+     */
+    @POST("accounts/device")
+    suspend fun deviceAccount(@Body request: DeviceAccountRequest): DeviceAccountResponse
 }
+
+@Serializable
+data class DeviceAccountRequest(
+    val deviceId: String,
+)
+
+@Serializable
+data class DeviceAccountResponse(
+    val accountId: String,
+    val tokens: TokenPairResponse,
+)
 
 @Serializable
 data class CreateAccountRequest(

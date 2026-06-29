@@ -1,6 +1,5 @@
 package com.sidequest.ui.capture
 
-import com.sidequest.data.auth.JwtClaims
 import com.sidequest.data.auth.TokenStore
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,11 +20,16 @@ class CurrentAccountProvider @Inject constructor(
     private val tokenStore: TokenStore,
 ) {
 
-    /** The account id to associate captured content with. */
-    fun currentAccountId(): String {
-        val accessToken = tokenStore.tokens()?.accessToken ?: return LOCAL_ACCOUNT_ID
-        return JwtClaims.subject(accessToken) ?: LOCAL_ACCOUNT_ID
-    }
+    /**
+     * The account id used to scope locally created data. This intentionally
+     * stays a single stable local id even after a silent backup account is
+     * provisioned: the backup account (a server identity used purely for
+     * cloud backup auth) must not reshuffle which rows the local UI shows.
+     * Cloud backups are keyed server-side by the authenticated account, so
+     * local scoping and backup identity are cleanly decoupled. Email "harden"
+     * later attaches an email to that backup account without touching this.
+     */
+    fun currentAccountId(): String = LOCAL_ACCOUNT_ID
 
     companion object {
         /** Placeholder local account used while signed out (offline-first). */

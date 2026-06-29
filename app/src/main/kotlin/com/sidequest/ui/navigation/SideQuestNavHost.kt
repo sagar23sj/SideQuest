@@ -247,7 +247,7 @@ private fun BottomNavBar(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TopLevelDestination.entries.forEach { destination ->
+            TopLevelDestination.visible().forEach { destination ->
                 val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
                 BottomNavItem(
                     destination = destination,

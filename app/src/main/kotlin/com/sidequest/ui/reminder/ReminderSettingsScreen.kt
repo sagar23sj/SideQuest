@@ -179,27 +179,33 @@ private fun ReminderTimePicker(
             style = MaterialTheme.typography.titleMedium,
         )
 
-        val timePickerState = rememberTimePickerState(
-            initialHour = time.hour,
-            initialMinute = time.minute,
-        )
+        // Recreate the picker whenever the persisted time changes (e.g. the
+        // stored value loads after the initial default), so it always reflects
+        // the saved time and never overwrites it with the default on open.
+        androidx.compose.runtime.key(time.hour, time.minute) {
+            val timePickerState = rememberTimePickerState(
+                initialHour = time.hour,
+                initialMinute = time.minute,
+            )
 
-        // Persist the chosen time whenever the picker's value changes (Req 6.3).
-        LaunchedEffect(timePickerState.hour, timePickerState.minute) {
-            if (timePickerState.hour != time.hour || timePickerState.minute != time.minute) {
-                onTimeChange(timePickerState.hour, timePickerState.minute)
+            // Persist only a genuine user change (the keyed initial state always
+            // equals the stored time, so this never fires spuriously on open).
+            LaunchedEffect(timePickerState.hour, timePickerState.minute) {
+                if (timePickerState.hour != time.hour || timePickerState.minute != time.minute) {
+                    onTimeChange(timePickerState.hour, timePickerState.minute)
+                }
             }
-        }
 
-        val timeDescription = stringResource(
-            R.string.reminder_time_desc,
-            timePickerState.hour,
-            timePickerState.minute,
-        )
-        TimePicker(
-            state = timePickerState,
-            modifier = Modifier.semantics { contentDescription = timeDescription },
-        )
+            val timeDescription = stringResource(
+                R.string.reminder_time_desc,
+                timePickerState.hour,
+                timePickerState.minute,
+            )
+            TimePicker(
+                state = timePickerState,
+                modifier = Modifier.semantics { contentDescription = timeDescription },
+            )
+        }
 
         if (!enabled) {
             Text(

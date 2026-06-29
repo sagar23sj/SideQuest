@@ -77,14 +77,19 @@ class CaptureViewModel(
             when (val result = captureRepository.beginCapture(accountId, intentData)) {
                 is BeginCaptureResult.Draft -> {
                     val draft = result.draft
-                    val isLink = draft.contentType == com.sidequest.domain.model.ContentType.LINK
+                    val contentType = draft.contentType
+                    val isTextual = contentType == com.sidequest.domain.model.ContentType.LINK ||
+                        contentType == com.sidequest.domain.model.ContentType.TEXT
+                    // Treat every shared text as text: the whole shared content
+                    // becomes the description, the first URL within it becomes
+                    // the link, and the user always names the quest themselves.
+                    val fullText = if (isTextual) draft.sourceContent.orEmpty() else ""
+                    val link = com.sidequest.domain.capture.firstUrlOrNull(fullText).orEmpty()
                     _uiState.value = CaptureUiState.Categorizing(
                         draft = draft,
-                        // Don't use the link/raw payload as the name — let the
-                        // user name the task. Prefill the title only for plain
-                        // shared text; route a shared URL into the link field.
-                        title = if (isLink) "" else draft.title,
-                        link = if (isLink) draft.sourceContent.orEmpty() else "",
+                        title = "",
+                        description = fullText,
+                        link = link,
                     )
                     observeBuckets(accountId)
                 }
@@ -222,21 +227,26 @@ class CaptureViewModel(
         updateCategorizing { it.copy(isSaving = true) }
         viewModelScope.launch {
             // Fold the edited name/description/link into the draft. A non-blank
-            // link makes the item a clickable LINK (and triggers preview
-            // enrichment); otherwise it stays the original content type.
+            // link makes the item a clickable LINK; plain text is stored as the
+            // description (no redundant source); media keeps its original type.
             val link = state.link.trim()
             val hasLink = link.isNotBlank()
-            val draft = state.draft.copy(
+            val original = state.draft
+            val isMedia = original.contentType == com.sidequest.domain.model.ContentType.IMAGE ||
+                original.contentType == com.sidequest.domain.model.ContentType.VIDEO_REF
+            val draft = original.copy(
                 title = state.title.trim(),
                 description = state.description.trim().ifBlank { null },
-                contentType = if (hasLink) {
-                    com.sidequest.domain.model.ContentType.LINK
-                } else if (state.isManual) {
-                    com.sidequest.domain.model.ContentType.TEXT
-                } else {
-                    state.draft.contentType
+                contentType = when {
+                    isMedia -> original.contentType
+                    hasLink -> com.sidequest.domain.model.ContentType.LINK
+                    else -> com.sidequest.domain.model.ContentType.TEXT
                 },
-                sourceContent = if (hasLink) link else if (state.isManual) null else state.draft.sourceContent,
+                sourceContent = when {
+                    isMedia -> original.sourceContent
+                    hasLink -> link
+                    else -> null
+                },
             )
             captureRepository.confirmCapture(draft, bucketId, timeframe)
             _uiState.value = CaptureUiState.Saved

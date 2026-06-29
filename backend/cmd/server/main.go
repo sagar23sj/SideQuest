@@ -14,8 +14,10 @@ import (
 
 	"github.com/actiontracker/backend/internal/accounts"
 	"github.com/actiontracker/backend/internal/auth"
+	backuprepo "github.com/actiontracker/backend/internal/backup"
 	"github.com/actiontracker/backend/internal/config"
 	"github.com/actiontracker/backend/internal/db"
+	devicerepo "github.com/actiontracker/backend/internal/device"
 	"github.com/actiontracker/backend/internal/provider"
 	"github.com/actiontracker/backend/internal/server"
 	syncrepo "github.com/actiontracker/backend/internal/sync"
@@ -71,6 +73,11 @@ func run(logger *slog.Logger) error {
 	// pgx pool, with deterministic last-writer-wins from the domain package.
 	syncStore := syncrepo.NewRepository(database.Pool())
 
+	// Silent device-account provisioning + per-account snapshot backup
+	// (offline-first onboarding and data durability).
+	deviceStore := devicerepo.NewRepository(database.Pool())
+	backupStore := backuprepo.NewRepository(database.Pool())
+
 	srv := server.New(cfg.ListenAddr,
 		server.WithLogger(logger),
 		server.WithDB(database),
@@ -79,6 +86,8 @@ func run(logger *slog.Logger) error {
 		server.WithAccountService(accountSvc),
 		server.WithTokenIssuer(tokenSvc),
 		server.WithSyncStore(syncStore),
+		server.WithDeviceAccountStore(deviceStore),
+		server.WithBackupStore(backupStore),
 		server.WithReadHeaderTimeout(cfg.ReadHeaderTimeout),
 		server.WithReadTimeout(cfg.ReadTimeout),
 		server.WithWriteTimeout(cfg.WriteTimeout),

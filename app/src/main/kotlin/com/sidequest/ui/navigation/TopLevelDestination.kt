@@ -54,4 +54,20 @@ enum class TopLevelDestination(
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.Person,
     ),
+    ;
+
+    companion object {
+        /**
+         * The tabs currently surfaced in the bottom bar. Board and Profile are
+         * always shown; Games and Voice appear only when their feature flags are
+         * enabled (hidden during the planner-focused rollout).
+         */
+        fun visible(): List<TopLevelDestination> = entries.filter { destination ->
+            when (destination) {
+                GAMES -> com.sidequest.FeatureFlags.GAMES_ENABLED
+                VOICE -> com.sidequest.FeatureFlags.VOICE_JOURNAL_ENABLED
+                else -> true
+            }
+        }
+    }
 }

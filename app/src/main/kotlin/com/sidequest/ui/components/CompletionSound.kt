@@ -22,7 +22,7 @@ import kotlin.math.sin
 object CompletionSound {
 
     private const val SAMPLE_RATE = 44_100
-    private const val DURATION_SEC = 0.7
+    private const val DURATION_SEC = 1.0
 
     /** Plays the celebration cue (best-effort; never throws, never blocks UI). */
     fun play() {
@@ -64,29 +64,43 @@ object CompletionSound {
         val buf = FloatArray(total)
 
         val notes = floatArrayOf(523.25f, 659.25f, 783.99f, 1046.5f) // C5, E5, G5, C6
-        // Soft bell timbre: fundamental + decaying 2nd/3rd partials.
-        val partialAmp = floatArrayOf(1.0f, 0.45f, 0.22f)
-        val staggerSamples = (SAMPLE_RATE * 0.078).toInt()
-        val attackSamples = (SAMPLE_RATE * 0.006).toInt()
+        // Brighter bell timbre: fundamental + several decaying upper partials.
+        val partials = floatArrayOf(1.0f, 0.5f, 0.3f, 0.18f)
+        val attackSamples = (SAMPLE_RATE * 0.005).toInt()
 
-        notes.forEachIndexed { idx, freq ->
-            val start = idx * staggerSamples
-            // The last (resolving octave) note rings a touch louder and longer.
-            val emphasis = if (idx == notes.lastIndex) 1.15f else 1.0f
-            val ringSamples = total - start
-            for (j in 0 until ringSamples) {
-                val n = start + j
-                if (n >= total) break
+        // A single struck bell-like note summed into [buf] from [startSample].
+        fun addNote(startSample: Int, freq: Float, amp: Float, decayRate: Double) {
+            val len = total - startSample
+            if (len <= 0) return
+            for (j in 0 until len) {
+                val n = startSample + j
                 val t = j.toFloat() / SAMPLE_RATE
                 val attack = if (j < attackSamples) j.toFloat() / attackSamples else 1f
-                val decay = exp(-4.2 * j / ringSamples).toFloat()
-                val env = attack * decay * emphasis
+                val env = attack * exp(decayRate * j / len).toFloat()
                 var wave = 0f
-                for (p in partialAmp.indices) {
-                    wave += partialAmp[p] * sin(2.0 * PI * freq * (p + 1) * t).toFloat()
+                for (p in partials.indices) {
+                    // A hair of detune on the 2nd partial adds a pleasant shimmer.
+                    val detune = if (p == 1) 1.003 else 1.0
+                    wave += partials[p] * sin(2.0 * PI * freq * (p + 1) * detune * t).toFloat()
                 }
-                buf[n] += wave * env * 0.16f
+                buf[n] += wave * env * amp
             }
+        }
+
+        // Ascending arpeggio that climbs and resolves on the octave.
+        val stagger = (SAMPLE_RATE * 0.072).toInt()
+        notes.forEachIndexed { idx, freq -> addNote(idx * stagger, freq, 0.13f, -4.2) }
+
+        // Triumphant chord bloom: the full major chord rings out together right
+        // after the run — the satisfying "reward" resolve.
+        val bloomStart = notes.lastIndex * stagger + (SAMPLE_RATE * 0.02).toInt()
+        notes.forEach { freq -> addNote(bloomStart, freq, 0.09f, -2.6) }
+
+        // A short feedback echo adds sparkle and a sense of space.
+        val delay = (SAMPLE_RATE * 0.14).toInt()
+        val echoGain = 0.28f
+        for (n in total - 1 downTo delay) {
+            buf[n] += buf[n - delay] * echoGain
         }
 
         // Peak-normalize, soft-clamp, to 16-bit PCM.
@@ -95,7 +109,7 @@ object CompletionSound {
             val mag = abs(v)
             if (mag > peak) peak = mag
         }
-        val gain = (0.9f / peak).coerceAtMost(3.0f)
+        val gain = (0.92f / peak).coerceAtMost(3.0f)
         val out = ShortArray(total)
         for (i in 0 until total) {
             var s = buf[i] * gain

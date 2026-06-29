@@ -50,5 +50,9 @@ class SideQuestApp : Application(), Configuration.Provider {
                 previewSeeder.seedIfEmpty()
             }
         }
+        // Kick off background backup/restore (provisions a silent account,
+        // restores on a fresh install, uploads the latest snapshot). Runs off
+        // the UX path and is fail-soft, so the app stays instant.
+        com.sidequest.data.sync.BackupWorker.schedule(this)
     }
 }
