@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -428,45 +429,104 @@ private fun BucketShelf(
                 )
             }
         }
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(items = openItems, key = { it.item.id }) { boardItem ->
-                val display = previewDisplay(boardItem)
-                val fallback = MaterialTheme.colorScheme.outline
-                val statusColor = parseStatusColor(boardItem.statusColor, fallback)
-                val statusLabel = stringResource(boardItem.item.status.labelRes())
-                val isCompleted = boardItem.item.status == ActionStatus.COMPLETED
-                com.sidequest.ui.components.TaskPosterCard(
-                    title = display.title,
-                    statusLabel = statusLabel,
-                    statusColor = statusColor,
-                    completed = isCompleted,
-                    onClick = { onOpenItem(boardItem.item.id) },
-                    onHoldComplete = { onComplete(boardItem.item.id) },
-                    onUndo = { onUndo(boardItem.item.id) },
-                    cover = {
-                        if (!display.thumbnailUrl.isNullOrBlank()) {
-                            coil.compose.AsyncImage(
-                                model = display.thumbnailUrl,
-                                contentDescription = null,
-                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        } else {
-                            BucketCover(
-                                name = bucketName,
-                                imageRef = bucketImageRef,
-                                modifier = Modifier.fillMaxSize(),
-                                iconSize = 40.dp,
-                            )
-                        }
-                    },
-                )
+        if (openItems.size <= FILL_SHELF_THRESHOLD) {
+            // Few items: stretch cards to fill the row so there's no dead space.
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                openItems.forEach { boardItem ->
+                    TaskPoster(
+                        boardItem = boardItem,
+                        bucketName = bucketName,
+                        bucketImageRef = bucketImageRef,
+                        onOpenItem = onOpenItem,
+                        onComplete = onComplete,
+                        onUndo = onUndo,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(180.dp),
+                    )
+                }
+            }
+        } else {
+            // Enough items to justify a scrolling poster carousel.
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                items(items = openItems, key = { it.item.id }) { boardItem ->
+                    TaskPoster(
+                        boardItem = boardItem,
+                        bucketName = bucketName,
+                        bucketImageRef = bucketImageRef,
+                        onOpenItem = onOpenItem,
+                        onComplete = onComplete,
+                        onUndo = onUndo,
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(200.dp),
+                    )
+                }
             }
         }
     }
+}
+
+/** Below this many open tasks, a shelf fills the row instead of scrolling. */
+private const val FILL_SHELF_THRESHOLD = 3
+
+/**
+ * A single board poster: resolves the item's display (title, thumbnail, status)
+ * and renders a [com.sidequest.ui.components.TaskPosterCard] backed by the
+ * item's own thumbnail when present, else its bucket's themed cover. Sized by
+ * the caller via [modifier] so it works both stretched (sparse shelf) and
+ * fixed-width (scrolling carousel).
+ */
+@Composable
+private fun TaskPoster(
+    boardItem: BoardItem,
+    bucketName: String,
+    bucketImageRef: String?,
+    onOpenItem: (String) -> Unit,
+    onComplete: (String) -> Unit,
+    onUndo: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val display = previewDisplay(boardItem)
+    val fallback = MaterialTheme.colorScheme.outline
+    val statusColor = parseStatusColor(boardItem.statusColor, fallback)
+    val statusLabel = stringResource(boardItem.item.status.labelRes())
+    val isCompleted = boardItem.item.status == ActionStatus.COMPLETED
+    com.sidequest.ui.components.TaskPosterCard(
+        title = display.title,
+        statusLabel = statusLabel,
+        statusColor = statusColor,
+        completed = isCompleted,
+        onClick = { onOpenItem(boardItem.item.id) },
+        onHoldComplete = { onComplete(boardItem.item.id) },
+        onUndo = { onUndo(boardItem.item.id) },
+        modifier = modifier,
+        cover = {
+            if (!display.thumbnailUrl.isNullOrBlank()) {
+                coil.compose.AsyncImage(
+                    model = display.thumbnailUrl,
+                    contentDescription = null,
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                BucketCover(
+                    name = bucketName,
+                    imageRef = bucketImageRef,
+                    modifier = Modifier.fillMaxSize(),
+                    iconSize = 40.dp,
+                )
+            }
+        },
+    )
 }
 
 @Composable

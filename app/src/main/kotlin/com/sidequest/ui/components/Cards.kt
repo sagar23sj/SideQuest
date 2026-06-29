@@ -331,8 +331,6 @@ fun TaskPosterCard(
 
     Box(
         modifier = modifier
-            .width(150.dp)
-            .height(200.dp)
             .clip(shape)
             .border(border, shape)
             .pointerInput(completed) {
