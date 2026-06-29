@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sidequest.domain.board.BoardPartitioningPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:04:15" hostname="INLPF5TK6XC" time="0.126">
+  <properties/>
+  <testcase name="Property 8: every input item appears exactly once and matches its group's bucket" classname="com.sidequest.domain.board.BoardPartitioningPropertyTest" time="0.126"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

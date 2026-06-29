@@ -2,6 +2,7 @@ package com.sidequest.ui.board
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Person
@@ -254,31 +256,25 @@ private fun ReadyBoard(
                 )
             }
 
-            // Each bucket lists only its *open* task cards under a section
-            // header. Buckets whose tasks are all done are hidden from the main
-            // board (completed quests live in the bucket's own page), keeping the
-            // board focused on what's still to do.
+            // Netflix-style shelves: one horizontal row of poster cards per
+            // bucket that has open tasks. Buckets whose tasks are all done are
+            // hidden from the main board (completed quests live in the bucket's
+            // own page), keeping the board focused on what's still to do. Group
+            // order is dynamic (most-used buckets first; see BoardOrdering).
             board.groups.forEach { group ->
-                val activeItems = group.items.filter {
+                val openItems = group.items.filter {
                     it.item.status != ActionStatus.COMPLETED
                 }
-                if (activeItems.isNotEmpty()) {
-                    item(key = "section-${group.bucket.id}") {
-                        SectionHeader(
-                            title = group.bucket.name,
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                        )
-                    }
-                    items(
-                        items = activeItems,
-                        key = { it.item.id },
-                    ) { boardItem ->
-                        ActionItemRow(
-                            boardItem = boardItem,
-                            onComplete = { onComplete(boardItem.item.id) },
-                            onUndo = { onUndo(boardItem.item.id) },
-                            onOpenItem = { onOpenItem(boardItem.item.id) },
-                            modifier = Modifier.padding(horizontal = 20.dp),
+                if (openItems.isNotEmpty()) {
+                    item(key = "shelf-${group.bucket.id}") {
+                        BucketShelf(
+                            bucketName = group.bucket.name,
+                            bucketImageRef = group.bucket.imageRef,
+                            openItems = openItems,
+                            onOpenBucket = { onOpenBucket(group.bucket.id) },
+                            onOpenItem = onOpenItem,
+                            onComplete = onComplete,
+                            onUndo = onUndo,
                         )
                     }
                 }
@@ -382,6 +378,90 @@ private fun QuestsCarousel(
                             modifier = Modifier.fillMaxSize(),
                             iconSize = 44.dp,
                         )
+                    },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * A Netflix-style "shelf": a tappable bucket header (name + open count + chevron
+ * that opens the bucket's full page) above a horizontal row of poster task cards
+ * for that bucket's open quests.
+ */
+@Composable
+private fun BucketShelf(
+    bucketName: String,
+    bucketImageRef: String?,
+    openItems: List<BoardItem>,
+    onOpenBucket: () -> Unit,
+    onOpenItem: (String) -> Unit,
+    onComplete: (String) -> Unit,
+    onUndo: (String) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onOpenBucket)
+                .padding(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = bucketName,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "${openItems.size}",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            items(items = openItems, key = { it.item.id }) { boardItem ->
+                val display = previewDisplay(boardItem)
+                val fallback = MaterialTheme.colorScheme.outline
+                val statusColor = parseStatusColor(boardItem.statusColor, fallback)
+                val statusLabel = stringResource(boardItem.item.status.labelRes())
+                val isCompleted = boardItem.item.status == ActionStatus.COMPLETED
+                com.sidequest.ui.components.TaskPosterCard(
+                    title = display.title,
+                    statusLabel = statusLabel,
+                    statusColor = statusColor,
+                    completed = isCompleted,
+                    onClick = { onOpenItem(boardItem.item.id) },
+                    onHoldComplete = { onComplete(boardItem.item.id) },
+                    onUndo = { onUndo(boardItem.item.id) },
+                    cover = {
+                        if (!display.thumbnailUrl.isNullOrBlank()) {
+                            coil.compose.AsyncImage(
+                                model = display.thumbnailUrl,
+                                contentDescription = null,
+                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                        } else {
+                            BucketCover(
+                                name = bucketName,
+                                imageRef = bucketImageRef,
+                                modifier = Modifier.fillMaxSize(),
+                                iconSize = 40.dp,
+                            )
+                        }
                     },
                 )
             }

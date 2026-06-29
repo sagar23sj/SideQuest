@@ -24,7 +24,7 @@ import javax.inject.Singleton
 /**
  * Populates the local database with a rich, coherent set of preview data so the
  * whole app can be explored in a working state: several default buckets
- * (Travel, Cooking, Shopping, Daily Rituals, Learning, Vault, Movies & Shows,
+ * (Travel, Cooking, Shopping, Daily Rituals, Learning, Vault, Movies & TV,
  * Appointments, Bills), action items spanning
  * every content type / status / timeframe, action plans with sub-actions, and a
  * transcribed voice-journal entry.
@@ -102,7 +102,7 @@ class PreviewSeeder @Inject constructor(
         val rituals = buckets.getValue("Daily Rituals").id
         val learning = buckets.getValue("Learning").id
         val vault = buckets.getValue("Vault").id
-        val movies = buckets.getValue("Movies & Shows").id
+        val movies = buckets.getValue("Movies & TV").id
         val appointments = buckets.getValue("Appointments").id
         val bills = buckets.getValue("Bills").id
 

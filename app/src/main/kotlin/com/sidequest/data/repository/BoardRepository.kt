@@ -7,7 +7,9 @@ import com.sidequest.data.local.entity.toActionItems
 import com.sidequest.data.local.entity.toBuckets
 import com.sidequest.data.local.entity.toDomain
 import com.sidequest.data.local.entity.toEntity
+import com.sidequest.data.seed.DEFAULT_BUCKETS
 import com.sidequest.domain.board.BoardAggregation
+import com.sidequest.domain.board.BoardOrdering
 import com.sidequest.domain.board.BoardState
 import com.sidequest.domain.model.ActionStatus
 import javax.inject.Inject
@@ -86,9 +88,18 @@ class BoardRepository(
             actionItemDao.observeByAccount(accountId),
             bucketDao.observeByAccount(accountId),
         ) { itemEntities, bucketEntities ->
-            BoardAggregation.buildBoard(
+            val board = BoardAggregation.buildBoard(
                 items = itemEntities.toActionItems(),
                 buckets = bucketEntities.toBuckets(),
+            )
+            // Order buckets dynamically by how much they're used (content
+            // volume, then recency), falling back to the curated default order
+            // for a brand-new user whose buckets are all empty.
+            board.copy(
+                groups = BoardOrdering.orderByActivity(
+                    groups = board.groups,
+                    defaultOrder = DEFAULT_BUCKETS.map { it.name },
+                ),
             )
         }
 

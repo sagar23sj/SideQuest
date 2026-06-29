@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sidequest.ui.board.CompletionCounterPlacementTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:05:07" hostname="INLPF5TK6XC" time="0.094">
+  <properties/>
+  <testcase name="Ready state exposes the completion count the top counter renders" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.032"/>
+  <testcase name="Ready state exposes a zero completion count when nothing is completed" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor parses a six-digit hex string" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.053"/>
+  <testcase name="parseStatusColor parses an eight-digit hex string with alpha" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor expands a three-digit hex shorthand" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor parses a value without a leading hash" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor falls back when the value is blank" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor falls back when the value is not a valid hex color" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <testcase name="parseStatusColor falls back when the hex length is unsupported" classname="com.sidequest.ui.board.CompletionCounterPlacementTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

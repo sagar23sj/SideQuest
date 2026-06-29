@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sidequest.ui.capture.CaptureViewModelDispatchTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:05:07" hostname="INLPF5TK6XC" time="0.183">
+  <properties/>
+  <testcase name="supported share dispatch enters the categorization flow" classname="com.sidequest.ui.capture.CaptureViewModelDispatchTest" time="0.124"/>
+  <testcase name="unsupported share dispatch enters the unsupported state" classname="com.sidequest.ui.capture.CaptureViewModelDispatchTest" time="0.01"/>
+  <testcase name="plain text without a link still dispatches into the categorization flow" classname="com.sidequest.ui.capture.CaptureViewModelDispatchTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

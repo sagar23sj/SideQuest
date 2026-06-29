@@ -19,15 +19,15 @@ data class DefaultBucketSpec(
     val completedColor: String,
 )
 
-/** The default starter buckets, in display order. */
+/** The default starter buckets, in display order (most content-heavy first). */
 val DEFAULT_BUCKETS: List<DefaultBucketSpec> = listOf(
     DefaultBucketSpec("Travel", "#FFB59E", "#FF8A65", "#9F4122"),
-    DefaultBucketSpec("Cooking", "#FFD8A8", "#FF922B", "#B85C00"),
+    DefaultBucketSpec("Movies & TV", "#B39DDB", "#7E57C2", "#4527A0"),
     DefaultBucketSpec("Shopping", "#C5A3FF", "#9775FA", "#6D4EA2"),
-    DefaultBucketSpec("Daily Rituals", "#8EF4E9", "#53BBB1", "#006A63"),
+    DefaultBucketSpec("Cooking", "#FFD8A8", "#FF922B", "#B85C00"),
     DefaultBucketSpec("Learning", "#A5D8FF", "#4DABF7", "#1971C2"),
-    DefaultBucketSpec("Vault", "#B0BEC5", "#78909C", "#37474F"),
-    DefaultBucketSpec("Movies & Shows", "#B39DDB", "#7E57C2", "#4527A0"),
+    DefaultBucketSpec("Daily Rituals", "#8EF4E9", "#53BBB1", "#006A63"),
     DefaultBucketSpec("Appointments", "#90CAF9", "#6FA8DC", "#2B6CB0"),
     DefaultBucketSpec("Bills", "#E6CB6E", "#D4B45A", "#8A6D1F"),
+    DefaultBucketSpec("Vault", "#B0BEC5", "#78909C", "#37474F"),
 )

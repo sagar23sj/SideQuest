@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sidequest.domain.bucket.NonEmptyBucketDeletionPropertyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:04:15" hostname="INLPF5TK6XC" time="0.067">
+  <properties/>
+  <testcase name="Property 6: reassign moves every contained item to the target, losing none and emptying the source" classname="com.sidequest.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.041"/>
+  <testcase name="Property 6: delete removes exactly the contained items, preserving the rest" classname="com.sidequest.domain.bucket.NonEmptyBucketDeletionPropertyTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

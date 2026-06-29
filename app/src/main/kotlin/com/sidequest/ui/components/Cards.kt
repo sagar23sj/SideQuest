@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +15,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -288,3 +294,155 @@ private fun TaskCardRow(
     }
 }
 
+
+/**
+ * A Netflix-style "poster" task card for the board's horizontal bucket shelves:
+ * a tall cover image ([cover] slot — the item's own thumbnail or its bucket's
+ * themed photo) with a legibility scrim, a translucent status pill, and the
+ * task title overlaid at the bottom.
+ *
+ * It carries the same press-and-hold interaction as [RichTaskCard]: a quick tap
+ * opens the item, a sustained hold sweeps a fill (green bottom→up to complete,
+ * red top→down to send back to to-do) and toggles completion with haptics.
+ * Completed posters get a green border and a check badge.
+ */
+@Composable
+fun TaskPosterCard(
+    title: String,
+    statusLabel: String,
+    statusColor: Color,
+    modifier: Modifier = Modifier,
+    completed: Boolean = false,
+    onClick: () -> Unit = {},
+    onHoldComplete: () -> Unit = {},
+    onUndo: () -> Unit = {},
+    cover: @Composable () -> Unit,
+) {
+    val haptics = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
+    val progress = remember { Animatable(0f) }
+    val shape = RoundedCornerShape(20.dp)
+    val fill = if (completed) UndoRed else CompleteGreen
+    val border = if (completed) {
+        BorderStroke(2.dp, CompleteGreen)
+    } else {
+        BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+    }
+
+    Box(
+        modifier = modifier
+            .width(150.dp)
+            .height(200.dp)
+            .clip(shape)
+            .border(border, shape)
+            .pointerInput(completed) {
+                detectTapGestures(
+                    onPress = {
+                        val job = scope.launch {
+                            progress.snapTo(0f)
+                            progress.animateTo(1f, tween(CARD_HOLD_MS, easing = LinearEasing))
+                        }
+                        val released = tryAwaitRelease()
+                        job.cancel()
+                        if (progress.value >= 1f) {
+                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            if (completed) onUndo() else onHoldComplete()
+                            scope.launch { progress.animateTo(0f, tween(220)) }
+                        } else {
+                            scope.launch { progress.animateTo(0f, tween(180)) }
+                            if (released) onClick()
+                        }
+                    },
+                )
+            },
+    ) {
+        // Cover fills the poster.
+        Box(modifier = Modifier.matchParentSize()) { cover() }
+
+        // Bottom scrim so the white title is always legible over the image.
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    Brush.verticalGradient(
+                        0.0f to Color.Transparent,
+                        0.5f to Color.Transparent,
+                        1.0f to Color.Black.copy(alpha = 0.78f),
+                    ),
+                ),
+        )
+
+        // Status pill on a translucent chip, top-start.
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(8.dp)
+                .clip(RoundedCornerShape(50))
+                .background(Color.Black.copy(alpha = 0.38f))
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(statusColor),
+            )
+            Text(
+                text = statusLabel,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
+            )
+        }
+
+        // Completed check badge, top-end.
+        if (completed) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .size(22.dp)
+                    .clip(CircleShape)
+                    .background(CompleteGreen),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(14.dp),
+                )
+            }
+        }
+
+        // Title overlaid at the bottom.
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.White,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(12.dp),
+        )
+
+        // Hold sweep: green fills up to complete, red fills down to undo.
+        if (progress.value > 0f) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(shape),
+                contentAlignment = if (completed) Alignment.TopCenter else Alignment.BottomCenter,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(progress.value)
+                        .background(fill.copy(alpha = 0.35f)),
+                )
+            }
+        }
+    }
+}
