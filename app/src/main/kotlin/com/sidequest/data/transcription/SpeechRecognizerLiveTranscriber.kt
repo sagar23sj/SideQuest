@@ -3,10 +3,11 @@ package com.sidequest.data.transcription
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.os.Bundle
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,16 +16,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 /**
- * [LiveTranscriber] backed by Android's on-device [SpeechRecognizer]
- * (Android 12+ `createOnDeviceSpeechRecognizer`). It listens to the microphone
- * while a journal is recording and accumulates finalized phrases into a single
- * transcript, restarting after each utterance so longer entries are captured.
+ * [LiveTranscriber] backed by Android's [SpeechRecognizer]. It listens to the
+ * microphone while a journal is recording and accumulates finalized phrases into
+ * a single transcript, restarting after each utterance so longer entries are
+ * captured. It prefers the on-device recognizer when the device has it, but
+ * falls back to the default recognizer (which on most phones still works,
+ * on-device or via Google) so transcription is available broadly.
  *
  * Everything is defensive and fail-soft: the recognizer is created and driven on
  * the main thread (required by the platform), every platform call is wrapped, and
  * any failure simply yields a null transcript so the caller falls back to the
- * file-based backend [TranscriptionService]. It never touches the recorded audio
- * file, so the audio capture path is unaffected even if recognition fails.
+ * file-based backend [TranscriptionService]. Diagnostic logging is emitted under
+ * the [TAG] tag.
  */
 @Singleton
 class SpeechRecognizerLiveTranscriber @Inject constructor(
@@ -39,26 +42,30 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
 
     override val isAvailable: Boolean
         get() = runCatching {
-            if (!SpeechRecognizer.isRecognitionAvailable(context)) return false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val available = SpeechRecognizer.isRecognitionAvailable(context)
+            val onDevice = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
-            } else {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-            }
-        }.getOrDefault(false)
+            Log.w(TAG, "isAvailable: recognitionAvailable=$available onDevice=$onDevice sdk=${Build.VERSION.SDK_INT}")
+            available
+        }.getOrElse {
+            Log.w(TAG, "isAvailable check threw", it)
+            false
+        }
 
     override suspend fun start() {
-        if (!isAvailable) return
+        if (!isAvailable) {
+            Log.w(TAG, "start: recognition not available; skipping live transcription")
+            return
+        }
         withContext(Dispatchers.Main) {
             runCatching {
                 stopped = false
                 transcript.setLength(0)
                 lastPartial = ""
-                recognizer = createRecognizer().apply {
-                    setRecognitionListener(listener)
-                }
+                recognizer = createRecognizer().apply { setRecognitionListener(listener) }
+                Log.w(TAG, "start: listening")
                 beginListening()
-            }
+            }.onFailure { Log.w(TAG, "start failed", it) }
         }
     }
 
@@ -68,14 +75,15 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
             stopped = true
             runCatching { rec.stopListening() }
         }
-        // Give the recognizer a brief window to deliver its final results.
         delay(FINALIZE_DELAY_MS)
         withContext(Dispatchers.Main) {
             commitPartial()
             runCatching { rec.destroy() }
             recognizer = null
         }
-        return transcript.toString().trim().ifBlank { null }
+        val result = transcript.toString().trim().ifBlank { null }
+        Log.w(TAG, "stop: transcript=${result?.take(80) ?: "<null>"}")
+        return result
     }
 
     override suspend fun cancel() {
@@ -90,16 +98,23 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
         }
     }
 
-    private fun createRecognizer(): SpeechRecognizer =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    /** Prefer the on-device recognizer when present; otherwise the default one. */
+    private fun createRecognizer(): SpeechRecognizer {
+        val onDevice = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            runCatching { SpeechRecognizer.isOnDeviceRecognitionAvailable(context) }.getOrDefault(false)
+        return if (onDevice && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Log.w(TAG, "createRecognizer: on-device")
             SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
         } else {
+            Log.w(TAG, "createRecognizer: default")
             SpeechRecognizer.createSpeechRecognizer(context)
         }
+    }
 
     /** Must be called on the main thread. */
     private fun beginListening() {
         runCatching { recognizer?.startListening(recognizerIntent()) }
+            .onFailure { Log.w(TAG, "startListening failed", it) }
     }
 
     private fun recognizerIntent(): Intent =
@@ -117,35 +132,25 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
         lastPartial = ""
     }
 
-    /** Folds the last partial hypothesis into the transcript when finalizing. */
     private fun commitPartial() {
-        if (lastPartial.isNotBlank()) {
-            append(lastPartial)
-        }
+        if (lastPartial.isNotBlank()) append(lastPartial)
     }
 
     private val listener = object : RecognitionListener {
         override fun onResults(results: Bundle?) {
-            val text = results
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.firstOrNull()
-                .orEmpty()
+            val text = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty()
+            Log.w(TAG, "onResults: '${text.take(80)}'")
             append(text)
             if (!stopped) restart()
         }
 
         override fun onPartialResults(partialResults: Bundle?) {
-            val text = partialResults
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.firstOrNull()
-                .orEmpty()
+            val text = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull().orEmpty()
             if (text.isNotBlank()) lastPartial = text
         }
 
         override fun onError(error: Int) {
-            // Transient end-of-utterance/silence errors just mean "start the next
-            // phrase"; keep listening until the caller stops. Other errors end
-            // the session gracefully (the caller falls back).
+            Log.w(TAG, "onError: $error (${errorName(error)}) stopped=$stopped")
             if (stopped) return
             when (error) {
                 SpeechRecognizer.ERROR_NO_MATCH,
@@ -155,7 +160,7 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
             }
         }
 
-        override fun onReadyForSpeech(params: Bundle?) = Unit
+        override fun onReadyForSpeech(params: Bundle?) { Log.w(TAG, "onReadyForSpeech") }
         override fun onBeginningOfSpeech() = Unit
         override fun onRmsChanged(rmsdB: Float) = Unit
         override fun onBufferReceived(buffer: ByteArray?) = Unit
@@ -163,13 +168,26 @@ class SpeechRecognizerLiveTranscriber @Inject constructor(
         override fun onEvent(eventType: Int, params: Bundle?) = Unit
     }
 
-    /** Restart a fresh utterance; guarded so a destroyed recognizer is ignored. */
     private fun restart() {
         if (stopped) return
         runCatching { recognizer?.startListening(recognizerIntent()) }
     }
 
+    private fun errorName(code: Int): String = when (code) {
+        SpeechRecognizer.ERROR_AUDIO -> "AUDIO"
+        SpeechRecognizer.ERROR_CLIENT -> "CLIENT"
+        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "PERMISSIONS"
+        SpeechRecognizer.ERROR_NETWORK -> "NETWORK"
+        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "NETWORK_TIMEOUT"
+        SpeechRecognizer.ERROR_NO_MATCH -> "NO_MATCH"
+        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "BUSY"
+        SpeechRecognizer.ERROR_SERVER -> "SERVER"
+        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "SPEECH_TIMEOUT"
+        else -> "OTHER"
+    }
+
     private companion object {
+        const val TAG = "SQVoice"
         const val FINALIZE_DELAY_MS = 600L
     }
 }

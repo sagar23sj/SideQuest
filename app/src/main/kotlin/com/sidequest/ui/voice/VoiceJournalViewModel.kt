@@ -117,13 +117,14 @@ class VoiceJournalViewModel @Inject constructor(
                         isRecording = false,
                         errorMessage = null,
                         lastSavedEntryId = entry.id,
-                        transcriptionFailed = false,
+                        // Reflect the on-device transcription outcome immediately
+                        // (transcript-only mode produces it synchronously on stop).
+                        transcriptionFailed = entry.transcriptionFailed,
                     )
                 }
-                // On-device live transcription may have already produced the
-                // transcript while recording; only fall back to the file-based
-                // backend transcription when it didn't.
-                if (entry.transcript.isNullOrBlank()) {
+                // Only fall back to the file-based backend transcription when we
+                // actually recorded an audio file and have no transcript yet.
+                if (entry.transcript.isNullOrBlank() && entry.audioRef.isNotBlank()) {
                     transcribe(entry.id)
                 }
             } catch (e: Exception) {

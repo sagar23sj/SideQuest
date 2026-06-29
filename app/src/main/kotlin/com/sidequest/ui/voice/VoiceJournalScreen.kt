@@ -315,7 +315,11 @@ private fun JournalEntryCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                AudioPlayerButton(audioPath = entry.audioRef)
+                if (entry.audioRef.isNotBlank()) {
+                    AudioPlayerButton(audioPath = entry.audioRef)
+                } else {
+                    Spacer(Modifier.width(1.dp))
+                }
                 Surface(
                     onClick = onExtract,
                     shape = CircleShape,

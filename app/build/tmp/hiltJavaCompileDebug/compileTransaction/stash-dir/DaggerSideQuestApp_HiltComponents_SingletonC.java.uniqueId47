@@ -1,0 +1,1096 @@
+package com.sidequest;
+
+import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
+import android.view.View;
+import androidx.datastore.core.DataStore;
+import androidx.datastore.preferences.core.Preferences;
+import androidx.fragment.app.Fragment;
+import androidx.hilt.work.HiltWorkerFactory;
+import androidx.hilt.work.WorkerAssistedFactory;
+import androidx.hilt.work.WorkerFactoryModule_ProvideFactoryFactory;
+import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
+import androidx.work.ListenableWorker;
+import androidx.work.WorkManager;
+import androidx.work.WorkerParameters;
+import com.sidequest.data.audio.MediaRecorderAudioRecorder;
+import com.sidequest.data.auth.EncryptedTokenStore;
+import com.sidequest.data.llm.LlmModule_Companion_ProvideLlmProxyApiFactory;
+import com.sidequest.data.llm.LlmProxyApi;
+import com.sidequest.data.llm.PrepareReminderTextUseCase;
+import com.sidequest.data.llm.RetrofitLlmService;
+import com.sidequest.data.local.SideQuestDatabase;
+import com.sidequest.data.local.UserPreferences;
+import com.sidequest.data.local.dao.ActionItemDao;
+import com.sidequest.data.local.dao.ActionPlanDao;
+import com.sidequest.data.local.dao.BucketDao;
+import com.sidequest.data.local.dao.VoiceJournalDao;
+import com.sidequest.data.local.di.DatabaseModule_ProvideActionItemDaoFactory;
+import com.sidequest.data.local.di.DatabaseModule_ProvideActionPlanDaoFactory;
+import com.sidequest.data.local.di.DatabaseModule_ProvideBucketDaoFactory;
+import com.sidequest.data.local.di.DatabaseModule_ProvideDatabaseFactory;
+import com.sidequest.data.local.di.DatabaseModule_ProvideVoiceJournalDaoFactory;
+import com.sidequest.data.preview.OkHttpPreviewService;
+import com.sidequest.data.preview.PreviewFetchWorker;
+import com.sidequest.data.preview.PreviewFetchWorker_AssistedFactory;
+import com.sidequest.data.preview.PreviewModule_Companion_ProvideOkHttpClientFactory;
+import com.sidequest.data.preview.PreviewModule_Companion_ProvideWorkManagerFactory;
+import com.sidequest.data.preview.WorkManagerPreviewEnqueuer;
+import com.sidequest.data.reminder.DailyReminderWorker;
+import com.sidequest.data.reminder.DailyReminderWorker_AssistedFactory;
+import com.sidequest.data.reminder.DataStoreReminderSettingsStore;
+import com.sidequest.data.reminder.NotificationManagerReminderNotifier;
+import com.sidequest.data.reminder.ReminderModule_Companion_ProvideClockFactory;
+import com.sidequest.data.reminder.ReminderModule_Companion_ProvidePreferencesDataStoreFactory;
+import com.sidequest.data.reminder.TaskReminderNotifier;
+import com.sidequest.data.reminder.TaskReminderScheduler;
+import com.sidequest.data.reminder.WorkManagerReminderScheduler;
+import com.sidequest.data.repository.ActionPlanRepository;
+import com.sidequest.data.repository.BoardRepository;
+import com.sidequest.data.repository.BucketRepository;
+import com.sidequest.data.repository.CaptureRepository;
+import com.sidequest.data.repository.VoiceJournalRepository;
+import com.sidequest.data.seed.PreviewSeeder;
+import com.sidequest.data.transcription.RetrofitTranscriptionService;
+import com.sidequest.data.transcription.SpeechRecognizerLiveTranscriber;
+import com.sidequest.data.transcription.TranscriptionModule_Companion_ProvideTranscriptionProxyApiFactory;
+import com.sidequest.data.transcription.TranscriptionProxyApi;
+import com.sidequest.di.DispatchersModule_ProvideIoDispatcherFactory;
+import com.sidequest.ui.board.BoardViewModel;
+import com.sidequest.ui.board.BoardViewModel_HiltModules;
+import com.sidequest.ui.bucket.BucketDetailViewModel;
+import com.sidequest.ui.bucket.BucketDetailViewModel_HiltModules;
+import com.sidequest.ui.bucket.BucketManagementViewModel;
+import com.sidequest.ui.bucket.BucketManagementViewModel_HiltModules;
+import com.sidequest.ui.bucket.CreateBucketViewModel;
+import com.sidequest.ui.bucket.CreateBucketViewModel_HiltModules;
+import com.sidequest.ui.capture.CaptureViewModel;
+import com.sidequest.ui.capture.CaptureViewModel_HiltModules;
+import com.sidequest.ui.capture.CurrentAccountProvider;
+import com.sidequest.ui.capture.ShareTargetActivity;
+import com.sidequest.ui.detail.ItemDetailViewModel;
+import com.sidequest.ui.detail.ItemDetailViewModel_HiltModules;
+import com.sidequest.ui.profile.ProfileViewModel;
+import com.sidequest.ui.profile.ProfileViewModel_HiltModules;
+import com.sidequest.ui.reminder.NotificationPermissionViewModel;
+import com.sidequest.ui.reminder.NotificationPermissionViewModel_HiltModules;
+import com.sidequest.ui.reminder.ReminderSettingsViewModel;
+import com.sidequest.ui.reminder.ReminderSettingsViewModel_HiltModules;
+import com.sidequest.ui.stats.StatsViewModel;
+import com.sidequest.ui.stats.StatsViewModel_HiltModules;
+import com.sidequest.ui.voice.VoiceJournalViewModel;
+import com.sidequest.ui.voice.VoiceJournalViewModel_HiltModules;
+import com.sidequest.ui.voice.VoiceReviewViewModel;
+import com.sidequest.ui.voice.VoiceReviewViewModel_HiltModules;
+import dagger.hilt.android.ActivityRetainedLifecycle;
+import dagger.hilt.android.ViewModelLifecycle;
+import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
+import dagger.hilt.android.internal.builders.ActivityRetainedComponentBuilder;
+import dagger.hilt.android.internal.builders.FragmentComponentBuilder;
+import dagger.hilt.android.internal.builders.ServiceComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewModelComponentBuilder;
+import dagger.hilt.android.internal.builders.ViewWithFragmentComponentBuilder;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories;
+import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_InternalFactoryFactory_Factory;
+import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
+import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
+import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
+import dagger.internal.DaggerGenerated;
+import dagger.internal.DoubleCheck;
+import dagger.internal.IdentifierNameString;
+import dagger.internal.KeepFieldType;
+import dagger.internal.LazyClassKeyMap;
+import dagger.internal.MapBuilder;
+import dagger.internal.Preconditions;
+import dagger.internal.Provider;
+import dagger.internal.SingleCheck;
+import java.time.Clock;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.processing.Generated;
+import okhttp3.OkHttpClient;
+
+@DaggerGenerated
+@Generated(
+    value = "dagger.internal.codegen.ComponentProcessor",
+    comments = "https://dagger.dev"
+)
+@SuppressWarnings({
+    "unchecked",
+    "rawtypes",
+    "KotlinInternal",
+    "KotlinInternalInJava",
+    "cast",
+    "deprecation"
+})
+public final class DaggerSideQuestApp_HiltComponents_SingletonC {
+  private DaggerSideQuestApp_HiltComponents_SingletonC() {
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    private ApplicationContextModule applicationContextModule;
+
+    private Builder() {
+    }
+
+    public Builder applicationContextModule(ApplicationContextModule applicationContextModule) {
+      this.applicationContextModule = Preconditions.checkNotNull(applicationContextModule);
+      return this;
+    }
+
+    public SideQuestApp_HiltComponents.SingletonC build() {
+      Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
+      return new SingletonCImpl(applicationContextModule);
+    }
+  }
+
+  private static final class ActivityRetainedCBuilder implements SideQuestApp_HiltComponents.ActivityRetainedC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private SavedStateHandleHolder savedStateHandleHolder;
+
+    private ActivityRetainedCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ActivityRetainedCBuilder savedStateHandleHolder(
+        SavedStateHandleHolder savedStateHandleHolder) {
+      this.savedStateHandleHolder = Preconditions.checkNotNull(savedStateHandleHolder);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ActivityRetainedC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandleHolder, SavedStateHandleHolder.class);
+      return new ActivityRetainedCImpl(singletonCImpl, savedStateHandleHolder);
+    }
+  }
+
+  private static final class ActivityCBuilder implements SideQuestApp_HiltComponents.ActivityC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private Activity activity;
+
+    private ActivityCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ActivityCBuilder activity(Activity activity) {
+      this.activity = Preconditions.checkNotNull(activity);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ActivityC build() {
+      Preconditions.checkBuilderRequirement(activity, Activity.class);
+      return new ActivityCImpl(singletonCImpl, activityRetainedCImpl, activity);
+    }
+  }
+
+  private static final class FragmentCBuilder implements SideQuestApp_HiltComponents.FragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private Fragment fragment;
+
+    private FragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public FragmentCBuilder fragment(Fragment fragment) {
+      this.fragment = Preconditions.checkNotNull(fragment);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.FragmentC build() {
+      Preconditions.checkBuilderRequirement(fragment, Fragment.class);
+      return new FragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragment);
+    }
+  }
+
+  private static final class ViewWithFragmentCBuilder implements SideQuestApp_HiltComponents.ViewWithFragmentC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private View view;
+
+    private ViewWithFragmentCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+    }
+
+    @Override
+    public ViewWithFragmentCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ViewWithFragmentC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewWithFragmentCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl, view);
+    }
+  }
+
+  private static final class ViewCBuilder implements SideQuestApp_HiltComponents.ViewC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private View view;
+
+    private ViewCBuilder(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+    }
+
+    @Override
+    public ViewCBuilder view(View view) {
+      this.view = Preconditions.checkNotNull(view);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ViewC build() {
+      Preconditions.checkBuilderRequirement(view, View.class);
+      return new ViewCImpl(singletonCImpl, activityRetainedCImpl, activityCImpl, view);
+    }
+  }
+
+  private static final class ViewModelCBuilder implements SideQuestApp_HiltComponents.ViewModelC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private SavedStateHandle savedStateHandle;
+
+    private ViewModelLifecycle viewModelLifecycle;
+
+    private ViewModelCBuilder(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+    }
+
+    @Override
+    public ViewModelCBuilder savedStateHandle(SavedStateHandle handle) {
+      this.savedStateHandle = Preconditions.checkNotNull(handle);
+      return this;
+    }
+
+    @Override
+    public ViewModelCBuilder viewModelLifecycle(ViewModelLifecycle viewModelLifecycle) {
+      this.viewModelLifecycle = Preconditions.checkNotNull(viewModelLifecycle);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ViewModelC build() {
+      Preconditions.checkBuilderRequirement(savedStateHandle, SavedStateHandle.class);
+      Preconditions.checkBuilderRequirement(viewModelLifecycle, ViewModelLifecycle.class);
+      return new ViewModelCImpl(singletonCImpl, activityRetainedCImpl, savedStateHandle, viewModelLifecycle);
+    }
+  }
+
+  private static final class ServiceCBuilder implements SideQuestApp_HiltComponents.ServiceC.Builder {
+    private final SingletonCImpl singletonCImpl;
+
+    private Service service;
+
+    private ServiceCBuilder(SingletonCImpl singletonCImpl) {
+      this.singletonCImpl = singletonCImpl;
+    }
+
+    @Override
+    public ServiceCBuilder service(Service service) {
+      this.service = Preconditions.checkNotNull(service);
+      return this;
+    }
+
+    @Override
+    public SideQuestApp_HiltComponents.ServiceC build() {
+      Preconditions.checkBuilderRequirement(service, Service.class);
+      return new ServiceCImpl(singletonCImpl, service);
+    }
+  }
+
+  private static final class ViewWithFragmentCImpl extends SideQuestApp_HiltComponents.ViewWithFragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl;
+
+    private final ViewWithFragmentCImpl viewWithFragmentCImpl = this;
+
+    private ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        FragmentCImpl fragmentCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+      this.fragmentCImpl = fragmentCImpl;
+
+
+    }
+  }
+
+  private static final class FragmentCImpl extends SideQuestApp_HiltComponents.FragmentC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final FragmentCImpl fragmentCImpl = this;
+
+    private FragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        Fragment fragmentParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return activityCImpl.getHiltInternalFactoryFactory();
+    }
+
+    @Override
+    public ViewWithFragmentComponentBuilder viewWithFragmentComponentBuilder() {
+      return new ViewWithFragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl, fragmentCImpl);
+    }
+  }
+
+  private static final class ViewCImpl extends SideQuestApp_HiltComponents.ViewC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl;
+
+    private final ViewCImpl viewCImpl = this;
+
+    private ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+        ActivityCImpl activityCImpl, View viewParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.activityCImpl = activityCImpl;
+
+
+    }
+  }
+
+  private static final class ActivityCImpl extends SideQuestApp_HiltComponents.ActivityC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ActivityCImpl activityCImpl = this;
+
+    private ActivityCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, Activity activityParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+
+
+    }
+
+    @Override
+    public void injectMainActivity(MainActivity mainActivity) {
+    }
+
+    @Override
+    public void injectShareTargetActivity(ShareTargetActivity shareTargetActivity) {
+    }
+
+    @Override
+    public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
+      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(getViewModelKeys(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
+    }
+
+    @Override
+    public Map<Class<?>, Boolean> getViewModelKeys() {
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(12).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, BoardViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, BucketDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, BucketManagementViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, CaptureViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, CreateBucketViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ItemDetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, NotificationPermissionViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ProfileViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ReminderSettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_stats_StatsViewModel, StatsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, VoiceJournalViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, VoiceReviewViewModel_HiltModules.KeyModule.provide()).build());
+    }
+
+    @Override
+    public ViewModelComponentBuilder getViewModelComponentBuilder() {
+      return new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public FragmentComponentBuilder fragmentComponentBuilder() {
+      return new FragmentCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    @Override
+    public ViewComponentBuilder viewComponentBuilder() {
+      return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
+    }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
+
+      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
+
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
+
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
+
+      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
+
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
+
+      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      @KeepFieldType
+      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+
+      @KeepFieldType
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
+
+      @KeepFieldType
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+
+      @KeepFieldType
+      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+
+      @KeepFieldType
+      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
+
+      @KeepFieldType
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+    }
+  }
+
+  private static final class ViewModelCImpl extends SideQuestApp_HiltComponents.ViewModelC {
+    private final SavedStateHandle savedStateHandle;
+
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl;
+
+    private final ViewModelCImpl viewModelCImpl = this;
+
+    private Provider<BoardViewModel> boardViewModelProvider;
+
+    private Provider<BucketDetailViewModel> bucketDetailViewModelProvider;
+
+    private Provider<BucketManagementViewModel> bucketManagementViewModelProvider;
+
+    private Provider<CaptureViewModel> captureViewModelProvider;
+
+    private Provider<CreateBucketViewModel> createBucketViewModelProvider;
+
+    private Provider<ItemDetailViewModel> itemDetailViewModelProvider;
+
+    private Provider<NotificationPermissionViewModel> notificationPermissionViewModelProvider;
+
+    private Provider<ProfileViewModel> profileViewModelProvider;
+
+    private Provider<ReminderSettingsViewModel> reminderSettingsViewModelProvider;
+
+    private Provider<StatsViewModel> statsViewModelProvider;
+
+    private Provider<VoiceJournalViewModel> voiceJournalViewModelProvider;
+
+    private Provider<VoiceReviewViewModel> voiceReviewViewModelProvider;
+
+    private ViewModelCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
+        ViewModelLifecycle viewModelLifecycleParam) {
+      this.singletonCImpl = singletonCImpl;
+      this.activityRetainedCImpl = activityRetainedCImpl;
+      this.savedStateHandle = savedStateHandleParam;
+      initialize(savedStateHandleParam, viewModelLifecycleParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandle savedStateHandleParam,
+        final ViewModelLifecycle viewModelLifecycleParam) {
+      this.boardViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.bucketDetailViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.bucketManagementViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.captureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.createBucketViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.itemDetailViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.notificationPermissionViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.profileViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
+      this.reminderSettingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
+      this.statsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
+      this.voiceJournalViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
+      this.voiceReviewViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 11);
+    }
+
+    @Override
+    public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(12).put(LazyClassKeyProvider.com_sidequest_ui_board_BoardViewModel, ((Provider) boardViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketDetailViewModel, ((Provider) bucketDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_BucketManagementViewModel, ((Provider) bucketManagementViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_capture_CaptureViewModel, ((Provider) captureViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_bucket_CreateBucketViewModel, ((Provider) createBucketViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_detail_ItemDetailViewModel, ((Provider) itemDetailViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_NotificationPermissionViewModel, ((Provider) notificationPermissionViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_profile_ProfileViewModel, ((Provider) profileViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_reminder_ReminderSettingsViewModel, ((Provider) reminderSettingsViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_stats_StatsViewModel, ((Provider) statsViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceJournalViewModel, ((Provider) voiceJournalViewModelProvider)).put(LazyClassKeyProvider.com_sidequest_ui_voice_VoiceReviewViewModel, ((Provider) voiceReviewViewModelProvider)).build());
+    }
+
+    @Override
+    public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
+      return Collections.<Class<?>, Object>emptyMap();
+    }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
+
+      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
+
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
+
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
+
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+
+      static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
+
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
+      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
+
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+
+      @KeepFieldType
+      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
+
+      @KeepFieldType
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+
+      @KeepFieldType
+      NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
+
+      @KeepFieldType
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+
+      @KeepFieldType
+      VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+
+      @KeepFieldType
+      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+
+      @KeepFieldType
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
+
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final ViewModelCImpl viewModelCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          ViewModelCImpl viewModelCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.viewModelCImpl = viewModelCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.sidequest.ui.board.BoardViewModel 
+          return (T) new BoardViewModel(singletonCImpl.boardRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 1: // com.sidequest.ui.bucket.BucketDetailViewModel 
+          return (T) new BucketDetailViewModel(singletonCImpl.boardRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get(), viewModelCImpl.savedStateHandle);
+
+          case 2: // com.sidequest.ui.bucket.BucketManagementViewModel 
+          return (T) new BucketManagementViewModel(singletonCImpl.bucketRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 3: // com.sidequest.ui.capture.CaptureViewModel 
+          return (T) new CaptureViewModel(singletonCImpl.captureRepositoryProvider.get(), singletonCImpl.bucketRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 4: // com.sidequest.ui.bucket.CreateBucketViewModel 
+          return (T) new CreateBucketViewModel(singletonCImpl.bucketRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.bucketDao(), viewModelCImpl.savedStateHandle);
+
+          case 5: // com.sidequest.ui.detail.ItemDetailViewModel 
+          return (T) new ItemDetailViewModel(singletonCImpl.actionPlanRepositoryProvider.get(), singletonCImpl.boardRepositoryProvider.get(), singletonCImpl.actionItemDao(), singletonCImpl.bucketDao(), viewModelCImpl.savedStateHandle);
+
+          case 6: // com.sidequest.ui.reminder.NotificationPermissionViewModel 
+          return (T) new NotificationPermissionViewModel(singletonCImpl.dataStoreReminderSettingsStoreProvider.get());
+
+          case 7: // com.sidequest.ui.profile.ProfileViewModel 
+          return (T) new ProfileViewModel(singletonCImpl.userPreferencesProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 8: // com.sidequest.ui.reminder.ReminderSettingsViewModel 
+          return (T) new ReminderSettingsViewModel(singletonCImpl.dataStoreReminderSettingsStoreProvider.get(), singletonCImpl.workManagerReminderSchedulerProvider.get());
+
+          case 9: // com.sidequest.ui.stats.StatsViewModel 
+          return (T) new StatsViewModel(singletonCImpl.boardRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 10: // com.sidequest.ui.voice.VoiceJournalViewModel 
+          return (T) new VoiceJournalViewModel(singletonCImpl.voiceJournalRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get());
+
+          case 11: // com.sidequest.ui.voice.VoiceReviewViewModel 
+          return (T) new VoiceReviewViewModel(singletonCImpl.voiceJournalRepositoryProvider.get(), singletonCImpl.bucketRepositoryProvider.get(), singletonCImpl.currentAccountProvider.get(), viewModelCImpl.savedStateHandle);
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ActivityRetainedCImpl extends SideQuestApp_HiltComponents.ActivityRetainedC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ActivityRetainedCImpl activityRetainedCImpl = this;
+
+    private Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
+
+    private ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
+        SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.singletonCImpl = singletonCImpl;
+
+      initialize(savedStateHandleHolderParam);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandleHolder savedStateHandleHolderParam) {
+      this.provideActivityRetainedLifecycleProvider = DoubleCheck.provider(new SwitchingProvider<ActivityRetainedLifecycle>(singletonCImpl, activityRetainedCImpl, 0));
+    }
+
+    @Override
+    public ActivityComponentBuilder activityComponentBuilder() {
+      return new ActivityCBuilder(singletonCImpl, activityRetainedCImpl);
+    }
+
+    @Override
+    public ActivityRetainedLifecycle getActivityRetainedLifecycle() {
+      return provideActivityRetainedLifecycleProvider.get();
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // dagger.hilt.android.ActivityRetainedLifecycle 
+          return (T) ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory.provideActivityRetainedLifecycle();
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+
+  private static final class ServiceCImpl extends SideQuestApp_HiltComponents.ServiceC {
+    private final SingletonCImpl singletonCImpl;
+
+    private final ServiceCImpl serviceCImpl = this;
+
+    private ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
+      this.singletonCImpl = singletonCImpl;
+
+
+    }
+  }
+
+  private static final class SingletonCImpl extends SideQuestApp_HiltComponents.SingletonC {
+    private final ApplicationContextModule applicationContextModule;
+
+    private final SingletonCImpl singletonCImpl = this;
+
+    private Provider<SideQuestDatabase> provideDatabaseProvider;
+
+    private Provider<EncryptedTokenStore> encryptedTokenStoreProvider;
+
+    private Provider<CurrentAccountProvider> currentAccountProvider;
+
+    private Provider<OkHttpClient> provideOkHttpClientProvider;
+
+    private Provider<LlmProxyApi> provideLlmProxyApiProvider;
+
+    private Provider<RetrofitLlmService> retrofitLlmServiceProvider;
+
+    private Provider<DataStore<Preferences>> providePreferencesDataStoreProvider;
+
+    private Provider<DataStoreReminderSettingsStore> dataStoreReminderSettingsStoreProvider;
+
+    private Provider<NotificationManagerReminderNotifier> notificationManagerReminderNotifierProvider;
+
+    private Provider<Clock> provideClockProvider;
+
+    private Provider<DailyReminderWorker_AssistedFactory> dailyReminderWorker_AssistedFactoryProvider;
+
+    private Provider<OkHttpPreviewService> okHttpPreviewServiceProvider;
+
+    private Provider<PreviewFetchWorker_AssistedFactory> previewFetchWorker_AssistedFactoryProvider;
+
+    private Provider<PreviewSeeder> previewSeederProvider;
+
+    private Provider<TaskReminderScheduler> taskReminderSchedulerProvider;
+
+    private Provider<TaskReminderNotifier> taskReminderNotifierProvider;
+
+    private Provider<BoardRepository> boardRepositoryProvider;
+
+    private Provider<BucketRepository> bucketRepositoryProvider;
+
+    private Provider<WorkManager> provideWorkManagerProvider;
+
+    private Provider<WorkManagerPreviewEnqueuer> workManagerPreviewEnqueuerProvider;
+
+    private Provider<CaptureRepository> captureRepositoryProvider;
+
+    private Provider<ActionPlanRepository> actionPlanRepositoryProvider;
+
+    private Provider<UserPreferences> userPreferencesProvider;
+
+    private Provider<WorkManagerReminderScheduler> workManagerReminderSchedulerProvider;
+
+    private Provider<MediaRecorderAudioRecorder> mediaRecorderAudioRecorderProvider;
+
+    private Provider<TranscriptionProxyApi> provideTranscriptionProxyApiProvider;
+
+    private Provider<RetrofitTranscriptionService> retrofitTranscriptionServiceProvider;
+
+    private Provider<SpeechRecognizerLiveTranscriber> speechRecognizerLiveTranscriberProvider;
+
+    private Provider<VoiceJournalRepository> voiceJournalRepositoryProvider;
+
+    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+      this.applicationContextModule = applicationContextModuleParam;
+      initialize(applicationContextModuleParam);
+      initialize2(applicationContextModuleParam);
+
+    }
+
+    private BucketDao bucketDao() {
+      return DatabaseModule_ProvideBucketDaoFactory.provideBucketDao(provideDatabaseProvider.get());
+    }
+
+    private PrepareReminderTextUseCase prepareReminderTextUseCase() {
+      return new PrepareReminderTextUseCase(retrofitLlmServiceProvider.get());
+    }
+
+    private Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
+        ) {
+      return MapBuilder.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>newMapBuilder(2).put("com.sidequest.data.reminder.DailyReminderWorker", ((Provider) dailyReminderWorker_AssistedFactoryProvider)).put("com.sidequest.data.preview.PreviewFetchWorker", ((Provider) previewFetchWorker_AssistedFactoryProvider)).build();
+    }
+
+    private HiltWorkerFactory hiltWorkerFactory() {
+      return WorkerFactoryModule_ProvideFactoryFactory.provideFactory(mapOfStringAndProviderOfWorkerAssistedFactoryOf());
+    }
+
+    private ActionPlanDao actionPlanDao() {
+      return DatabaseModule_ProvideActionPlanDaoFactory.provideActionPlanDao(provideDatabaseProvider.get());
+    }
+
+    private VoiceJournalDao voiceJournalDao() {
+      return DatabaseModule_ProvideVoiceJournalDaoFactory.provideVoiceJournalDao(provideDatabaseProvider.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<SideQuestDatabase>(singletonCImpl, 1));
+      this.encryptedTokenStoreProvider = DoubleCheck.provider(new SwitchingProvider<EncryptedTokenStore>(singletonCImpl, 3));
+      this.currentAccountProvider = DoubleCheck.provider(new SwitchingProvider<CurrentAccountProvider>(singletonCImpl, 2));
+      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 6));
+      this.provideLlmProxyApiProvider = DoubleCheck.provider(new SwitchingProvider<LlmProxyApi>(singletonCImpl, 5));
+      this.retrofitLlmServiceProvider = DoubleCheck.provider(new SwitchingProvider<RetrofitLlmService>(singletonCImpl, 4));
+      this.providePreferencesDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<DataStore<Preferences>>(singletonCImpl, 8));
+      this.dataStoreReminderSettingsStoreProvider = DoubleCheck.provider(new SwitchingProvider<DataStoreReminderSettingsStore>(singletonCImpl, 7));
+      this.notificationManagerReminderNotifierProvider = DoubleCheck.provider(new SwitchingProvider<NotificationManagerReminderNotifier>(singletonCImpl, 9));
+      this.provideClockProvider = DoubleCheck.provider(new SwitchingProvider<Clock>(singletonCImpl, 10));
+      this.dailyReminderWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<DailyReminderWorker_AssistedFactory>(singletonCImpl, 0));
+      this.okHttpPreviewServiceProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpPreviewService>(singletonCImpl, 12));
+      this.previewFetchWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<PreviewFetchWorker_AssistedFactory>(singletonCImpl, 11));
+      this.previewSeederProvider = DoubleCheck.provider(new SwitchingProvider<PreviewSeeder>(singletonCImpl, 13));
+      this.taskReminderSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<TaskReminderScheduler>(singletonCImpl, 14));
+      this.taskReminderNotifierProvider = DoubleCheck.provider(new SwitchingProvider<TaskReminderNotifier>(singletonCImpl, 15));
+      this.boardRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BoardRepository>(singletonCImpl, 16));
+      this.bucketRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BucketRepository>(singletonCImpl, 17));
+      this.provideWorkManagerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManager>(singletonCImpl, 20));
+      this.workManagerPreviewEnqueuerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManagerPreviewEnqueuer>(singletonCImpl, 19));
+      this.captureRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CaptureRepository>(singletonCImpl, 18));
+      this.actionPlanRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ActionPlanRepository>(singletonCImpl, 21));
+      this.userPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<UserPreferences>(singletonCImpl, 22));
+      this.workManagerReminderSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManagerReminderScheduler>(singletonCImpl, 23));
+      this.mediaRecorderAudioRecorderProvider = DoubleCheck.provider(new SwitchingProvider<MediaRecorderAudioRecorder>(singletonCImpl, 25));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize2(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideTranscriptionProxyApiProvider = DoubleCheck.provider(new SwitchingProvider<TranscriptionProxyApi>(singletonCImpl, 27));
+      this.retrofitTranscriptionServiceProvider = DoubleCheck.provider(new SwitchingProvider<RetrofitTranscriptionService>(singletonCImpl, 26));
+      this.speechRecognizerLiveTranscriberProvider = DoubleCheck.provider(new SwitchingProvider<SpeechRecognizerLiveTranscriber>(singletonCImpl, 28));
+      this.voiceJournalRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<VoiceJournalRepository>(singletonCImpl, 24));
+    }
+
+    @Override
+    public void injectSideQuestApp(SideQuestApp sideQuestApp) {
+      injectSideQuestApp2(sideQuestApp);
+    }
+
+    @Override
+    public ActionItemDao actionItemDao() {
+      return DatabaseModule_ProvideActionItemDaoFactory.provideActionItemDao(provideDatabaseProvider.get());
+    }
+
+    @Override
+    public TaskReminderScheduler scheduler() {
+      return taskReminderSchedulerProvider.get();
+    }
+
+    @Override
+    public CurrentAccountProvider accountProvider() {
+      return currentAccountProvider.get();
+    }
+
+    @Override
+    public TaskReminderNotifier notifier() {
+      return taskReminderNotifierProvider.get();
+    }
+
+    @Override
+    public Set<Boolean> getDisableFragmentGetContextFix() {
+      return Collections.<Boolean>emptySet();
+    }
+
+    @Override
+    public ActivityRetainedComponentBuilder retainedComponentBuilder() {
+      return new ActivityRetainedCBuilder(singletonCImpl);
+    }
+
+    @Override
+    public ServiceComponentBuilder serviceComponentBuilder() {
+      return new ServiceCBuilder(singletonCImpl);
+    }
+
+    private SideQuestApp injectSideQuestApp2(SideQuestApp instance) {
+      SideQuestApp_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
+      SideQuestApp_MembersInjector.injectPreviewSeeder(instance, previewSeederProvider.get());
+      return instance;
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.sidequest.data.reminder.DailyReminderWorker_AssistedFactory 
+          return (T) new DailyReminderWorker_AssistedFactory() {
+            @Override
+            public DailyReminderWorker create(Context appContext, WorkerParameters params) {
+              return new DailyReminderWorker(appContext, params, singletonCImpl.actionItemDao(), singletonCImpl.bucketDao(), singletonCImpl.currentAccountProvider.get(), singletonCImpl.prepareReminderTextUseCase(), singletonCImpl.dataStoreReminderSettingsStoreProvider.get(), singletonCImpl.notificationManagerReminderNotifierProvider.get(), singletonCImpl.provideClockProvider.get());
+            }
+          };
+
+          case 1: // com.sidequest.data.local.SideQuestDatabase 
+          return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 2: // com.sidequest.ui.capture.CurrentAccountProvider 
+          return (T) new CurrentAccountProvider(singletonCImpl.encryptedTokenStoreProvider.get());
+
+          case 3: // com.sidequest.data.auth.EncryptedTokenStore 
+          return (T) new EncryptedTokenStore(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 4: // com.sidequest.data.llm.RetrofitLlmService 
+          return (T) new RetrofitLlmService(singletonCImpl.provideLlmProxyApiProvider.get());
+
+          case 5: // com.sidequest.data.llm.LlmProxyApi 
+          return (T) LlmModule_Companion_ProvideLlmProxyApiFactory.provideLlmProxyApi(singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 6: // okhttp3.OkHttpClient 
+          return (T) PreviewModule_Companion_ProvideOkHttpClientFactory.provideOkHttpClient();
+
+          case 7: // com.sidequest.data.reminder.DataStoreReminderSettingsStore 
+          return (T) new DataStoreReminderSettingsStore(singletonCImpl.providePreferencesDataStoreProvider.get());
+
+          case 8: // androidx.datastore.core.DataStore<androidx.datastore.preferences.core.Preferences> 
+          return (T) ReminderModule_Companion_ProvidePreferencesDataStoreFactory.providePreferencesDataStore(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 9: // com.sidequest.data.reminder.NotificationManagerReminderNotifier 
+          return (T) new NotificationManagerReminderNotifier(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 10: // java.time.Clock 
+          return (T) ReminderModule_Companion_ProvideClockFactory.provideClock();
+
+          case 11: // com.sidequest.data.preview.PreviewFetchWorker_AssistedFactory 
+          return (T) new PreviewFetchWorker_AssistedFactory() {
+            @Override
+            public PreviewFetchWorker create(Context appContext2, WorkerParameters params2) {
+              return new PreviewFetchWorker(appContext2, params2, singletonCImpl.okHttpPreviewServiceProvider.get(), singletonCImpl.actionItemDao());
+            }
+          };
+
+          case 12: // com.sidequest.data.preview.OkHttpPreviewService 
+          return (T) new OkHttpPreviewService(singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 13: // com.sidequest.data.seed.PreviewSeeder 
+          return (T) new PreviewSeeder(singletonCImpl.bucketDao(), singletonCImpl.actionItemDao(), singletonCImpl.actionPlanDao(), singletonCImpl.voiceJournalDao());
+
+          case 14: // com.sidequest.data.reminder.TaskReminderScheduler 
+          return (T) new TaskReminderScheduler(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideClockProvider.get());
+
+          case 15: // com.sidequest.data.reminder.TaskReminderNotifier 
+          return (T) new TaskReminderNotifier(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 16: // com.sidequest.data.repository.BoardRepository 
+          return (T) new BoardRepository(singletonCImpl.actionItemDao(), singletonCImpl.bucketDao(), singletonCImpl.taskReminderSchedulerProvider.get());
+
+          case 17: // com.sidequest.data.repository.BucketRepository 
+          return (T) new BucketRepository(singletonCImpl.bucketDao(), singletonCImpl.actionItemDao());
+
+          case 18: // com.sidequest.data.repository.CaptureRepository 
+          return (T) new CaptureRepository(singletonCImpl.actionItemDao(), singletonCImpl.workManagerPreviewEnqueuerProvider.get());
+
+          case 19: // com.sidequest.data.preview.WorkManagerPreviewEnqueuer 
+          return (T) new WorkManagerPreviewEnqueuer(singletonCImpl.provideWorkManagerProvider.get());
+
+          case 20: // androidx.work.WorkManager 
+          return (T) PreviewModule_Companion_ProvideWorkManagerFactory.provideWorkManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 21: // com.sidequest.data.repository.ActionPlanRepository 
+          return (T) new ActionPlanRepository(singletonCImpl.actionPlanDao(), singletonCImpl.boardRepositoryProvider.get());
+
+          case 22: // com.sidequest.data.local.UserPreferences 
+          return (T) new UserPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 23: // com.sidequest.data.reminder.WorkManagerReminderScheduler 
+          return (T) new WorkManagerReminderScheduler(singletonCImpl.provideWorkManagerProvider.get(), singletonCImpl.provideClockProvider.get());
+
+          case 24: // com.sidequest.data.repository.VoiceJournalRepository 
+          return (T) new VoiceJournalRepository(singletonCImpl.mediaRecorderAudioRecorderProvider.get(), singletonCImpl.voiceJournalDao(), singletonCImpl.retrofitTranscriptionServiceProvider.get(), singletonCImpl.speechRecognizerLiveTranscriberProvider.get(), singletonCImpl.retrofitLlmServiceProvider.get(), singletonCImpl.actionItemDao());
+
+          case 25: // com.sidequest.data.audio.MediaRecorderAudioRecorder 
+          return (T) new MediaRecorderAudioRecorder(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), DispatchersModule_ProvideIoDispatcherFactory.provideIoDispatcher());
+
+          case 26: // com.sidequest.data.transcription.RetrofitTranscriptionService 
+          return (T) new RetrofitTranscriptionService(singletonCImpl.provideTranscriptionProxyApiProvider.get());
+
+          case 27: // com.sidequest.data.transcription.TranscriptionProxyApi 
+          return (T) TranscriptionModule_Companion_ProvideTranscriptionProxyApiFactory.provideTranscriptionProxyApi(singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 28: // com.sidequest.data.transcription.SpeechRecognizerLiveTranscriber 
+          return (T) new SpeechRecognizerLiveTranscriber(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          default: throw new AssertionError(id);
+        }
+      }
+    }
+  }
+}

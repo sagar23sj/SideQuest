@@ -22,7 +22,7 @@ import kotlin.math.sin
 object CompletionSound {
 
     private const val SAMPLE_RATE = 44_100
-    private const val DURATION_SEC = 0.62
+    private const val DURATION_SEC = 0.7
 
     /** Plays the celebration cue (best-effort; never throws, never blocks UI). */
     fun play() {
@@ -53,61 +53,43 @@ object CompletionSound {
     }
 
     /**
-     * Builds the PCM for a "party popper": a few quick clap-like noise bursts
-     * (applause feel) followed by a confetti "shower" — a softly flickering
-     * noise tail that rises then fades — plus a tiny bright sparkle to finish.
-     * A one-pole low-pass softens the hiss, and the mix is peak-normalized.
+     * Builds the PCM for a clean, rewarding chime: a major arpeggio (C5–E5–G5–C6)
+     * that rises and resolves on the octave. Each note is a soft bell-like tone
+     * (fundamental + gently decaying upper partials) with a quick attack and a
+     * long exponential ring, so the notes bloom into a consonant chord. No noise
+     * — just a bright, happy "success" cue. Peak-normalized to avoid clipping.
      */
     private fun synthesize(): ShortArray {
         val total = (SAMPLE_RATE * DURATION_SEC).toInt()
         val buf = FloatArray(total)
-        val rnd = java.util.Random(11)
 
-        // --- Claps: short, snappy noise bursts spaced like a quick applause. ---
-        val claps = arrayOf(0.0 to 1.0, 0.07 to 0.9, 0.15 to 0.8)
-        for ((startSec, amp) in claps) {
-            val start = (SAMPLE_RATE * startSec).toInt()
-            val len = (SAMPLE_RATE * 0.05).toInt()
-            for (j in 0 until len) {
-                val n = start + j
-                if (n >= total) break
-                val env = exp(-30.0 * j / len).toFloat() // fast decay = snappy
-                buf[n] += (rnd.nextFloat() * 2f - 1f) * env * amp.toFloat() * 0.7f
-            }
-        }
+        val notes = floatArrayOf(523.25f, 659.25f, 783.99f, 1046.5f) // C5, E5, G5, C6
+        // Soft bell timbre: fundamental + decaying 2nd/3rd partials.
+        val partialAmp = floatArrayOf(1.0f, 0.45f, 0.22f)
+        val staggerSamples = (SAMPLE_RATE * 0.078).toInt()
+        val attackSamples = (SAMPLE_RATE * 0.006).toInt()
 
-        // --- Confetti shower: flickering noise that swells then decays. ---
-        val showerStart = (SAMPLE_RATE * 0.16).toInt()
-        for (n in showerStart until total) {
-            val p = (n - showerStart).toFloat() / (total - showerStart)
-            val env = (exp(-3.2 * p) * (1.0 - exp(-22.0 * p))).toFloat()
-            val flicker = 0.55f + 0.45f * rnd.nextFloat()
-            buf[n] += (rnd.nextFloat() * 2f - 1f) * env * flicker * 0.2f
-        }
-
-        // --- A small bright sparkle accent near the start of the shower. ---
-        val sparkleFreqs = floatArrayOf(1568.0f, 2093.0f) // G6, C7
-        sparkleFreqs.forEachIndexed { idx, freq ->
-            val start = (SAMPLE_RATE * (0.12 + idx * 0.06)).toInt()
-            val len = (SAMPLE_RATE * 0.22).toInt()
-            for (j in 0 until len) {
+        notes.forEachIndexed { idx, freq ->
+            val start = idx * staggerSamples
+            // The last (resolving octave) note rings a touch louder and longer.
+            val emphasis = if (idx == notes.lastIndex) 1.15f else 1.0f
+            val ringSamples = total - start
+            for (j in 0 until ringSamples) {
                 val n = start + j
                 if (n >= total) break
                 val t = j.toFloat() / SAMPLE_RATE
-                val env = exp(-6.0 * j / len).toFloat()
-                buf[n] += sin(2.0 * PI * freq * t).toFloat() * env * 0.12f
+                val attack = if (j < attackSamples) j.toFloat() / attackSamples else 1f
+                val decay = exp(-4.2 * j / ringSamples).toFloat()
+                val env = attack * decay * emphasis
+                var wave = 0f
+                for (p in partialAmp.indices) {
+                    wave += partialAmp[p] * sin(2.0 * PI * freq * (p + 1) * t).toFloat()
+                }
+                buf[n] += wave * env * 0.16f
             }
         }
 
-        // --- Gentle one-pole low-pass to soften harsh hiss. ---
-        var prev = 0f
-        val a = 0.4f
-        for (i in buf.indices) {
-            prev += a * (buf[i] - prev)
-            buf[i] = prev
-        }
-
-        // --- Peak-normalize, soft-clamp, to 16-bit PCM. ---
+        // Peak-normalize, soft-clamp, to 16-bit PCM.
         var peak = 1e-6f
         for (v in buf) {
             val mag = abs(v)

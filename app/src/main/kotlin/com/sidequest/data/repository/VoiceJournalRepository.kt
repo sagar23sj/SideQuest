@@ -80,19 +80,28 @@ class VoiceJournalRepository(
 
     /** Whether a recording is currently in progress. */
     val isRecording: Boolean
-        get() = audioRecorder.isRecording
+        get() = audioRecorder.isRecording || usingLiveOnly
+
+    // True for the current session when we're capturing transcript-only via the
+    // on-device recognizer (no MediaRecorder), because the two can't share the
+    // mic — the privileged recognizer starves MediaRecorder, breaking recording.
+    @Volatile private var usingLiveOnly = false
 
     /**
-     * Starts capturing audio (Req 10.2) and, when on-device live transcription
-     * is available, begins listening to the microphone in parallel so the
-     * transcript can be produced offline. The live transcriber is fail-soft and
-     * never affects the audio capture path. Returns the audio file path.
+     * Starts a capture session. When on-device live transcription is available
+     * we run *only* the recognizer (transcript-first, no audio file) to avoid
+     * mic contention; otherwise we record audio for later (backend)
+     * transcription. Returns the audio file path, or "" in transcript-only mode.
      */
-    suspend fun startRecording(): String {
-        val path = audioRecorder.start()
-        runCatching { liveTranscriber.start() }
-        return path
-    }
+    suspend fun startRecording(): String =
+        if (liveTranscriber.isAvailable) {
+            usingLiveOnly = true
+            liveTranscriber.start()
+            ""
+        } else {
+            usingLiveOnly = false
+            audioRecorder.start()
+        }
 
     /**
      * Stops the in-progress recording and persists a [VoiceJournalEntry] for
@@ -104,19 +113,27 @@ class VoiceJournalRepository(
      * and pushed by sync. Returns the persisted entry.
      */
     suspend fun stopRecording(accountId: String): VoiceJournalEntry {
-        val audioRef = audioRecorder.stop()
-        // Pull the on-device live transcript, if any. Null means on-device
-        // recognition was unavailable/empty, and the caller can fall back to the
-        // file-based backend transcription.
-        val liveTranscript = runCatching { liveTranscriber.stop() }.getOrNull()
-            ?.takeIf { it.isNotBlank() }
+        val audioRef: String
+        val transcript: String?
+        val failed: Boolean
+        if (usingLiveOnly) {
+            // Transcript-only mode: no audio file; the recognizer's text is the
+            // outcome. A null/blank result means recognition produced nothing.
+            audioRef = ""
+            transcript = runCatching { liveTranscriber.stop() }.getOrNull()?.takeIf { it.isNotBlank() }
+            failed = transcript == null
+        } else {
+            audioRef = audioRecorder.stop()
+            transcript = null
+            failed = false
+        }
         val now = clock()
         val entry = VoiceJournalEntry(
             id = idGenerator(),
             accountId = accountId,
             audioRef = audioRef,
-            transcript = liveTranscript,
-            transcriptionFailed = false,
+            transcript = transcript,
+            transcriptionFailed = failed,
             createdAt = now,
             extractedActionItemIds = emptyList(),
             sync = SyncMeta(
@@ -183,7 +200,9 @@ class VoiceJournalRepository(
      */
     suspend fun requestExtraction(entryId: String): LlmOutcome<ExtractedAction>? {
         val entry = voiceJournalDao.getById(entryId)?.toDomain() ?: return null
-        val transcript = entry.transcript ?: return null
+        val transcript = entry.transcript
+        android.util.Log.w("SQVoice", "requestExtraction: transcript=${transcript?.take(80) ?: "<null>"}")
+        if (transcript == null) return null
         val outcome = LlmFailSoft.listOrUnavailable(llmService.extractActions(transcript))
         if (!outcome.unavailable && outcome.values.isNotEmpty()) {
             return outcome
@@ -192,6 +211,7 @@ class VoiceJournalRepository(
         // heuristic so extraction still works fully offline. We surface its
         // candidates as available, since they were produced successfully.
         val heuristic = HeuristicActionExtraction.extract(transcript)
+        android.util.Log.w("SQVoice", "requestExtraction: llmUnavailable=${outcome.unavailable} heuristicCount=${heuristic.size}")
         return if (heuristic.isNotEmpty()) {
             LlmOutcome(values = heuristic, unavailable = false)
         } else {
@@ -240,8 +260,11 @@ class VoiceJournalRepository(
      * the microphone and discarding the partial audio file.
      */
     suspend fun cancelRecording() {
-        audioRecorder.cancel()
-        runCatching { liveTranscriber.cancel() }
+        if (usingLiveOnly) {
+            runCatching { liveTranscriber.cancel() }
+        } else {
+            audioRecorder.cancel()
+        }
     }
 
     /**
