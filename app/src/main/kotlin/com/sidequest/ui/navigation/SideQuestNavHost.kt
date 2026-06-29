@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,6 +40,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.sidequest.R
 import com.sidequest.ui.board.BoardScreen
 import com.sidequest.ui.bucket.BucketManagementScreen
 import com.sidequest.ui.bucket.CreateBucketScreen
@@ -90,7 +94,10 @@ fun SideQuestNavHost(
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                BottomNavBar(navController = navController)
+                BottomNavBar(
+                    navController = navController,
+                    onCapture = { onAddTask(null) },
+                )
             }
         },
     ) { innerPadding ->
@@ -107,7 +114,18 @@ fun SideQuestNavHost(
                     onOpenBucket = { bucketId -> navController.navigate(Routes.bucketDetail(bucketId)) },
                     onOpenProfile = { navController.navigate(Routes.PROFILE) },
                     onOpenLeaderboard = { navController.navigate(Routes.LEADERBOARD) },
-                    onOpenStats = { navController.navigate(Routes.STATS) },
+                    onOpenStats = {
+                        // Switch to the Insights tab (same options as the bottom
+                        // bar) so the tab stays in sync and the back stack is
+                        // consistent.
+                        navController.navigate(Routes.STATS) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                 )
             }
 
@@ -127,6 +145,7 @@ fun SideQuestNavHost(
 
             composable(Routes.PROFILE) {
                 ProfileScreen(
+                    onNavigateBack = navController::popBackStack,
                     onOpenReminders = { navController.navigate(Routes.REMINDER_SETTINGS) },
                     onManageBuckets = { navController.navigate(Routes.BUCKETS) },
                     onCreateBucket = { navController.navigate(Routes.CREATE_BUCKET) },
@@ -199,9 +218,8 @@ fun SideQuestNavHost(
             }
 
             composable(Routes.STATS) {
-                com.sidequest.ui.stats.StatsScreen(
-                    onNavigateBack = navController::popBackStack,
-                )
+                // Insights tab — no back arrow (it's a top-level tab).
+                com.sidequest.ui.stats.StatsScreen()
             }
 
             composable(Routes.LOGIN) {
@@ -229,9 +247,27 @@ fun SideQuestNavHost(
  * avoids piling duplicate destinations.
  */
 @Composable
-private fun BottomNavBar(navController: NavHostController) {
+private fun BottomNavBar(
+    navController: NavHostController,
+    onCapture: () -> Unit,
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+
+    val tabs = TopLevelDestination.visible()
+    val mid = tabs.size / 2
+    val leftTabs = tabs.take(mid)
+    val rightTabs = tabs.drop(mid)
+
+    fun onTabClick(destination: TopLevelDestination) {
+        navController.navigate(destination.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
@@ -243,26 +279,58 @@ private fun BottomNavBar(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TopLevelDestination.visible().forEach { destination ->
-                val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
-                BottomNavItem(
-                    destination = destination,
-                    selected = selected,
-                    onClick = {
-                        navController.navigate(destination.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                )
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                leftTabs.forEach { destination ->
+                    val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
+                    BottomNavItem(destination = destination, selected = selected, onClick = { onTabClick(destination) })
+                }
             }
+
+            CaptureButton(onClick = onCapture)
+
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                rightTabs.forEach { destination ->
+                    val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
+                    BottomNavItem(destination = destination, selected = selected, onClick = { onTabClick(destination) })
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The center capture action: a raised, primary-colored circular "+" — the
+ * highest-frequency action in the app (add a quest), placed where the thumb
+ * naturally rests.
+ */
+@Composable
+private fun CaptureButton(onClick: () -> Unit) {
+    val desc = stringResource(R.string.nav_capture_desc)
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primary,
+        shadowElevation = 6.dp,
+        modifier = Modifier.size(56.dp),
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = androidx.compose.material.icons.Icons.Filled.Add,
+                contentDescription = desc,
+                tint = MaterialTheme.colorScheme.onPrimary,
+            )
         }
     }
 }

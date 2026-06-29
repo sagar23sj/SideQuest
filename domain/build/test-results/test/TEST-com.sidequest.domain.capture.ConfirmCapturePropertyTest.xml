@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.capture.ConfirmCapturePropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:04:15" hostname="INLPF5TK6XC" time="0.064">
+<testsuite name="com.sidequest.domain.capture.ConfirmCapturePropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.048">
   <properties/>
-  <testcase name="Property 2: confirming capture creates a not-started item preserving its bucket and timeframe" classname="com.sidequest.domain.capture.ConfirmCapturePropertyTest" time="0.064"/>
+  <testcase name="Property 2: confirming capture creates a not-started item preserving its bucket and timeframe" classname="com.sidequest.domain.capture.ConfirmCapturePropertyTest" time="0.048"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

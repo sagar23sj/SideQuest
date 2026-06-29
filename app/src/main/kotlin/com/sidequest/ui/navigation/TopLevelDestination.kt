@@ -3,12 +3,12 @@ package com.sidequest.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.sidequest.R
@@ -48,19 +48,21 @@ enum class TopLevelDestination(
         selectedIcon = Icons.Filled.Mic,
         unselectedIcon = Icons.Outlined.Mic,
     ),
-    PROFILE(
-        route = Routes.PROFILE,
-        labelRes = R.string.nav_profile,
-        selectedIcon = Icons.Filled.Person,
-        unselectedIcon = Icons.Outlined.Person,
+    INSIGHTS(
+        route = Routes.STATS,
+        labelRes = R.string.nav_insights,
+        selectedIcon = Icons.Filled.Insights,
+        unselectedIcon = Icons.Outlined.Insights,
     ),
     ;
 
     companion object {
         /**
-         * The tabs currently surfaced in the bottom bar. Board and Profile are
-         * always shown; Games and Voice appear only when their feature flags are
-         * enabled (hidden during the planner-focused rollout).
+         * The tabs currently surfaced in the bottom bar, split around the center
+         * capture FAB. Home and Insights are always shown; Games and Voice
+         * appear only when their feature flags are enabled (hidden during the
+         * planner-focused rollout). Profile is not a tab — it opens from the
+         * top-left avatar as a pushed screen.
          */
         fun visible(): List<TopLevelDestination> = entries.filter { destination ->
             when (destination) {

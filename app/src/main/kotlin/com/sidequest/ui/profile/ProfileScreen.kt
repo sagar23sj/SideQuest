@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.CorporateFare
@@ -59,6 +60,7 @@ import com.sidequest.ui.components.SettingsRow
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {},
     onOpenReminders: () -> Unit = {},
     onManageBuckets: () -> Unit = {},
     onCreateBucket: () -> Unit = {},
@@ -110,6 +112,14 @@ fun ProfileScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                     )
+                },
+                navigationIcon = {
+                    androidx.compose.material3.IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.action_back),
+                        )
+                    }
                 },
             )
         },

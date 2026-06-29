@@ -56,7 +56,7 @@ private val StatGreen = Color(0xFF2E7D32)
 @Composable
 fun StatsScreen(
     modifier: Modifier = Modifier,
-    onNavigateBack: () -> Unit = {},
+    onNavigateBack: (() -> Unit)? = null,
     viewModel: StatsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -77,11 +77,13 @@ fun StatsScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.stats_back),
-                        )
+                    if (onNavigateBack != null) {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.stats_back),
+                            )
+                        }
                     }
                 },
             )

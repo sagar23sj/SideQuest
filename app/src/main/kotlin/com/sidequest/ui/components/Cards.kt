@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,8 +35,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -86,6 +92,68 @@ private val CompleteGreen = Color(0xFF2E7D32)
 
 /** Hold-to-undo fill: a clear red signalling "send back to to-do". */
 private val UndoRed = Color(0xFFD32F2F)
+
+/**
+ * The hold-to-confirm overlay shared by the task cards: a translucent scrim plus
+ * a centered circular progress ring that fills clockwise as the user holds, with
+ * a check (complete) or replay (undo) icon that springs in with the ring. This
+ * replaces the old flat color flood — the icon communicates the action, so it no
+ * longer relies on color alone, and the ring reads as deliberate "hold to
+ * confirm" feedback.
+ */
+@Composable
+private fun HoldConfirmOverlay(
+    progress: Float,
+    isUndo: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    if (progress <= 0f) return
+    val accent = if (isUndo) UndoRed else CompleteGreen
+    val p = progress.coerceIn(0f, 1f)
+    Box(
+        modifier = modifier.background(Color.Black.copy(alpha = 0.30f * p)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(54.dp)) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val strokeWidth = 5.dp.toPx()
+                val arcSize = Size(size.width - strokeWidth, size.height - strokeWidth)
+                val topLeft = Offset(strokeWidth / 2f, strokeWidth / 2f)
+                drawArc(
+                    color = Color.White.copy(alpha = 0.35f),
+                    startAngle = -90f,
+                    sweepAngle = 360f,
+                    useCenter = false,
+                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                    topLeft = topLeft,
+                    size = arcSize,
+                )
+                drawArc(
+                    color = accent,
+                    startAngle = -90f,
+                    sweepAngle = 360f * p,
+                    useCenter = false,
+                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                    topLeft = topLeft,
+                    size = arcSize,
+                )
+            }
+            Icon(
+                imageVector = if (isUndo) Icons.Filled.Replay else Icons.Filled.Check,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .size(24.dp)
+                    .graphicsLayer {
+                        val s = 0.6f + 0.4f * p
+                        scaleX = s
+                        scaleY = s
+                        alpha = p
+                    },
+            )
+        }
+    }
+}
 
 /**
  * A small status pill: a colored dot plus its label (e.g. "Not started",
@@ -151,11 +219,15 @@ fun RichTaskCard(
         val scope = rememberCoroutineScope()
         val progress = remember { Animatable(0f) }
         val shape = RoundedCornerShape(28.dp)
-        val fill = if (completed) UndoRed else CompleteGreen
 
         Box(
             modifier = modifier
                 .fillMaxWidth()
+                .graphicsLayer {
+                    val s = 1f - 0.03f * progress.value
+                    scaleX = s
+                    scaleY = s
+                }
                 .clip(shape)
                 .pointerInput(completed) {
                     detectTapGestures(
@@ -189,23 +261,14 @@ fun RichTaskCard(
                     trailing = null,
                 )
             }
-            // Progress fill that sweeps while holding: green left→right to
-            // complete, red right→left (reverse) to send a task back to to-do.
-            if (progress.value > 0f) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clip(shape),
-                    contentAlignment = if (completed) Alignment.CenterEnd else Alignment.CenterStart,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(progress.value)
-                            .background(fill.copy(alpha = 0.30f)),
-                    )
-                }
-            }
+            // Centered ring + icon confirm feedback while holding.
+            HoldConfirmOverlay(
+                progress = progress.value,
+                isUndo = completed,
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(shape),
+            )
         }
         return
     }
@@ -302,9 +365,9 @@ private fun TaskCardRow(
  * task title overlaid at the bottom.
  *
  * It carries the same press-and-hold interaction as [RichTaskCard]: a quick tap
- * opens the item, a sustained hold sweeps a fill (green bottom→up to complete,
- * red top→down to send back to to-do) and toggles completion with haptics.
- * Completed posters get a green border and a check badge.
+ * opens the item, a sustained hold fills a centered confirm ring (check to
+ * complete, replay to undo) and toggles completion with haptics. Completed
+ * posters get a green border and a check badge.
  */
 @Composable
 fun TaskPosterCard(
@@ -322,7 +385,6 @@ fun TaskPosterCard(
     val scope = rememberCoroutineScope()
     val progress = remember { Animatable(0f) }
     val shape = RoundedCornerShape(20.dp)
-    val fill = if (completed) UndoRed else CompleteGreen
     val border = if (completed) {
         BorderStroke(2.dp, CompleteGreen)
     } else {
@@ -331,6 +393,11 @@ fun TaskPosterCard(
 
     Box(
         modifier = modifier
+            .graphicsLayer {
+                val s = 1f - 0.03f * progress.value
+                scaleX = s
+                scaleY = s
+            }
             .clip(shape)
             .border(border, shape)
             .pointerInput(completed) {
@@ -426,21 +493,13 @@ fun TaskPosterCard(
                 .padding(12.dp),
         )
 
-        // Hold sweep: green fills up to complete, red fills down to undo.
-        if (progress.value > 0f) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clip(shape),
-                contentAlignment = if (completed) Alignment.TopCenter else Alignment.BottomCenter,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(progress.value)
-                        .background(fill.copy(alpha = 0.35f)),
-                )
-            }
-        }
+        // Centered ring + icon confirm feedback while holding.
+        HoldConfirmOverlay(
+            progress = progress.value,
+            isUndo = completed,
+            modifier = Modifier
+                .matchParentSize()
+                .clip(shape),
+        )
     }
 }

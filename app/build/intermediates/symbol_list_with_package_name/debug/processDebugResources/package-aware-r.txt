@@ -227,6 +227,7 @@ layout notification_template_part_time
 mipmap ic_launcher
 mipmap ic_launcher_round
 raw completion_tune
+string action_back
 string add_chooser_bucket
 string add_chooser_bucket_desc
 string add_chooser_task
@@ -434,6 +435,7 @@ string nav_board
 string nav_capture
 string nav_capture_desc
 string nav_games
+string nav_insights
 string nav_profile
 string nav_voice
 string navigation_menu

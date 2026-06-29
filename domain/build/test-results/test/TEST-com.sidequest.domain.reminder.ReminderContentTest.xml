@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.reminder.ReminderContentTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:04:16" hostname="INLPF5TK6XC" time="0.033">
+<testsuite name="com.sidequest.domain.reminder.ReminderContentTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.02">
   <properties/>
   <testcase name="empty due-set yields the review-upcoming reminder" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.005"/>
-  <testcase name="review-upcoming text is the fixed, non-empty prompt" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.01"/>
-  <testcase name="non-empty due-set yields a DueItems plan carrying the supplied summaries" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.01"/>
+  <testcase name="review-upcoming text is the fixed, non-empty prompt" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.005"/>
+  <testcase name="non-empty due-set yields a DueItems plan carrying the supplied summaries" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.004"/>
   <testcase name="a single due item still yields DueItems, not the review-upcoming prompt" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.0"/>
-  <testcase name="defaultDueText is non-empty for any non-negative count" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.002"/>
+  <testcase name="defaultDueText is non-empty for any non-negative count" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.001"/>
   <testcase name="defaultDueText uses the singular form for a single item and plural otherwise" classname="com.sidequest.domain.reminder.ReminderContentTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

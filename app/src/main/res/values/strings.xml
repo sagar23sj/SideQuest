@@ -128,10 +128,12 @@
     <string name="voice_journal_error_dismiss">Dismiss</string>
 
     <!-- Bottom navigation shell. -->
-    <string name="nav_board">Board</string>
+    <string name="nav_board">Home</string>
     <string name="nav_games">Games</string>
     <string name="nav_voice">Voice</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_insights">Insights</string>
+    <string name="action_back">Back</string>
     <string name="nav_capture">Add item</string>
     <string name="nav_capture_desc">Add a new action item</string>
 

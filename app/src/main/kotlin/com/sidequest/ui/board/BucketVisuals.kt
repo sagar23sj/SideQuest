@@ -145,6 +145,35 @@ fun BucketCover(
 }
 
 /**
+ * A task "tile" backdrop for poster cards whose task has no thumbnail of its
+ * own: the bucket's domain gradient with a large, faint topical icon watermark.
+ *
+ * This is deliberately distinct from [BucketCover] (which shows a photo): task
+ * cards read as colored tiles, bucket cards read as photos, so a task never
+ * echoes its bucket's cover image. The caller overlays the title/status.
+ */
+@Composable
+fun TaskTileBackdrop(
+    name: String,
+    modifier: Modifier = Modifier,
+    iconSize: Dp = 72.dp,
+) {
+    val scheme = MaterialTheme.colorScheme
+    val (start, end, _) = coverPalette(name, scheme)
+    Box(
+        modifier = modifier.background(Brush.linearGradient(listOf(start, end))),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = bucketIconFor(name),
+            contentDescription = null,
+            tint = Color.White.copy(alpha = 0.22f),
+            modifier = Modifier.size(iconSize),
+        )
+    }
+}
+
+/**
  * The bundled illustrated cover drawable for a bucket [name], matched on the
  * same domain keywords as [iconFor]. Always returns a drawable (a branded
  * default for unrecognized names), so every bucket has an attractive,

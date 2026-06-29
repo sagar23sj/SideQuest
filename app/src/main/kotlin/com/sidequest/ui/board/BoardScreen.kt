@@ -135,15 +135,6 @@ fun BoardContent(
                     navigationIcon = {
                         AvatarButton(onClick = onOpenProfile)
                     },
-                    actions = {
-                        IconButton(onClick = onAddTask) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = stringResource(R.string.nav_capture_desc),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                    },
                 )
             },
         ) { innerPadding ->
@@ -248,7 +239,8 @@ private fun ReadyBoard(
                 EmptyBoard(modifier = Modifier.padding(horizontal = 20.dp))
             }
         } else {
-            // "Your Quests" — horizontal carousel of bucket cover cards.
+            // "Your Quests" — browse every bucket (including empty ones) and
+            // jump into any bucket's page.
             item(key = "quests") {
                 QuestsCarousel(
                     board = board,
@@ -257,11 +249,12 @@ private fun ReadyBoard(
                 )
             }
 
-            // Netflix-style shelves: one horizontal row of poster cards per
-            // bucket that has open tasks. Buckets whose tasks are all done are
-            // hidden from the main board (completed quests live in the bucket's
-            // own page), keeping the board focused on what's still to do. Group
-            // order is dynamic (most-used buckets first; see BoardOrdering).
+            // One shelf per bucket that has open tasks, organized by the user's
+            // own categories — the simplest, lowest-friction way to navigate
+            // (no time/status taxonomy to learn). The header opens the bucket's
+            // full page; cards are colored tiles so they read distinctly from
+            // the bucket covers above. Dynamic order (most-used first) via
+            // BoardOrdering.
             board.groups.forEach { group ->
                 val openItems = group.items.filter {
                     it.item.status != ActionStatus.COMPLETED
@@ -270,7 +263,6 @@ private fun ReadyBoard(
                     item(key = "shelf-${group.bucket.id}") {
                         BucketShelf(
                             bucketName = group.bucket.name,
-                            bucketImageRef = group.bucket.imageRef,
                             openItems = openItems,
                             onOpenBucket = { onOpenBucket(group.bucket.id) },
                             onOpenItem = onOpenItem,
@@ -387,14 +379,13 @@ private fun QuestsCarousel(
 }
 
 /**
- * A Netflix-style "shelf": a tappable bucket header (name + open count + chevron
- * that opens the bucket's full page) above a horizontal row of poster task cards
- * for that bucket's open quests.
+ * A per-bucket shelf: a tappable header (bucket name + open count + chevron that
+ * opens the bucket's full page) above a row of task posters for that bucket's
+ * open quests. Responsive — 1–3 items stretch to fill the row, 4+ scroll.
  */
 @Composable
 private fun BucketShelf(
     bucketName: String,
-    bucketImageRef: String?,
     openItems: List<BoardItem>,
     onOpenBucket: () -> Unit,
     onOpenItem: (String) -> Unit,
@@ -430,7 +421,6 @@ private fun BucketShelf(
             }
         }
         if (openItems.size <= FILL_SHELF_THRESHOLD) {
-            // Few items: stretch cards to fill the row so there's no dead space.
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -441,7 +431,6 @@ private fun BucketShelf(
                     TaskPoster(
                         boardItem = boardItem,
                         bucketName = bucketName,
-                        bucketImageRef = bucketImageRef,
                         onOpenItem = onOpenItem,
                         onComplete = onComplete,
                         onUndo = onUndo,
@@ -452,7 +441,6 @@ private fun BucketShelf(
                 }
             }
         } else {
-            // Enough items to justify a scrolling poster carousel.
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -461,7 +449,6 @@ private fun BucketShelf(
                     TaskPoster(
                         boardItem = boardItem,
                         bucketName = bucketName,
-                        bucketImageRef = bucketImageRef,
                         onOpenItem = onOpenItem,
                         onComplete = onComplete,
                         onUndo = onUndo,
@@ -475,21 +462,20 @@ private fun BucketShelf(
     }
 }
 
-/** Below this many open tasks, a shelf fills the row instead of scrolling. */
+/** Below this many tasks, a shelf fills the row instead of scrolling. */
 private const val FILL_SHELF_THRESHOLD = 3
 
 /**
  * A single board poster: resolves the item's display (title, thumbnail, status)
  * and renders a [com.sidequest.ui.components.TaskPosterCard] backed by the
- * item's own thumbnail when present, else its bucket's themed cover. Sized by
- * the caller via [modifier] so it works both stretched (sparse shelf) and
- * fixed-width (scrolling carousel).
+ * item's own thumbnail when present, else a colored tile derived from its
+ * bucket (never the bucket's cover photo, so tasks don't echo bucket cards).
+ * Sized by the caller via [modifier].
  */
 @Composable
 private fun TaskPoster(
     boardItem: BoardItem,
     bucketName: String,
-    bucketImageRef: String?,
     onOpenItem: (String) -> Unit,
     onComplete: (String) -> Unit,
     onUndo: (String) -> Unit,
@@ -518,11 +504,9 @@ private fun TaskPoster(
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
-                BucketCover(
+                TaskTileBackdrop(
                     name = bucketName,
-                    imageRef = bucketImageRef,
                     modifier = Modifier.fillMaxSize(),
-                    iconSize = 40.dp,
                 )
             }
         },
