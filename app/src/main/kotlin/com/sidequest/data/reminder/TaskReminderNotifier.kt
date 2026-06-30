@@ -32,13 +32,19 @@ class TaskReminderNotifier @Inject constructor(
         if (!notificationManager.areNotificationsEnabled()) return false
         ensureChannel()
 
-        val launch = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        // Tapping the notification opens the app and deep-links straight to this
+        // task's detail page (Req 6.5). Reuse the existing task if the app is
+        // already running (SINGLE_TOP → onNewIntent) rather than stacking.
+        val openIntent = Intent(context, com.sidequest.MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra(com.sidequest.MainActivity.EXTRA_OPEN_ITEM_ID, item.id)
         }
         val contentIntent = PendingIntent.getActivity(
             context,
             item.id.hashCode(),
-            launch ?: Intent(),
+            openIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 

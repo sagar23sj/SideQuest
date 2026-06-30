@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -18,8 +19,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BookmarkAdd
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,6 +70,7 @@ fun CategorizationSheetContent(
     onPickDate: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
+    onClose: () -> Unit = {},
 ) {
     androidx.compose.foundation.layout.Column(
         modifier = modifier
@@ -75,15 +79,32 @@ fun CategorizationSheetContent(
             .padding(horizontal = 20.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        Text(
-            text = stringResource(
-                if (state.isManual) R.string.capture_new_task_title else R.string.capture_title,
-            ),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-        )
+        // Header: centered title with an explicit close (✕) on the right, so the
+        // form has a deliberate dismiss control (the sheet itself resists
+        // accidental swipe-down).
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(
+                    if (state.isManual) R.string.capture_new_task_title else R.string.capture_title,
+                ),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            )
+            androidx.compose.material3.IconButton(
+                onClick = onClose,
+                modifier = Modifier.align(Alignment.CenterEnd),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.action_back),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
 
         // Name (required).
         androidx.compose.material3.OutlinedTextField(
@@ -176,6 +197,15 @@ private fun SectionHeaderRow(icon: ImageVector, text: String) {
     }
 }
 
+/** How many quick-pick bucket chips to show inline before the picker. */
+private const val QUICK_BUCKET_CHIPS = 5
+
+/**
+ * Scalable bucket selector: a few quick-pick chips for the common case plus a
+ * "Browse all" entry that opens a searchable picker, so choosing among many
+ * buckets no longer means scrolling a long horizontal strip. The currently
+ * selected bucket is always surfaced as a quick chip.
+ */
 @Composable
 private fun BucketChips(
     buckets: List<Bucket>,
@@ -184,43 +214,55 @@ private fun BucketChips(
     onCreateBucket: (String) -> Unit,
 ) {
     var showNewBucketDialog by remember { mutableStateOf(false) }
+    var showPicker by remember { mutableStateOf(false) }
+
+    // Quick picks: the first few buckets, but always include the selected one.
+    val quick = remember(buckets, selectedBucketId) {
+        val head = buckets.take(QUICK_BUCKET_CHIPS).toMutableList()
+        val selected = buckets.firstOrNull { it.id == selectedBucketId }
+        if (selected != null && head.none { it.id == selected.id }) {
+            if (head.isNotEmpty()) head[head.size - 1] = selected else head.add(selected)
+        }
+        head
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        buckets.forEach { bucket ->
+        quick.forEach { bucket ->
             BucketChip(
                 name = bucket.name,
                 selected = bucket.id == selectedBucketId,
                 onClick = { onBucketSelected(bucket.id) },
             )
         }
-        Surface(
-            onClick = { showNewBucketDialog = true },
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.surface,
-            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(18.dp),
-                )
-                Text(
-                    text = stringResource(R.string.capture_new_bucket),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
+        // Always offer the searchable picker — it scales to any number of
+        // buckets and hosts the "New bucket" action, so there's no separate
+        // create chip cluttering the quick row.
+        ActionChip(
+            icon = Icons.Filled.Search,
+            label = stringResource(R.string.capture_browse_buckets),
+            onClick = { showPicker = true },
+        )
+    }
+
+    if (showPicker) {
+        BucketPickerDialog(
+            buckets = buckets,
+            selectedBucketId = selectedBucketId,
+            onPick = { id ->
+                showPicker = false
+                onBucketSelected(id)
+            },
+            onCreateBucket = {
+                showPicker = false
+                showNewBucketDialog = true
+            },
+            onDismiss = { showPicker = false },
+        )
     }
 
     if (showNewBucketDialog) {
@@ -231,6 +273,142 @@ private fun BucketChips(
             },
             onDismiss = { showNewBucketDialog = false },
         )
+    }
+}
+
+/** A pill-shaped chip with a leading icon used for "Browse all" / "New". */
+@Composable
+private fun ActionChip(icon: ImageVector, label: String, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surface,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp),
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+    }
+}
+
+/**
+ * A searchable bucket picker: a search field filters the full bucket list, each
+ * row showing the bucket's topical icon and name. "Create new" is pinned at the
+ * top so a new bucket is always one tap away. Scales cleanly to many buckets.
+ */
+@Composable
+private fun BucketPickerDialog(
+    buckets: List<Bucket>,
+    selectedBucketId: String?,
+    onPick: (String) -> Unit,
+    onCreateBucket: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(buckets, query) {
+        if (query.isBlank()) buckets
+        else buckets.filter { it.name.contains(query.trim(), ignoreCase = true) }
+    }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.capture_select_bucket)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                androidx.compose.material3.OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    singleLine = true,
+                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    placeholder = { Text(stringResource(R.string.capture_search_buckets)) },
+                    shape = RoundedCornerShapeMedium,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 320.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    BucketPickerRow(
+                        icon = Icons.Filled.Add,
+                        name = stringResource(R.string.capture_new_bucket),
+                        selected = false,
+                        onClick = onCreateBucket,
+                    )
+                    filtered.forEach { bucket ->
+                        BucketPickerRow(
+                            icon = bucketIconFor(bucket.name),
+                            name = bucket.name,
+                            selected = bucket.id == selectedBucketId,
+                            onClick = { onPick(bucket.id) },
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.create_bucket_cancel))
+            }
+        },
+    )
+}
+
+@Composable
+private fun BucketPickerRow(
+    icon: ImageVector,
+    name: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShapeMedium,
+        color = if (selected) MaterialTheme.colorScheme.secondaryContainer else androidx.compose.ui.graphics.Color.Transparent,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 

@@ -73,10 +73,20 @@ import com.sidequest.ui.voice.VoiceReviewScreen
 fun SideQuestNavHost(
     onAddTask: (bucketId: String?) -> Unit,
     modifier: Modifier = Modifier,
+    deepLinkItemId: String? = null,
+    onDeepLinkHandled: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
+
+    // Deep-link from a reminder notification: open the task's detail page once,
+    // then clear so it doesn't re-navigate on recomposition (Req 6.5).
+    androidx.compose.runtime.LaunchedEffect(deepLinkItemId) {
+        val itemId = deepLinkItemId ?: return@LaunchedEffect
+        navController.navigate(Routes.itemDetail(itemId))
+        onDeepLinkHandled()
+    }
 
     // The bottom bar shows on every top-level tab; the capture FAB is scoped to
     // the Board only (the bucket detail screen hosts its own per-bucket FAB).

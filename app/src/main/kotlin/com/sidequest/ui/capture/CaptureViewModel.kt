@@ -167,7 +167,11 @@ class CaptureViewModel(
             bucketRepository.observeBuckets(accountId).collect { buckets ->
                 _uiState.update { state ->
                     if (state is CaptureUiState.Categorizing) {
-                        state.copy(buckets = buckets)
+                        // Default to the first bucket so the common case needs no
+                        // bucket tap; an explicit prior selection is preserved.
+                        val selected = state.selectedBucketId
+                            ?: buckets.firstOrNull()?.id
+                        state.copy(buckets = buckets, selectedBucketId = selected)
                     } else {
                         state
                     }

@@ -276,6 +276,7 @@ string call_notification_incoming_text
 string call_notification_ongoing_text
 string call_notification_screening_text
 string capture_add_to_actions
+string capture_browse_buckets
 string capture_close
 string capture_confirm
 string capture_discard
@@ -284,6 +285,7 @@ string capture_new_bucket
 string capture_new_task_title
 string capture_no_buckets
 string capture_pick_date
+string capture_search_buckets
 string capture_select_bucket
 string capture_select_timeframe
 string capture_selected_bucket_desc

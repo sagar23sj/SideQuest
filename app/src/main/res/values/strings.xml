@@ -23,6 +23,8 @@
     <string name="capture_select_bucket">Bucket</string>
     <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
     <string name="capture_new_bucket">New bucket</string>
+    <string name="capture_browse_buckets">Browse all</string>
+    <string name="capture_search_buckets">Search buckets</string>
     <string name="capture_select_timeframe">When do you want to act on this?</string>
     <string name="capture_timeframe_today">Today</string>
     <string name="capture_timeframe_within_a_day">Within a day</string>

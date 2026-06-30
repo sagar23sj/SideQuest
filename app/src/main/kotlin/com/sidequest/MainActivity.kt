@@ -38,14 +38,36 @@ import kotlinx.coroutines.delay
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    // The task id to deep-link to when launched from a reminder notification
+    // (Req 6.5). A StateFlow so a tap while the app is already running
+    // (onNewIntent) re-triggers navigation.
+    private val deepLinkItemId = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        deepLinkItemId.value = intent?.getStringExtra(EXTRA_OPEN_ITEM_ID)
         setContent {
             SideQuestTheme {
-                SideQuestRoot(modifier = Modifier.fillMaxSize())
+                SideQuestRoot(
+                    deepLinkItemId = deepLinkItemId,
+                    onDeepLinkHandled = { deepLinkItemId.value = null },
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        intent.getStringExtra(EXTRA_OPEN_ITEM_ID)?.let { deepLinkItemId.value = it }
+    }
+
+    companion object {
+        /** Intent extra: open this task's detail page on launch (reminder tap). */
+        const val EXTRA_OPEN_ITEM_ID = "com.sidequest.extra.OPEN_ITEM_ID"
     }
 }
 
@@ -61,10 +83,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun SideQuestRoot(
     modifier: Modifier = Modifier,
+    deepLinkItemId: kotlinx.coroutines.flow.StateFlow<String?> =
+        kotlinx.coroutines.flow.MutableStateFlow(null),
+    onDeepLinkHandled: () -> Unit = {},
     permissionViewModel: NotificationPermissionViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val permissionState by permissionViewModel.uiState.collectAsStateWithLifecycle()
+    val pendingItemId by deepLinkItemId.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -101,6 +127,8 @@ private fun SideQuestRoot(
     }
 
     SideQuestNavHost(
+        deepLinkItemId = pendingItemId,
+        onDeepLinkHandled = onDeepLinkHandled,
         onAddTask = { bucketId ->
             // The capture FAB's "add task" opens the manual capture entry (no
             // shared content). When launched from a bucket, that bucket is

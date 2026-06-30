@@ -167,11 +167,22 @@ private fun CaptureScreen(
 
         is CaptureUiState.Categorizing -> {
             var showDatePicker by remember { mutableStateOf(false) }
-            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            // Resist accidental swipe-down: the sheet won't dismiss on a drag to
+            // hidden. The user dismisses intentionally via the system back
+            // gesture or the explicit close (✕) button, so an in-progress form
+            // isn't lost by a stray finger slide.
+            val sheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = true,
+                confirmValueChange = { it != androidx.compose.material3.SheetValue.Hidden },
+            )
+
+            // Back reliably closes the form regardless of the drag lock above.
+            androidx.activity.compose.BackHandler(enabled = true) { onDismiss() }
 
             ModalBottomSheet(
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             ) {
                 CategorizationSheetContent(
                     state = state,
@@ -183,6 +194,7 @@ private fun CaptureScreen(
                     onCreateBucket = onCreateBucket,
                     onPickDate = { showDatePicker = true },
                     onConfirm = onConfirm,
+                    onClose = onDismiss,
                 )
             }
 
