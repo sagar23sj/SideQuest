@@ -159,9 +159,11 @@
     <string name="plan_title">Action plan</string>
     <string name="plan_undo_complete">Mark as not done</string>
     <string name="profile_account_label">Account</string>
+    <string name="profile_avatar_dialog_title">Pick an avatar</string>
     <string name="profile_buckets">Buckets</string>
     <string name="profile_buckets_subtitle">Names, colors, and cover images</string>
     <string name="profile_change_photo">Change profile photo</string>
+    <string name="profile_choose_photo">Use a photo</string>
     <string name="profile_edit_name">Edit your name</string>
     <string name="profile_local_subtitle">Adventurer</string>
     <string name="profile_name_dialog_label">Your name</string>

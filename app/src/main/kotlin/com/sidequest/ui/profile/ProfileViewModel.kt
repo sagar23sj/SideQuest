@@ -44,6 +44,9 @@ class ProfileViewModel @Inject constructor(
 
     fun setDisplayName(name: String) = userPreferences.setDisplayName(name)
 
+    /** Picks one of the built-in [AVATAR_PRESETS] as the avatar. */
+    fun setAvatarPreset(index: Int) = userPreferences.setAvatarRef(avatarRefForPreset(index))
+
     fun dismissNamePrompt() = userPreferences.markNamePromptSeen()
 
     /**

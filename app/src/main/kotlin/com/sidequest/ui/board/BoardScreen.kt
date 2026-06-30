@@ -74,10 +74,15 @@ fun BoardScreen(
     onOpenLeaderboard: () -> Unit = {},
     onOpenStats: () -> Unit = {},
     viewModel: BoardViewModel = hiltViewModel(),
+    profileViewModel: com.sidequest.ui.profile.ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val avatarRef by profileViewModel.avatarRef.collectAsStateWithLifecycle()
+    val displayName by profileViewModel.displayName.collectAsStateWithLifecycle()
     BoardContent(
         state = state,
+        avatarRef = avatarRef,
+        avatarName = displayName,
         onComplete = { id -> viewModel.onStatusChange(id, ActionStatus.COMPLETED) },
         onUndo = { id -> viewModel.onStatusChange(id, ActionStatus.NOT_STARTED) },
         onAddTask = onAddTask,
@@ -104,6 +109,8 @@ fun BoardContent(
     state: BoardUiState,
     onComplete: (itemId: String) -> Unit,
     modifier: Modifier = Modifier,
+    avatarRef: String? = null,
+    avatarName: String? = null,
     onUndo: (itemId: String) -> Unit = {},
     onAddTask: () -> Unit = {},
     onOpenItem: (String) -> Unit = {},
@@ -133,7 +140,7 @@ fun BoardContent(
                         )
                     },
                     navigationIcon = {
-                        AvatarButton(onClick = onOpenProfile)
+                        AvatarButton(onClick = onOpenProfile, avatarRef = avatarRef, avatarName = avatarName)
                     },
                 )
             },
@@ -161,23 +168,18 @@ fun BoardContent(
 }
 
 @Composable
-private fun AvatarButton(onClick: () -> Unit) {
+private fun AvatarButton(onClick: () -> Unit, avatarRef: String? = null, avatarName: String? = null) {
     val desc = stringResource(R.string.profile_title)
     IconButton(onClick = onClick) {
-        Box(
+        com.sidequest.ui.profile.UserAvatar(
+            avatarRef = avatarRef,
+            displayName = avatarName,
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
                 .semantics { contentDescription = desc },
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        }
+            emojiSize = 24.dp,
+        )
     }
 }
 

@@ -72,7 +72,10 @@ fun ProfileScreen(
     val displayName by viewModel.displayName.collectAsStateWithLifecycle()
     val avatarRef by viewModel.avatarRef.collectAsStateWithLifecycle()
     var showNameDialog by remember { mutableStateOf(false) }
+    var showAvatarPicker by remember { mutableStateOf(false) }
 
+    // Plain photo picker (no external crop activity — avoids the AppCompat-theme
+    // crash). The picked image is copied to internal storage as the avatar.
     val avatarPicker = androidx.activity.compose.rememberLauncherForActivityResult(
         contract = androidx.activity.result.contract.ActivityResultContracts.GetContent(),
     ) { uri -> viewModel.onAvatarPicked(uri) }
@@ -94,6 +97,20 @@ fun ProfileScreen(
                 showNameDialog = false
             },
             onDismiss = { showNameDialog = false },
+        )
+    }
+
+    if (showAvatarPicker) {
+        AvatarPickerDialog(
+            onPreset = { index ->
+                viewModel.setAvatarPreset(index)
+                showAvatarPicker = false
+            },
+            onChoosePhoto = {
+                showAvatarPicker = false
+                avatarPicker.launch("image/*")
+            },
+            onDismiss = { showAvatarPicker = false },
         )
     }
 
@@ -137,7 +154,7 @@ fun ProfileScreen(
                 displayName = displayName,
                 avatarRef = avatarRef,
                 onEditName = { showNameDialog = true },
-                onChangePhoto = { avatarPicker.launch("image/*") },
+                onChangePhoto = { showAvatarPicker = true },
             )
 
             SettingsGroup {
@@ -215,25 +232,12 @@ private fun ProfileHero(
                 modifier = Modifier.size(112.dp),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    if (!avatarRef.isNullOrBlank()) {
-                        coil.compose.AsyncImage(
-                            model = if (avatarRef.startsWith("content:") || avatarRef.startsWith("http")) {
-                                avatarRef
-                            } else {
-                                java.io.File(avatarRef)
-                            },
-                            contentDescription = stringResource(R.string.profile_change_photo),
-                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(56.dp),
-                        )
-                    }
+                    UserAvatar(
+                        avatarRef = avatarRef,
+                        displayName = displayName,
+                        modifier = Modifier.fillMaxSize(),
+                        emojiSize = 64.dp,
+                    )
                 }
             }
             // Small camera badge overlapping the avatar to invite changing it.
@@ -306,6 +310,56 @@ private fun NameDialog(
         confirmButton = {
             androidx.compose.material3.TextButton(onClick = { onConfirm(text) }) {
                 Text(stringResource(R.string.profile_save_name))
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.create_bucket_cancel))
+            }
+        },
+    )
+}
+
+/**
+ * Avatar chooser: a grid of built-in preset avatars (the crash-free default
+ * path) plus an option to use a personal photo. No external crop activity is
+ * involved, so it can't crash on theme mismatch.
+ */
+@Composable
+private fun AvatarPickerDialog(
+    onPreset: (Int) -> Unit,
+    onChoosePhoto: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.profile_avatar_dialog_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                AVATAR_PRESETS.indices.chunked(4).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        row.forEach { index ->
+                            Surface(
+                                onClick = { onPreset(index) },
+                                shape = CircleShape,
+                                color = androidx.compose.ui.graphics.Color.Transparent,
+                                modifier = Modifier.size(56.dp),
+                            ) {
+                                UserAvatar(
+                                    avatarRef = avatarRefForPreset(index),
+                                    displayName = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    emojiSize = 30.dp,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onChoosePhoto) {
+                Text(stringResource(R.string.profile_choose_photo))
             }
         },
         dismissButton = {

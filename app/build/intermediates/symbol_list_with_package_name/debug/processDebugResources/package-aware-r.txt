@@ -458,9 +458,11 @@ string plan_sub_action_toggle_desc
 string plan_title
 string plan_undo_complete
 string profile_account_label
+string profile_avatar_dialog_title
 string profile_buckets
 string profile_buckets_subtitle
 string profile_change_photo
+string profile_choose_photo
 string profile_edit_name
 string profile_local_subtitle
 string profile_name_dialog_label
