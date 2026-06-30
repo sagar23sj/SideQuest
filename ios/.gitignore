@@ -1,0 +1,19 @@
+# Xcode / SwiftPM build artifacts for the SideQuest_iOS client.
+
+# Generated Xcode project (produced from project.yml via `xcodegen generate`).
+SideQuest_iOS.xcodeproj/
+
+# Xcode user/workspace state
+*.xcworkspace/xcuserdata/
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# macOS
+.DS_Store

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SideQuest_iOS main app Info.plist.
+
+  iPhone-only (Req 1.1): LSRequiresIPhoneOS = true and only iPhone interface
+  orientations are declared. The device family (TARGETED_DEVICE_FAMILY = 1) is
+  set on the Xcode target in project.yml.
+
+  The Minimum_iOS_Version (Req 1.2) is the target's IPHONEOS_DEPLOYMENT_TARGET
+  (16.0), declared in project.yml.
+
+  Notification usage descriptions, background-mode declarations, and
+  BGTaskScheduler identifiers (Req 7, 13.3, 13.4) are added by the notification
+  and sync tasks (13, 16) and finalized in task 18.2.
+
+  Sync (task 16.6): UIBackgroundModes declares `fetch` + `processing` so the
+  app may run BGAppRefreshTask / BGProcessingTask, and
+  BGTaskSchedulerPermittedIdentifiers lists every identifier the app registers.
+  These identifiers MUST stay identical to `SyncBackgroundTasks` in SideQuestKit
+  (Req 6.5, 13.3).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>SideQuest</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<!--
+	  Usage-description string for the only runtime permission iOS gates with an
+	  Info.plist purpose string in SideQuest (Req 11.2, 13.5). SideQuest captures
+	  links, text, images, and video references; selecting existing photos/videos
+	  to turn into action items reads the photo library. The string names
+	  SideQuest and the specific feature, and is kept in lock-step with
+	  DistributionConfig.runtimePermissions / DistributionManifest.shipped, which
+	  the submission-validation check enforces (Req 13.6). Notification
+	  authorization is also requested at runtime but iOS presents its own system
+	  prompt with no Info.plist usage-description string, so none is declared for
+	  it.
+	-->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SideQuest accesses your photo library so you can capture photos and videos as action items to follow up on later.</string>
+	<key>BackendBaseURL</key>
+	<string>https://api.sidequest.app</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.sidequest.sync.refresh</string>
+		<string>com.sidequest.sync.processing</string>
+	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Share Extension entitlements.
+
+  The App Group (Req 13.2) MUST be IDENTICAL to the one declared in the main
+  app (App/SideQuest_iOS.entitlements) and to AppGroup.identifier in
+  SideQuestKit. This shared container is how items captured in the extension's
+  separate process become visible in the main app (Req 4.10).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.sidequest.shared</string>
+	</array>
+	<!--
+	  Shared Keychain access group (Req 10.4, 13.4). MUST match the main app's
+	  `keychain-access-groups` entry and AppGroup.keychainAccessGroup so the
+	  extension can read the same auth tokens (team-prefixed at runtime).
+	-->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.sidequest.shared</string>
+	</array>
+</dict>
+</plist>

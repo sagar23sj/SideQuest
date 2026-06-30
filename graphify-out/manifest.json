@@ -1,0 +1,3292 @@
+{
+  ".agents/skills/app-store-review/evals/evals.json": {
+    "mtime": 1782779313.112251,
+    "ast_hash": "98bbf027dcb21b249633881b7e7c31c3",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-code-style/evals/evals.json": {
+    "mtime": 1782249059.7359805,
+    "ast_hash": "5f342a9935c360607f71ae68265ab9b9",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/evals/evals.json": {
+    "mtime": 1782250959.8580513,
+    "ast_hash": "e053346a819a42f645ecbc714ca2754d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/evals/evals.json": {
+    "mtime": 1782249281.999821,
+    "ast_hash": "24c49f51458b66471ceb17e5071ef3ad",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-error-handling/evals/evals.json": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "2409415d3b92ab9d7977d123d40f803f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/evals/evals.json": {
+    "mtime": 1782250960.0667565,
+    "ast_hash": "fb72da3d10d61f1a2baeef5dfe95dbba",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/evals/evals.json": {
+    "mtime": 1782250960.296371,
+    "ast_hash": "c823224d63282147bd397bfcea46f8ca",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/evals/evals.json": {
+    "mtime": 1782250960.401609,
+    "ast_hash": "ca8c2e3f342e3a965e62ec6e5577e411",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/.claude-plugin/plugin.json": {
+    "mtime": 1782779672.6602957,
+    "ast_hash": "5890659d977e54e5fe0ce8ff6672b7fb",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/analyze_trace.py": {
+    "mtime": 1782779563.7243876,
+    "ast_hash": "6fd4dbc9ebf0538bb404a89b9c7adc1f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/__init__.py": {
+    "mtime": 1782779563.7263844,
+    "ast_hash": "f6e2ea07c1ef34de955f5132f2a8ec93",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/causes.py": {
+    "mtime": 1782779563.727386,
+    "ast_hash": "317cdd36bd2572bfc1227b8f609d8d7c",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/correlate.py": {
+    "mtime": 1782779563.7283885,
+    "ast_hash": "9322ba9cb949f54abdb277e0d39bd8f0",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/events.py": {
+    "mtime": 1782779563.7293885,
+    "ast_hash": "4793ad0ee1e512f1d93e4bea17fbf692",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/hangs.py": {
+    "mtime": 1782779563.7313886,
+    "ast_hash": "deb54205812349381733e7af6d0d1847",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/hitches.py": {
+    "mtime": 1782779563.7323892,
+    "ast_hash": "367fbde04d1b285b0e4bb021fe9d6e92",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/summary.py": {
+    "mtime": 1782779563.7333899,
+    "ast_hash": "fc50f08e8924bb55ad1ce392b5e7a664",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/swiftui.py": {
+    "mtime": 1782779563.7349045,
+    "ast_hash": "62875fb427ccdd0c7ad127423d7d7dad",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/time_profiler.py": {
+    "mtime": 1782779563.7359047,
+    "ast_hash": "e1db1bc1f5764f869106491c9b3e8c09",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py": {
+    "mtime": 1782779563.7369049,
+    "ast_hash": "37242e4e015880371ddd6f7464a7e4a8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/instruments_parser/xml_utils.py": {
+    "mtime": 1782779563.7379048,
+    "ast_hash": "c497d71859ff134cd12d7e3b503e1571",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/scripts/record_trace.py": {
+    "mtime": 1782779563.7389047,
+    "ast_hash": "347223c8cc1161737dfa23ebac5d2bc8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/.claude-plugin/plugin.json": {
+    "mtime": 1782779608.4367197,
+    "ast_hash": "0ada5995e6515af755a96dd27b82deb0",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/app-store-review/evals/evals.json": {
+    "mtime": 1782779313.112251,
+    "ast_hash": "98bbf027dcb21b249633881b7e7c31c3",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-code-style/evals/evals.json": {
+    "mtime": 1782249059.7359805,
+    "ast_hash": "5f342a9935c360607f71ae68265ab9b9",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/evals/evals.json": {
+    "mtime": 1782250959.8580513,
+    "ast_hash": "e053346a819a42f645ecbc714ca2754d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/evals/evals.json": {
+    "mtime": 1782249281.999821,
+    "ast_hash": "24c49f51458b66471ceb17e5071ef3ad",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-error-handling/evals/evals.json": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "2409415d3b92ab9d7977d123d40f803f",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/evals/evals.json": {
+    "mtime": 1782250960.0667565,
+    "ast_hash": "fb72da3d10d61f1a2baeef5dfe95dbba",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/evals/evals.json": {
+    "mtime": 1782250960.296371,
+    "ast_hash": "c823224d63282147bd397bfcea46f8ca",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/evals/evals.json": {
+    "mtime": 1782250960.401609,
+    "ast_hash": "ca8c2e3f342e3a965e62ec6e5577e411",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/.claude-plugin/plugin.json": {
+    "mtime": 1782779672.6602957,
+    "ast_hash": "5890659d977e54e5fe0ce8ff6672b7fb",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/analyze_trace.py": {
+    "mtime": 1782779563.7243876,
+    "ast_hash": "6fd4dbc9ebf0538bb404a89b9c7adc1f",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/__init__.py": {
+    "mtime": 1782779563.7263844,
+    "ast_hash": "f6e2ea07c1ef34de955f5132f2a8ec93",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/causes.py": {
+    "mtime": 1782779563.727386,
+    "ast_hash": "317cdd36bd2572bfc1227b8f609d8d7c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/correlate.py": {
+    "mtime": 1782779563.7283885,
+    "ast_hash": "9322ba9cb949f54abdb277e0d39bd8f0",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/events.py": {
+    "mtime": 1782779563.7293885,
+    "ast_hash": "4793ad0ee1e512f1d93e4bea17fbf692",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/hangs.py": {
+    "mtime": 1782779563.7313886,
+    "ast_hash": "deb54205812349381733e7af6d0d1847",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/hitches.py": {
+    "mtime": 1782779563.7323892,
+    "ast_hash": "367fbde04d1b285b0e4bb021fe9d6e92",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/summary.py": {
+    "mtime": 1782779563.7333899,
+    "ast_hash": "fc50f08e8924bb55ad1ce392b5e7a664",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/swiftui.py": {
+    "mtime": 1782779563.7349045,
+    "ast_hash": "62875fb427ccdd0c7ad127423d7d7dad",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/time_profiler.py": {
+    "mtime": 1782779563.7359047,
+    "ast_hash": "e1db1bc1f5764f869106491c9b3e8c09",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/xctrace.py": {
+    "mtime": 1782779563.7369049,
+    "ast_hash": "37242e4e015880371ddd6f7464a7e4a8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/instruments_parser/xml_utils.py": {
+    "mtime": 1782779563.7379048,
+    "ast_hash": "c497d71859ff134cd12d7e3b503e1571",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/scripts/record_trace.py": {
+    "mtime": 1782779563.7389047,
+    "ast_hash": "347223c8cc1161737dfa23ebac5d2bc8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/.claude-plugin/plugin.json": {
+    "mtime": 1782779608.4367197,
+    "ast_hash": "0ada5995e6515af755a96dd27b82deb0",
+    "semantic_hash": ""
+  },
+  "app/build.gradle.kts": {
+    "mtime": 1782778376.564392,
+    "ast_hash": "ea4c0d8af60a0309caa3c6127a3b7143",
+    "semantic_hash": ""
+  },
+  "app/new.sh": {
+    "mtime": 1782459556.264714,
+    "ast_hash": "fb40c130599d5d0e0a30d0abeac28702",
+    "semantic_hash": ""
+  },
+  "app/new2.sh": {
+    "mtime": 1782459579.4470665,
+    "ast_hash": "fb40c130599d5d0e0a30d0abeac28702",
+    "semantic_hash": ""
+  },
+  "app/new3.sh": {
+    "mtime": 1782459636.7624142,
+    "ast_hash": "9cb9d5ed28e5a8dcdc74593e0e9b7165",
+    "semantic_hash": ""
+  },
+  "app/src/androidTest/kotlin/com/sidequest/data/audio/AudioCaptureIntegrationTest.kt": {
+    "mtime": 1782575698.941051,
+    "ast_hash": "3f1637151a825789b8bdfda43dc3ce74",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/FeatureFlags.kt": {
+    "mtime": 1782744088.2556603,
+    "ast_hash": "d487d8d74596fb62d1f619ad6d221c1f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/MainActivity.kt": {
+    "mtime": 1782625365.24392,
+    "ast_hash": "02e4691eed35c26c7c191889bcec94bc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/SideQuestApp.kt": {
+    "mtime": 1782754888.6695676,
+    "ast_hash": "89fa34411ea351bcc604d4db1d3ce274",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/audio/AudioModule.kt": {
+    "mtime": 1782575698.9470515,
+    "ast_hash": "16fca1293dee6eca80051c9293d26fb5",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/audio/AudioRecorder.kt": {
+    "mtime": 1782575698.9500527,
+    "ast_hash": "71504f702d62eaa6cf0f1c835fd8ba2c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/audio/MediaRecorderAudioRecorder.kt": {
+    "mtime": 1782636627.2671425,
+    "ast_hash": "a2e5740a761f147eff73244d3d62e675",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/AuthApi.kt": {
+    "mtime": 1782743493.2702472,
+    "ast_hash": "a1e1ff0fb6677d9c69ed9abfd9e8d4a3",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/AuthHeaderInterceptor.kt": {
+    "mtime": 1782575698.9597569,
+    "ast_hash": "39e81090d10b19a41e6b04bba522bb4b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/AuthModule.kt": {
+    "mtime": 1782575698.963053,
+    "ast_hash": "c453b449a5245ffc6792242c94c43bd9",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/EncryptedTokenStore.kt": {
+    "mtime": 1782575698.9660528,
+    "ast_hash": "d896a7b49fa317b1ad0572ab45f1b2b6",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/JwtClaims.kt": {
+    "mtime": 1782575698.9690516,
+    "ast_hash": "4e4bacc513bb1091fd2152caad459f3d",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/TokenAuthenticator.kt": {
+    "mtime": 1782575698.9715662,
+    "ast_hash": "87c0e0efdd1e2b6f6819782f79801c98",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/auth/TokenStore.kt": {
+    "mtime": 1782575698.9825964,
+    "ast_hash": "9c7baee0a30140888ed686c52accc88c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/LlmModule.kt": {
+    "mtime": 1782575698.9866028,
+    "ast_hash": "c209b7d9b2670bd49b9c3e56f4fc9704",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/LlmProxyApi.kt": {
+    "mtime": 1782575698.9901109,
+    "ast_hash": "17eaeda655f2f5f106ce64b313dcf459",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/LlmService.kt": {
+    "mtime": 1782575698.9938679,
+    "ast_hash": "c334b894437aaf60dd2c57dc98ba4a7d",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/PrepareReminderTextUseCase.kt": {
+    "mtime": 1782575698.997876,
+    "ast_hash": "f880124c96d2b05c31d40f49b0d7fedc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/RequestSuggestionsUseCase.kt": {
+    "mtime": 1782575699.0013878,
+    "ast_hash": "527ae3ed2d913547c5dfcdb7dceeb489",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/llm/RetrofitLlmService.kt": {
+    "mtime": 1782575699.0053916,
+    "ast_hash": "b5414b5a1b4ba86e9dade9ccaba43c9f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/SideQuestDatabase.kt": {
+    "mtime": 1782601318.9220834,
+    "ast_hash": "5889a7c4ac9085475be0f2772dfc00d8",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/UserPreferences.kt": {
+    "mtime": 1782643320.8920918,
+    "ast_hash": "6725e9c687bbaccb52de5ee06a9faecb",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/converters/Converters.kt": {
+    "mtime": 1782582163.2440164,
+    "ast_hash": "22c8b9c791bf409f1210fe619d650187",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/converters/RoomJson.kt": {
+    "mtime": 1782575699.011411,
+    "ast_hash": "40957b311f0e3ee834bcefe925612bc8",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/dao/ActionItemDao.kt": {
+    "mtime": 1782640712.4611027,
+    "ast_hash": "10498d134ea271ed2c869ca2b4070c05",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/dao/ActionPlanDao.kt": {
+    "mtime": 1782575699.0229342,
+    "ast_hash": "bd933cc175240e1807d98920b4d56afc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/dao/BucketDao.kt": {
+    "mtime": 1782575699.0264492,
+    "ast_hash": "8cb0994d1447839e68947e7112cba4d3",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/dao/VoiceJournalDao.kt": {
+    "mtime": 1782575699.028447,
+    "ast_hash": "5fbf85b03d0a50ea64e57b98ca075dc9",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/di/DatabaseModule.kt": {
+    "mtime": 1782601335.457537,
+    "ast_hash": "82d450215c35ac778e0084eac913ec76",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/entity/ActionItemEntity.kt": {
+    "mtime": 1782582124.65413,
+    "ast_hash": "0080f937f091a61719159e6516e599c9",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/entity/ActionPlanEntity.kt": {
+    "mtime": 1782575699.03796,
+    "ast_hash": "738f77ccd3f695808f84d26a13be85c8",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/entity/BucketEntity.kt": {
+    "mtime": 1782601275.8812659,
+    "ast_hash": "11a44ab02d2dab14165fd269e3d4e121",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/entity/Mappers.kt": {
+    "mtime": 1782601299.081152,
+    "ast_hash": "4aa5043b70d9989c62edda9d4d51f804",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/local/entity/VoiceJournalEntryEntity.kt": {
+    "mtime": 1782575699.047227,
+    "ast_hash": "d433b832ec5f66ff01895b7215068eab",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/preview/OkHttpPreviewService.kt": {
+    "mtime": 1782673652.302243,
+    "ast_hash": "ed2079b8bebc002d056b7d7382b4340b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/preview/PreviewEnqueuer.kt": {
+    "mtime": 1782575699.056248,
+    "ast_hash": "c0a58c42d3ea499daee5c91056837d96",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/preview/PreviewFetchWorker.kt": {
+    "mtime": 1782575699.0597634,
+    "ast_hash": "f0c8e78395be1e01e34854e060c9be91",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/preview/PreviewModule.kt": {
+    "mtime": 1782575699.0627804,
+    "ast_hash": "fb5889586bea9a000b205057106b1c65",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/preview/PreviewService.kt": {
+    "mtime": 1782575699.0657787,
+    "ast_hash": "cad9c261cd1636d6cd6adc4d8a044001",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/BootCompletedReceiver.kt": {
+    "mtime": 1782582375.3663938,
+    "ast_hash": "9375eb80b2a728efa3136598ac8bb0e3",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/DailyReminderWorker.kt": {
+    "mtime": 1782575699.06878,
+    "ast_hash": "3cc42a214278fc2d8466b11f354ed6df",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/DataStoreReminderSettingsStore.kt": {
+    "mtime": 1782575699.0722952,
+    "ast_hash": "2a24f6eba44e54a48150bd38b81fdb78",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/ReminderModule.kt": {
+    "mtime": 1782575699.075809,
+    "ast_hash": "a17255f7437c2ecf8a67b935a4856ba1",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/ReminderNotifier.kt": {
+    "mtime": 1782575699.078809,
+    "ast_hash": "a631beb3271eea3b3b35ca8cb2602b07",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/ReminderScheduler.kt": {
+    "mtime": 1782575699.0822632,
+    "ast_hash": "6a589adbc2fcea722d87c7db239093a9",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/ReminderSettingsStore.kt": {
+    "mtime": 1782575699.0852625,
+    "ast_hash": "4eb311d0905a8e79146cc107187b339e",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/TaskReminderNotifier.kt": {
+    "mtime": 1782582352.317844,
+    "ast_hash": "cb9ee9f25625f0deeb1d6b3d976fae6a",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/TaskReminderReceiver.kt": {
+    "mtime": 1782582324.7580128,
+    "ast_hash": "c99694095773d1afadf625531f265b32",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/reminder/TaskReminderScheduler.kt": {
+    "mtime": 1782582593.9289033,
+    "ast_hash": "cc34f8e875e1e0e8acfa87ee4ea80b78",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/repository/ActionPlanRepository.kt": {
+    "mtime": 1782635148.4072974,
+    "ast_hash": "2e33047cf5334b0bc9ddacf84d708358",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/repository/BoardRepository.kt": {
+    "mtime": 1782755676.2995777,
+    "ast_hash": "491eb5cd717e3ffcac38a5ff6d91a33c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/repository/BucketRepository.kt": {
+    "mtime": 1782640725.112009,
+    "ast_hash": "f566d1e2b942e4afc0fb4af690fd9f49",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/repository/CaptureRepository.kt": {
+    "mtime": 1782745906.2498546,
+    "ast_hash": "d6c252d595f151ed0e45fc6261ebf8ec",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/repository/VoiceJournalRepository.kt": {
+    "mtime": 1782677747.1634111,
+    "ast_hash": "a7a3ab3c4d3adfb304f9ea21e35acd64",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/seed/DefaultBucketSeeder.kt": {
+    "mtime": 1782754824.4734035,
+    "ast_hash": "b24268cf302280f4c5022eaf034007f3",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/seed/DefaultBuckets.kt": {
+    "mtime": 1782755097.6957867,
+    "ast_hash": "28f76314a2dfccd81d2a38f7fbbc03c0",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/seed/PreviewSeeder.kt": {
+    "mtime": 1782755122.439093,
+    "ast_hash": "ae268aa2e5c7f5fb89813eb0cf551b4e",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/AccountBootstrap.kt": {
+    "mtime": 1782743563.3686237,
+    "ast_hash": "6a03be27774ab82689bad2ebef9100bf",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/BackupApi.kt": {
+    "mtime": 1782743523.7039733,
+    "ast_hash": "1cf4a30fd19e611f1a4fc766a98da460",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/BackupRepository.kt": {
+    "mtime": 1782743587.862105,
+    "ast_hash": "ed019f6a02150fb87a83ee57e17a1c7b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/BackupSnapshot.kt": {
+    "mtime": 1782743511.40546,
+    "ast_hash": "face4602e9c3386ea392ec462374d67a",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/BackupWorker.kt": {
+    "mtime": 1782743621.511657,
+    "ast_hash": "19a6856a0029db928635352e207958ee",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/DeviceIdentity.kt": {
+    "mtime": 1782743478.414166,
+    "ast_hash": "16fb51fc9f54d01982a8596947165599",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/sync/SyncModule.kt": {
+    "mtime": 1782743539.884523,
+    "ast_hash": "7b998e0649eff33853eadc76fb7c35ce",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/LiveTranscriber.kt": {
+    "mtime": 1782649382.162285,
+    "ast_hash": "7346500e4c5fd4b49169f95359547405",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/RetrofitTranscriptionService.kt": {
+    "mtime": 1782575699.1099184,
+    "ast_hash": "45e792dface1bf7920ba4deb3107ca33",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/SpeechRecognizerLiveTranscriber.kt": {
+    "mtime": 1782677386.239014,
+    "ast_hash": "765aafc6ec48b4278501e4ec2c282cf5",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/TranscriptionModule.kt": {
+    "mtime": 1782649423.5192091,
+    "ast_hash": "28fbe0e50bf60528e8124a7351820716",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/TranscriptionProxyApi.kt": {
+    "mtime": 1782575699.1150885,
+    "ast_hash": "b625a4c4b400e31ebd9a92e4c48fcf68",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/data/transcription/TranscriptionService.kt": {
+    "mtime": 1782575699.1180947,
+    "ast_hash": "728a91be39a2e73c6bd721a64d51265f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/di/Dispatchers.kt": {
+    "mtime": 1782575699.1222072,
+    "ast_hash": "1ac880011a99d1922a80a0f6d296d667",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/auth/JoinOrganizationScreen.kt": {
+    "mtime": 1782575699.125718,
+    "ast_hash": "e21053c151027222d7964a5d6d9e84cb",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/auth/LoginScreen.kt": {
+    "mtime": 1782575699.1290963,
+    "ast_hash": "45005d28eeb786fbd70625ac3361ae04",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/BoardScreen.kt": {
+    "mtime": 1782778635.6259353,
+    "ast_hash": "8186c7a39dcd12f2d5bf7d9ee2c0b7a5",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/BoardUiState.kt": {
+    "mtime": 1782575699.1353042,
+    "ast_hash": "896e0a771a1a59ff1a76ef1144e63649",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/BoardViewModel.kt": {
+    "mtime": 1782575699.1384575,
+    "ast_hash": "4ed49311aa38b005866e219bb5a57db0",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/BucketVisuals.kt": {
+    "mtime": 1782759484.125476,
+    "ast_hash": "9a7550f68a40afa0c834a66812c585d1",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/PreviewDisplay.kt": {
+    "mtime": 1782640487.0348232,
+    "ast_hash": "8bea81f1f1a4f0b0449208e07c7e65f1",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/board/StatusColor.kt": {
+    "mtime": 1782575699.1446538,
+    "ast_hash": "11cf0ea43ecc29e79ebd3420ff721c4f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/BucketDetailScreen.kt": {
+    "mtime": 1782752665.4884417,
+    "ast_hash": "a687b3ee3a5a0497eb629c1c265d9f14",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/BucketDetailViewModel.kt": {
+    "mtime": 1782633187.188713,
+    "ast_hash": "84b3dce84309ec1c825c1705971b2c21",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/BucketManagementScreen.kt": {
+    "mtime": 1782640826.21468,
+    "ast_hash": "da56e7b2a5eae00839930a67e8d0d35e",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/BucketManagementViewModel.kt": {
+    "mtime": 1782640747.376717,
+    "ast_hash": "9b62c92d726fd6f4d4de7c6a78a86972",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/CreateBucketScreen.kt": {
+    "mtime": 1782744101.7770255,
+    "ast_hash": "05919b97870a2ec622fa44d168463f91",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/bucket/CreateBucketViewModel.kt": {
+    "mtime": 1782638532.9591975,
+    "ast_hash": "1d148f54140aea0a16ddb4f336bfb775",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/capture/CaptureUiState.kt": {
+    "mtime": 1782632789.22541,
+    "ast_hash": "52e8523940c2ccd1b942ec374078eb8c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/capture/CaptureViewModel.kt": {
+    "mtime": 1782744910.2245555,
+    "ast_hash": "bc894ecffd9417f873c82e640b15bd47",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/capture/CategorizationSheet.kt": {
+    "mtime": 1782636423.7078133,
+    "ast_hash": "ed39c2e6ef8a6210ca59e4d2af936b4d",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/capture/CurrentAccountProvider.kt": {
+    "mtime": 1782743661.551415,
+    "ast_hash": "9c87562e7b193a7d45fd3d585a00fdeb",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/capture/ShareTargetActivity.kt": {
+    "mtime": 1782632912.3841684,
+    "ast_hash": "00acb2bddb76cec2dcc0a53b45416ef1",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/Buttons.kt": {
+    "mtime": 1782581635.4672146,
+    "ast_hash": "aae35c0eec7e75b7d803fd85aaa8468b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/Cards.kt": {
+    "mtime": 1782763944.0254931,
+    "ast_hash": "c1f0e24a2aa39402f8c3e2f7ff0ca452",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/CompletionSound.kt": {
+    "mtime": 1782752594.4366033,
+    "ast_hash": "4bf08fe3c65767cf6f45647fe4715b25",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/Confetti.kt": {
+    "mtime": 1782634998.104755,
+    "ast_hash": "b028239a53337248bc056dfbfe26c08b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/HoldToComplete.kt": {
+    "mtime": 1782633024.012053,
+    "ast_hash": "c66cf580c21f4f1d132987a913e7f009",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/ProgressRing.kt": {
+    "mtime": 1782575699.1841931,
+    "ast_hash": "a07f825623f57c025b3ca6125fb27b24",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/components/Sections.kt": {
+    "mtime": 1782601678.365877,
+    "ast_hash": "72ef4d908fed537eb22333d6c30dcdc4",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/detail/ItemDetailScreen.kt": {
+    "mtime": 1782752779.4127138,
+    "ast_hash": "c2a84c27d3f6fe241251e663109ba24b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/detail/ItemDetailUiState.kt": {
+    "mtime": 1782601536.7043114,
+    "ast_hash": "07b8319f315b16f3cbd8dbbd59ea5c85",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/detail/ItemDetailViewModel.kt": {
+    "mtime": 1782635158.669376,
+    "ast_hash": "c8398be874004509388338ef2d1c9aba",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/games/GameDailyStore.kt": {
+    "mtime": 1782648740.4436302,
+    "ast_hash": "d2331655dd67c18b148c120d6cb58b0f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/games/GamesHubScreen.kt": {
+    "mtime": 1782639152.906579,
+    "ast_hash": "f8659f193717107c6e336bb3a8a21137",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/games/SpellingBeeScreen.kt": {
+    "mtime": 1782597730.6830664,
+    "ast_hash": "26992b1862a35677d8f9c701cae27f6b",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/games/WordGuessScreen.kt": {
+    "mtime": 1782643633.7980294,
+    "ast_hash": "c44839b139835509954392fa1edb57e2",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/leaderboard/LeaderboardScreen.kt": {
+    "mtime": 1782585643.575399,
+    "ast_hash": "768f44489bc3416f78c01aee3462ec53",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/loading/LoadingScreen.kt": {
+    "mtime": 1782584208.4137213,
+    "ast_hash": "8c0a26fff810a78cf28a845dba20678c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/loading/ThoughtOfTheDay.kt": {
+    "mtime": 1782580955.119701,
+    "ast_hash": "e35fcfc4697a66ff2a8ab2d6712c68cb",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/navigation/Destinations.kt": {
+    "mtime": 1782648412.2966459,
+    "ast_hash": "54c2edc68187d408ed8f4cdc016c331d",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/navigation/SideQuestNavHost.kt": {
+    "mtime": 1782764265.5522199,
+    "ast_hash": "51e475273e1ef6efb9fbc4b2e3109b50",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/navigation/TopLevelDestination.kt": {
+    "mtime": 1782762836.173337,
+    "ast_hash": "fff679b9b2619c60a60b8e8d8fcb5178",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/profile/ProfileScreen.kt": {
+    "mtime": 1782778570.8427918,
+    "ast_hash": "6e33a62c3efa99003dd466b182ac15e1",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/profile/ProfileViewModel.kt": {
+    "mtime": 1782778479.9359362,
+    "ast_hash": "80c4bbbc490b5a53bd54eb99ccc326d8",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/profile/UserAvatar.kt": {
+    "mtime": 1782778465.7520695,
+    "ast_hash": "cf72a09ff843fb6cbe34a5ab7f556a6c",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/NotificationPermission.kt": {
+    "mtime": 1782575699.230518,
+    "ast_hash": "0b87f8c71e9aaa44d3ecf278662dbe2f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/NotificationPermissionUiState.kt": {
+    "mtime": 1782575699.2335286,
+    "ast_hash": "3f8a9e2d4a5d9faea48960c21f38d1a2",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/NotificationPermissionViewModel.kt": {
+    "mtime": 1782575699.2375312,
+    "ast_hash": "3ea3b3eef5222f8cf5db74cec9644ed9",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/ReminderSettingsScreen.kt": {
+    "mtime": 1782745772.7524083,
+    "ast_hash": "a7181448244bf8dc575345d7622f815a",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/ReminderSettingsUiState.kt": {
+    "mtime": 1782575699.244054,
+    "ast_hash": "5fdc88d55ae9553249d99242c9b89ae8",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/reminder/ReminderSettingsViewModel.kt": {
+    "mtime": 1782575699.2470548,
+    "ast_hash": "1cbe3e07f7c147eb83b556518dcb92b7",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/stats/StatsScreen.kt": {
+    "mtime": 1782763156.8482828,
+    "ast_hash": "3cf8f2307408fa58e83d77dd0942154a",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/stats/StatsViewModel.kt": {
+    "mtime": 1782648342.065242,
+    "ast_hash": "0c11d99ed8995dc8c8f25ed4668bb69a",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/theme/Color.kt": {
+    "mtime": 1782575699.2500527,
+    "ast_hash": "01d647cd3a82882fd28cb390e4b31e4f",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/theme/Shape.kt": {
+    "mtime": 1782575699.2532244,
+    "ast_hash": "60d741e0674f7b034a03ab6bde7db3ca",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/theme/Theme.kt": {
+    "mtime": 1782575699.2562225,
+    "ast_hash": "30a5ca83b9d7e675c12113bfbc2f41f6",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/theme/Type.kt": {
+    "mtime": 1782575699.259927,
+    "ast_hash": "b61de1f2894c7b999a7a9a2b1f1e97dc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/AudioPlayerButton.kt": {
+    "mtime": 1782635059.3373425,
+    "ast_hash": "e7f0e6f12b58f53c233532911f251e5d",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/MicrophonePermission.kt": {
+    "mtime": 1782575699.2629333,
+    "ast_hash": "ae8fdd75ab449a63547f5995734599f5",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/VoiceJournalScreen.kt": {
+    "mtime": 1782677798.4456296,
+    "ast_hash": "3a9cd94e5f51cff79ee7e832c954ace6",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/VoiceJournalUiState.kt": {
+    "mtime": 1782584273.6254592,
+    "ast_hash": "2dfb520a2691abae760a45b9939c4dbc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/VoiceJournalViewModel.kt": {
+    "mtime": 1782677765.340109,
+    "ast_hash": "ca98c8ac8c0bc7091d33f7e59eb0d500",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/VoiceReviewScreen.kt": {
+    "mtime": 1782617052.7093096,
+    "ast_hash": "bd226cd5969c738ad6044225f383accc",
+    "semantic_hash": ""
+  },
+  "app/src/main/kotlin/com/sidequest/ui/voice/VoiceReviewViewModel.kt": {
+    "mtime": 1782617044.5050468,
+    "ast_hash": "560dc5cd0a68dda53c25ae07f33dec4d",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/data/llm/PrepareReminderTextUseCaseTest.kt": {
+    "mtime": 1782575699.3020597,
+    "ast_hash": "e693ec3cebf16c0dc70bb1edf6b5c6e2",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/data/llm/RequestSuggestionsUseCaseTest.kt": {
+    "mtime": 1782575699.3050594,
+    "ast_hash": "211ad259eb0616e5d09f58938a92efce",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/data/local/PersistenceRoundTripPropertyTest.kt": {
+    "mtime": 1782575699.308597,
+    "ast_hash": "625b88c6ec55b26d7e622e1ac51f3d1a",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/data/repository/VoiceJournalRepositoryExtractionTriggerTest.kt": {
+    "mtime": 1782649536.8420808,
+    "ast_hash": "e49a70077f48285f562eaf641e45248c",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/data/transcription/TranscriptionProxyIntegrationTest.kt": {
+    "mtime": 1782575699.3150194,
+    "ast_hash": "18d5df4c706c5b7b29c3f9ac0b352e93",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/board/BoardViewModelStatusChangeTest.kt": {
+    "mtime": 1782575699.318016,
+    "ast_hash": "f51cdf9d29498d5130d98c00492999ae",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/board/CompletionCounterPlacementTest.kt": {
+    "mtime": 1782575699.3215249,
+    "ast_hash": "debdf2a30e34ad6efe960d70239a98b3",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/board/PreviewDisplayTest.kt": {
+    "mtime": 1782640510.16472,
+    "ast_hash": "3dd479d9faffbe9a3b6331f6a5f99396",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/capture/CaptureViewModelDispatchTest.kt": {
+    "mtime": 1782575699.3280334,
+    "ast_hash": "804e31ea0c36d1cafd6dc5bf3e101f54",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/capture/ShareTargetManifestSmokeTest.kt": {
+    "mtime": 1782575699.3315396,
+    "ast_hash": "96170be41a0cc9ed88f62fd788184e5e",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/reminder/NotificationPermissionViewModelTest.kt": {
+    "mtime": 1782575699.3345435,
+    "ast_hash": "a4b975801ff238002f1b92b7f716c663",
+    "semantic_hash": ""
+  },
+  "app/src/test/kotlin/com/sidequest/ui/reminder/ReminderSettingsViewModelTest.kt": {
+    "mtime": 1782575699.3375435,
+    "ast_hash": "48cf36b9f6818c1b3e075f466d41c25d",
+    "semantic_hash": ""
+  },
+  "backend/cmd/server/main.go": {
+    "mtime": 1782743752.9582012,
+    "ast_hash": "ec9c08f425a7e225dd43394d20fe7df5",
+    "semantic_hash": ""
+  },
+  "backend/go.mod": {
+    "mtime": 1782311854.5417452,
+    "ast_hash": "ede5db90a1567e183a58d4b524df2505",
+    "semantic_hash": ""
+  },
+  "backend/internal/accounts/errors.go": {
+    "mtime": 1782308051.1797009,
+    "ast_hash": "ed445cdec0b5246cbfd6f015d207a7f2",
+    "semantic_hash": ""
+  },
+  "backend/internal/accounts/id.go": {
+    "mtime": 1782308144.5055637,
+    "ast_hash": "17d83a3ebee44312060711e43e19126d",
+    "semantic_hash": ""
+  },
+  "backend/internal/accounts/repository.go": {
+    "mtime": 1782308189.1473076,
+    "ast_hash": "85de879dead4ec08bca6ff3d947a1013",
+    "semantic_hash": ""
+  },
+  "backend/internal/accounts/service.go": {
+    "mtime": 1782308224.9867392,
+    "ast_hash": "a5d63b57fdb786a6b3999a13dce4ba03",
+    "semantic_hash": ""
+  },
+  "backend/internal/accounts/service_test.go": {
+    "mtime": 1782309633.9872186,
+    "ast_hash": "8ecaa19d2cfd0779c8e01c67301de585",
+    "semantic_hash": ""
+  },
+  "backend/internal/auth/middleware.go": {
+    "mtime": 1782308247.016051,
+    "ast_hash": "e9a92a7c9fdf5fcebd659ee1e591dfcb",
+    "semantic_hash": ""
+  },
+  "backend/internal/backup/repository.go": {
+    "mtime": 1782743752.9582012,
+    "ast_hash": "f2d59e63ea71ac77665b1f74453b3c70",
+    "semantic_hash": ""
+  },
+  "backend/internal/config/config.go": {
+    "mtime": 1782308867.1758542,
+    "ast_hash": "8131fcf3033e1a5746f1ad47954cb11e",
+    "semantic_hash": ""
+  },
+  "backend/internal/config/config_test.go": {
+    "mtime": 1782307370.1920097,
+    "ast_hash": "88cd09093cb2bd956bef09c498cc915b",
+    "semantic_hash": ""
+  },
+  "backend/internal/db/db.go": {
+    "mtime": 1782307456.0864058,
+    "ast_hash": "909be6841c8adec91abe4443d7d5587a",
+    "semantic_hash": ""
+  },
+  "backend/internal/device/repository.go": {
+    "mtime": 1782743752.9582012,
+    "ast_hash": "40bfb0af866fede68c628d5c53ca0d7c",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/association.go": {
+    "mtime": 1782308065.9648387,
+    "ast_hash": "532e58a6579373d7d6969489d0099002",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/association_property_test.go": {
+    "mtime": 1782309412.6733973,
+    "ast_hash": "047a33d4dfa1a48c8545b0b1ef929a8b",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/domain.go": {
+    "mtime": 1782321747.533357,
+    "ast_hash": "46cd93723fda71e9f375c8e8f31702de",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/sync.go": {
+    "mtime": 1782312173.3604672,
+    "ast_hash": "0e792479590add0af97d7cc93575462a",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/sync_property_test.go": {
+    "mtime": 1782312068.8700664,
+    "ast_hash": "3d566561b2723e449a440b7b16b2c8bb",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/syncset.go": {
+    "mtime": 1782314064.134019,
+    "ast_hash": "d4554fd1876416b231acfa589775391f",
+    "semantic_hash": ""
+  },
+  "backend/internal/domain/syncset_property_test.go": {
+    "mtime": 1782314146.550221,
+    "ast_hash": "52c1f22713577f54be056faa5c7b9190",
+    "semantic_hash": ""
+  },
+  "backend/internal/games/games.go": {
+    "mtime": 1782313628.3875117,
+    "ast_hash": "7f897d5c96a10ffcee3abf2b28460427",
+    "semantic_hash": ""
+  },
+  "backend/internal/games/games_property_test.go": {
+    "mtime": 1782313730.3589356,
+    "ast_hash": "c77059dbbcdb6a908b404baeaff9824c",
+    "semantic_hash": ""
+  },
+  "backend/internal/games/scoring.go": {
+    "mtime": 1782313652.9528944,
+    "ast_hash": "7ae0a83c10ff40aec8ab9525176e4cd3",
+    "semantic_hash": ""
+  },
+  "backend/internal/games/scoring_property_test.go": {
+    "mtime": 1782313768.8218174,
+    "ast_hash": "ac30ac9bf77db731599ea13f36bb5986",
+    "semantic_hash": ""
+  },
+  "backend/internal/leaderboard/leaderboard.go": {
+    "mtime": 1782313880.272661,
+    "ast_hash": "08f7f83f0f3361d9f20d670944ac37f1",
+    "semantic_hash": ""
+  },
+  "backend/internal/leaderboard/leaderboard_property_test.go": {
+    "mtime": 1782313915.052246,
+    "ast_hash": "255d0e892706d87c1a1fc2a61facb8ed",
+    "semantic_hash": ""
+  },
+  "backend/internal/provider/httpadapter.go": {
+    "mtime": 1782306918.6054935,
+    "ast_hash": "7f6bc6407b27007730a3d2fe4e6f6629",
+    "semantic_hash": ""
+  },
+  "backend/internal/provider/provider.go": {
+    "mtime": 1782306892.3164499,
+    "ast_hash": "945dbdffc1325a7bacf755b9f7db8e37",
+    "semantic_hash": ""
+  },
+  "backend/internal/provider/provider_test.go": {
+    "mtime": 1782307387.306414,
+    "ast_hash": "aff0d971e37155567964a763f2767645",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/accounts.go": {
+    "mtime": 1782314305.9262948,
+    "ast_hash": "e163b22e31cb9de60e463ac390933b6f",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/accounts_test.go": {
+    "mtime": 1782311987.2147965,
+    "ast_hash": "cb63666bccc9bb77037bad7876adf34d",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/backup.go": {
+    "mtime": 1782743752.9582012,
+    "ast_hash": "ee0670228d9611a24eaca379a7fe38eb",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/device.go": {
+    "mtime": 1782743752.9582012,
+    "ast_hash": "0b57eaa9116156ba87eccf7ff90115a7",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/health.go": {
+    "mtime": 1782307090.0349698,
+    "ast_hash": "c7da13610c3ea076cb946d1920fae511",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/leaderboard.go": {
+    "mtime": 1782317620.440962,
+    "ast_hash": "9160091e5ef0c3ee0e6e4a1794c3d712",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/leaderboard_test.go": {
+    "mtime": 1782317704.0641384,
+    "ast_hash": "31ded83bb447f8a32ac46b1a6752fc12",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/proxy.go": {
+    "mtime": 1782306987.7460828,
+    "ast_hash": "0f543dffd1b3a4787b5a933f70702a65",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/server.go": {
+    "mtime": 1782743752.9587498,
+    "ast_hash": "46a40fc2717181461826ffa69ffe4474",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/server_test.go": {
+    "mtime": 1782307334.9156346,
+    "ast_hash": "81db90fd7ab6d7f71b6ef16d52def140",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/sync.go": {
+    "mtime": 1782314261.5925157,
+    "ast_hash": "2e5ab14a0ecbf0580c844a14aaf92db7",
+    "semantic_hash": ""
+  },
+  "backend/internal/server/sync_test.go": {
+    "mtime": 1782315075.43231,
+    "ast_hash": "b25ea08302111a55deb385abf9402b75",
+    "semantic_hash": ""
+  },
+  "backend/internal/sync/repository.go": {
+    "mtime": 1782321785.032651,
+    "ast_hash": "5dae1787fa3afa4c811653b1c355b559",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0001_init.down.sql": {
+    "mtime": 1782307224.0646925,
+    "ast_hash": "013bae77fc98b5620a4f93963165fcc8",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0001_init.up.sql": {
+    "mtime": 1782321831.6261976,
+    "ast_hash": "0e9ec08b8b5b2ccd27c27530bca8d13a",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0002_sync.down.sql": {
+    "mtime": 1782314395.7866557,
+    "ast_hash": "727eafc185df7ac7a22f8cf266e0eea6",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0002_sync.up.sql": {
+    "mtime": 1782314387.4427738,
+    "ast_hash": "7e3bb84ea589d5778a5f31d977f302b0",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0003_backup.down.sql": {
+    "mtime": 1782743183.0685227,
+    "ast_hash": "551db00ff8640f2e0982487bc90c32bf",
+    "semantic_hash": ""
+  },
+  "backend/migrations/0003_backup.up.sql": {
+    "mtime": 1782743174.4894762,
+    "ast_hash": "839999657ae3da64725f52908a556d30",
+    "semantic_hash": ""
+  },
+  "build.gradle.kts": {
+    "mtime": 1782252808.8813398,
+    "ast_hash": "002bbfbe6eb2662b6b8bbd1b29900ff6",
+    "semantic_hash": ""
+  },
+  "domain/build.gradle.kts": {
+    "mtime": 1782252828.8041713,
+    "ast_hash": "87e6c6f6b7d0b6cb53ac3dc40674b777",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/Domain.kt": {
+    "mtime": 1782575699.4563344,
+    "ast_hash": "a16e821991c7c9875fa6b6e16d8d972b",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/board/BoardAggregation.kt": {
+    "mtime": 1782575699.3450544,
+    "ast_hash": "49092d4d6c68a89fa61e2dc4f9c98e45",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/board/BoardOrdering.kt": {
+    "mtime": 1782755638.4616365,
+    "ast_hash": "6d05e3d1e5f10234f1de70dd3d5096f3",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/board/BoardState.kt": {
+    "mtime": 1782575699.3480544,
+    "ast_hash": "2aaacd1a6f5d3dfb877245e838983e75",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/bucket/BucketDeletion.kt": {
+    "mtime": 1782575699.3505583,
+    "ast_hash": "bf4fb75db9f9275ad244b45f212422b8",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/bucket/BucketOperations.kt": {
+    "mtime": 1782575699.3545656,
+    "ast_hash": "4a8661c0068a0d3ec54ddc82f71b93a4",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/bucket/BucketResult.kt": {
+    "mtime": 1782575699.358072,
+    "ast_hash": "27e91d9b77f388a1671299fe99373f7e",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/CaptureDraft.kt": {
+    "mtime": 1782632768.7189777,
+    "ast_hash": "a34278af93b59ce47621f73d0ba59590",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/CaptureOperations.kt": {
+    "mtime": 1782632776.178417,
+    "ast_hash": "a71b3292c5518aec832f99964788d978",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/ClassificationResult.kt": {
+    "mtime": 1782575699.366583,
+    "ast_hash": "59a4e14857bd31eabc2c74dd527c6eb9",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/ContentClassifier.kt": {
+    "mtime": 1782673611.0466428,
+    "ast_hash": "90ae38fddb7f5de720cabdc63a3ed72a",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/SharedIntentData.kt": {
+    "mtime": 1782575699.373093,
+    "ast_hash": "f14f48f81f458bc61956f6ceb2f4c1e4",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/TimeframeValidationResult.kt": {
+    "mtime": 1782575699.3756063,
+    "ast_hash": "7742a66603f4e1e6fdc7ae370609921c",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/capture/TimeframeValidator.kt": {
+    "mtime": 1782575699.3786066,
+    "ast_hash": "b0b79566285eb647b001bd8e322c20c1",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/llm/LlmContract.kt": {
+    "mtime": 1782575699.3811238,
+    "ast_hash": "de34667c23a6a2e27f6e78a1adfbdfa1",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/llm/LlmFailSoft.kt": {
+    "mtime": 1782575699.385124,
+    "ast_hash": "630f8d97f6583f4d6720c7d836a22003",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/llm/LlmResult.kt": {
+    "mtime": 1782575699.388125,
+    "ast_hash": "1402f5e10982daf81d13e87ae833d638",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/ActionItem.kt": {
+    "mtime": 1782582090.5519347,
+    "ast_hash": "30c52c4ffb7856c6bcb45c15ac622a15",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/ActionPlan.kt": {
+    "mtime": 1782575699.3936782,
+    "ast_hash": "2a474d0ae58210199cf2f4ddaf14874a",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/Bucket.kt": {
+    "mtime": 1782601228.3234384,
+    "ast_hash": "b32f106f7858112a72fa4c25981002e1",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/Enums.kt": {
+    "mtime": 1782575699.4001813,
+    "ast_hash": "494da4284fd1e871b78a25ec09a2607e",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/LinkPreview.kt": {
+    "mtime": 1782575699.4031997,
+    "ast_hash": "562ee8d620a70f154880ff433e4afe59",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/Serialization.kt": {
+    "mtime": 1782575699.406706,
+    "ast_hash": "d84d6158bc1993f95162cdb54ccd05a5",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/SyncMeta.kt": {
+    "mtime": 1782575699.4087152,
+    "ast_hash": "8b61536a5171264071cbd0192c2a9b7d",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/TaskReminder.kt": {
+    "mtime": 1782582073.5461729,
+    "ast_hash": "5e0da6f4520610f58cc967abbfd81a6c",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/Timeframe.kt": {
+    "mtime": 1782575699.4122283,
+    "ast_hash": "6719c3acd4e1eecae1fbea99e948d704",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/model/VoiceJournalEntry.kt": {
+    "mtime": 1782575699.4152284,
+    "ast_hash": "3fc21f3f8be8f10155251780bab7c3ba",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/plan/ActionPlanOperations.kt": {
+    "mtime": 1782575699.418233,
+    "ast_hash": "9eb08e9e904dd4a83abbb283c299b9f6",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/plan/Progress.kt": {
+    "mtime": 1782575699.4217508,
+    "ast_hash": "73adbd6d846ee1be98b3b9bc6dce8265",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/preview/PreviewMerge.kt": {
+    "mtime": 1782575699.4252648,
+    "ast_hash": "12533ab85e78413c8bf42e0b94c5bce7",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/preview/PreviewResult.kt": {
+    "mtime": 1782575699.4282656,
+    "ast_hash": "091aee03377a6ec7a9e7e6155c2814c8",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/DueSet.kt": {
+    "mtime": 1782575699.4307792,
+    "ast_hash": "cd268524bbceafb2c630ff833da469ac",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/ReminderContent.kt": {
+    "mtime": 1782575699.4337797,
+    "ast_hash": "2fae095cb6672cec2d8e38453228903a",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/ReminderSchedule.kt": {
+    "mtime": 1782575699.43678,
+    "ast_hash": "e7cb214085faff54d633afbda178c69b",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/ReminderSettings.kt": {
+    "mtime": 1782575699.4402876,
+    "ast_hash": "163e358aec3ea7eaccb50edc397315d0",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/TaskReminderDefaults.kt": {
+    "mtime": 1782745827.917152,
+    "ast_hash": "da7dda7c6037c169b048a772ce94f3da",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/reminder/TaskReminderSchedule.kt": {
+    "mtime": 1782582263.3070235,
+    "ast_hash": "8424e6b7a51662748c33486c12b37f5c",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/sync/ConflictResolution.kt": {
+    "mtime": 1782575699.443302,
+    "ast_hash": "c2ff89bb6130bd87cffff03a7bbfa172",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/transcription/TranscriptionOutcome.kt": {
+    "mtime": 1782575699.4463015,
+    "ast_hash": "9455a78189bb3b783aa3a4726ab83da9",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/transcription/TranscriptionResult.kt": {
+    "mtime": 1782575699.4498105,
+    "ast_hash": "5c6be05a93361ba0f072d6d0b38d674c",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/voice/HeuristicActionExtraction.kt": {
+    "mtime": 1782649588.0373888,
+    "ast_hash": "ca6ddf05f64b5268cf50c01e5cf3383e",
+    "semantic_hash": ""
+  },
+  "domain/src/main/kotlin/com/sidequest/domain/voice/VoiceActionExtraction.kt": {
+    "mtime": 1782575699.4528282,
+    "ast_hash": "0a229ed50898f636116da75e5dc28d05",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/KotestConfig.kt": {
+    "mtime": 1782575699.5387027,
+    "ast_hash": "bcecdc336f40f90b4c93da9b09dc99c4",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/SmokeTest.kt": {
+    "mtime": 1782575699.542719,
+    "ast_hash": "b1fc65e0f99c7ac683555110327b5482",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/board/BoardAggregationTest.kt": {
+    "mtime": 1782575699.458348,
+    "ast_hash": "4cf976a47bfd26479d127e65cecbe67e",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/board/BoardPartitioningPropertyTest.kt": {
+    "mtime": 1782575699.4618752,
+    "ast_hash": "0585b286582b91080b67587a4e6c862f",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/board/CompletionCounterPropertyTest.kt": {
+    "mtime": 1782575699.4648745,
+    "ast_hash": "619b796b0472b28f34a7fa556599bc00",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/board/IntraBucketOrderingPropertyTest.kt": {
+    "mtime": 1782575699.4678767,
+    "ast_hash": "ef709d1d8f811e81e3d3f68abee9794a",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/board/StatusIndicatorColorPropertyTest.kt": {
+    "mtime": 1782575699.4713938,
+    "ast_hash": "73f2cecbba8a900d3382dddfd658425e",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/bucket/BucketCrudTest.kt": {
+    "mtime": 1782575699.4749093,
+    "ast_hash": "c8b999fa2ad0f254697aafd52f44fdbe",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/bucket/BucketDeletionTest.kt": {
+    "mtime": 1782575699.4779162,
+    "ast_hash": "7aa807cef1f7e16bf01814110c9c5b6e",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/bucket/BucketNameUniquenessPropertyTest.kt": {
+    "mtime": 1782575699.4810586,
+    "ast_hash": "fae79a5f3bb7bf735f6f243e85ba6880",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/bucket/NonEmptyBucketDeletionPropertyTest.kt": {
+    "mtime": 1782575699.4850607,
+    "ast_hash": "46ee773fddb99a807deba76fe3999342",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/capture/ConfirmCapturePropertyTest.kt": {
+    "mtime": 1782575699.4880614,
+    "ast_hash": "cd57849778b5d7c9b44a10f6ea5cb5d3",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/capture/FirstUrlTest.kt": {
+    "mtime": 1782673670.4543755,
+    "ast_hash": "e82182fd15b98f6490f2509c3b8aac74",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/capture/SpecificDateTimeframePropertyTest.kt": {
+    "mtime": 1782575699.4910917,
+    "ast_hash": "4e968c17586548b163c808af34ec80f5",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/capture/UnsupportedContentPropertyTest.kt": {
+    "mtime": 1782575699.494608,
+    "ast_hash": "441a688ee77acfa19fdb4f04fab855bf",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/llm/LlmFailSoftPropertyTest.kt": {
+    "mtime": 1782575699.497609,
+    "ast_hash": "ede4fac05f76deb7092d9f2e06b557af",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/model/ModelSerializationTest.kt": {
+    "mtime": 1782575699.501127,
+    "ast_hash": "5b8555a40dd9f48d0f149a77460113ea",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/plan/MarkCompletePromptPropertyTest.kt": {
+    "mtime": 1782575699.5051322,
+    "ast_hash": "856211b43f213bed38ed9a483167708d",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/plan/SubActionProgressCountPropertyTest.kt": {
+    "mtime": 1782575699.5086486,
+    "ast_hash": "1e8d7038eebeff4e8fe3224f765bea63",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/plan/SubActionReorderingPropertyTest.kt": {
+    "mtime": 1782575699.5111637,
+    "ast_hash": "6fd07c10dcb8a22dbf4ca7eba7a856e2",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/preview/ResolvedPreviewPropertyTest.kt": {
+    "mtime": 1782575699.5141628,
+    "ast_hash": "a4db195c7e91ff1735271aed6eccc97e",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/preview/UnresolvedPreviewPropertyTest.kt": {
+    "mtime": 1782575699.5181656,
+    "ast_hash": "12c5fb6f0f63437810ed9fc1b0f7b5cd",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/reminder/DailyDueSetPropertyTest.kt": {
+    "mtime": 1782575699.5206714,
+    "ast_hash": "31ba84915307dd1be2752ff59f2bd7af",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/reminder/ReminderContentTest.kt": {
+    "mtime": 1782575699.5241928,
+    "ast_hash": "33a3a29b916bb569ede3fe1431584a4a",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/sync/ConflictResolutionPropertyTest.kt": {
+    "mtime": 1782575699.527192,
+    "ast_hash": "13355d94a22a614b86d2732431137425",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/transcription/TranscriptionOutcomePropertyTest.kt": {
+    "mtime": 1782575699.5306995,
+    "ast_hash": "455ea60580517a4df42c7b76ae34c57c",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/voice/ConfirmationGatedCreationPropertyTest.kt": {
+    "mtime": 1782575699.5337033,
+    "ast_hash": "99c98faae67d2f418230924a07bee3f6",
+    "semantic_hash": ""
+  },
+  "domain/src/test/kotlin/com/sidequest/domain/voice/HeuristicActionExtractionTest.kt": {
+    "mtime": 1782649556.7305849,
+    "ast_hash": "cc0e6336f2d85d647a20701a07fdf274",
+    "semantic_hash": ""
+  },
+  "gradlew": {
+    "mtime": 1782253278.8133378,
+    "ast_hash": "f092910dfa8e47c5a37a452c3f6baf8a",
+    "semantic_hash": ""
+  },
+  "scripts/dev-down.ps1": {
+    "mtime": 1782545506.8818514,
+    "ast_hash": "7fa1ad67e38ef4548b22d8a6ae18680f",
+    "semantic_hash": ""
+  },
+  "scripts/dev-up.ps1": {
+    "mtime": 1782545452.5306525,
+    "ast_hash": "5d5f4d9654c82d60ac3695d1047dca82",
+    "semantic_hash": ""
+  },
+  "scripts/fetch-new-covers.ps1": {
+    "mtime": 1782753882.434778,
+    "ast_hash": "29c679921a25323b7b4a03bc58099a4c",
+    "semantic_hash": ""
+  },
+  "scripts/release-build.ps1": {
+    "mtime": 1782668607.9665513,
+    "ast_hash": "85d5dc7945cffdebffd44f99df2c99b8",
+    "semantic_hash": ""
+  },
+  "scripts/release-keystore.ps1": {
+    "mtime": 1782668580.7980351,
+    "ast_hash": "9b0f34c2a0c284a8ef415709e529dc71",
+    "semantic_hash": ""
+  },
+  "settings.gradle.kts": {
+    "mtime": 1782575699.5487285,
+    "ast_hash": "b3bc07180106fea6d988da4a1352d395",
+    "semantic_hash": ""
+  },
+  "skills-lock.json": {
+    "mtime": 1782779683.2338934,
+    "ast_hash": "27aa0d014289e012fbb20b46ae6b1fd3",
+    "semantic_hash": ""
+  },
+  ".agents/skills/accessibility-compliance/SKILL.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "293daa1a04a7a5e4ba74e302cd00d6c1",
+    "semantic_hash": ""
+  },
+  ".agents/skills/accessibility-compliance/references/aria-patterns.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "92ea0518dc0e0d472a8a8cb3daef43cf",
+    "semantic_hash": ""
+  },
+  ".agents/skills/accessibility-compliance/references/details.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "6dc11650df251b5d4c8889c302636b8b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/accessibility-compliance/references/mobile-accessibility.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "b30aef31e904dd8841189f1c043b85f6",
+    "semantic_hash": ""
+  },
+  ".agents/skills/accessibility-compliance/references/wcag-guidelines.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "6da4c9947b22079d9425c562d4e8270c",
+    "semantic_hash": ""
+  },
+  ".agents/skills/android-jetpack-compose-expert/SKILL.md": {
+    "mtime": 1782251329.2382598,
+    "ast_hash": "a6e3f2b88a0213c6da9ed4b247ece4ee",
+    "semantic_hash": ""
+  },
+  ".agents/skills/android-kotlin/SKILL.md": {
+    "mtime": 1782249022.3048704,
+    "ast_hash": "4dd5d34b01a2ad748dbb4033ef81902b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/app-store-review/SKILL.md": {
+    "mtime": 1782779313.1112516,
+    "ast_hash": "dd5075be56539ee9c1879524ecf56496",
+    "semantic_hash": ""
+  },
+  ".agents/skills/app-store-review/references/privacy-manifest.md": {
+    "mtime": 1782779313.1132514,
+    "ast_hash": "2cf5def2e7a7509941125ed3370ba540",
+    "semantic_hash": ""
+  },
+  ".agents/skills/app-store-review/references/review-checklists.md": {
+    "mtime": 1782779313.1147547,
+    "ast_hash": "cba5bd3182f4e20289ebeb4862c50018",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-code-style/SKILL.md": {
+    "mtime": 1782249059.7198985,
+    "ast_hash": "1adf441a97c1d8ef3f54c589efe49f52",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-code-style/references/details.md": {
+    "mtime": 1782249059.7359805,
+    "ast_hash": "3a63c4ad1a705ce563c1b01139200a98",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/SKILL.md": {
+    "mtime": 1782250959.8447008,
+    "ast_hash": "be456e144dc9178938b156be90b09105",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/references/performance.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "26c687f87e1f0f5e9360f93348a11ce0",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/references/scanning.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "f40d16a2f4d41478045c179f35979f23",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/references/testing.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "6a06572fdda9961feef42a717bef37b2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-database/references/transactions.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "30326c8c5f1e99d5be2a0f2e08f7a6ba",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/SKILL.md": {
+    "mtime": 1782249281.999821,
+    "ast_hash": "2c42cfb47daac9172b6f0a997e802a8f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/architecture.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "16db32e79d58ed5b8bdcf4594ca78581",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/clean-architecture.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "d94f14e4f1b96503ea6b2320687b7056",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/data-handling.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "014f1ded7ab228ba76a87f2ad2c0a71d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/ddd.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "912ab23da9692669ea63733f0300b94b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/hexagonal-architecture.md": {
+    "mtime": 1782249282.0141459,
+    "ast_hash": "1012a73221d00e6850d4e3aa93c18607",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-design-patterns/references/resource-management.md": {
+    "mtime": 1782249282.0162325,
+    "ast_hash": "25cf9fa02caf5a570813a1f3bd7d40e2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-error-handling/SKILL.md": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "be659c3b0cce059a9eab77d237c622fc",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-error-handling/references/error-creation.md": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "ff44a86e823c810d3671366528d6ba45",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-error-handling/references/error-handling.md": {
+    "mtime": 1782250959.9695508,
+    "ast_hash": "0686dce2b104d74f029eb2128450167c",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-error-handling/references/error-wrapping.md": {
+    "mtime": 1782250959.9695508,
+    "ast_hash": "5c094ba80ac0e79079bdf4f3bb3fd4dc",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/SKILL.md": {
+    "mtime": 1782250960.0585687,
+    "ast_hash": "75b4d0e1a5de99679f10f6841d2f7536",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/references/functions-methods.md": {
+    "mtime": 1782250960.067476,
+    "ast_hash": "52d708effa2a6aa02f8e16d9d19e6be8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/references/identifiers.md": {
+    "mtime": 1782250960.067476,
+    "ast_hash": "5ead055018d508e00a6cfd9707173472",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/references/packages-files.md": {
+    "mtime": 1782250960.0747051,
+    "ast_hash": "c7adbfef5c5343c576868f1d8b951998",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/references/testing.md": {
+    "mtime": 1782250960.0778277,
+    "ast_hash": "3e9f22f72c4d2c0b4e92fd11ae04beff",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-naming/references/types-errors.md": {
+    "mtime": 1782250960.0778277,
+    "ast_hash": "6194bfc2bb12fb18cd0ac339f2d1fb62",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/SKILL.md": {
+    "mtime": 1782250960.296371,
+    "ast_hash": "1c4988d7f3da78c7d0c06ba6ad7a4f92",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/architecture.md": {
+    "mtime": 1782250960.3049276,
+    "ast_hash": "3f9e8d29aead6607b01ef534ffdc9fc0",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/checklist.md": {
+    "mtime": 1782250960.3080382,
+    "ast_hash": "eb053eac3f568dcbfa1204458270e13a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/cookies.md": {
+    "mtime": 1782250960.309238,
+    "ast_hash": "7fc6b2f044c8231d0ca79bb5bcb20148",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/cryptography.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "1837dd774433f58db606ca761e507421",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/filesystem.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "e77d8aff7ab39e897680f3023a70ed26",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/injection.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "bf475b5942ca3cab3d9ba61a48e8d4b5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/logging.md": {
+    "mtime": 1782250960.320622,
+    "ast_hash": "eb7dbbd1b4ca509119f94866ff14d059",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/memory-safety.md": {
+    "mtime": 1782250960.320622,
+    "ast_hash": "3b9a9c2c5d6a7cfa8e0ba031adaedc31",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/network.md": {
+    "mtime": 1782250960.3246918,
+    "ast_hash": "83835487b61653d9398c2e9e8adfef47",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/third-party.md": {
+    "mtime": 1782250960.3290687,
+    "ast_hash": "23b343840dbf39e89926c8d110517af7",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-security/references/threat-modeling.md": {
+    "mtime": 1782250960.3290687,
+    "ast_hash": "bdb7030798e332e15d8e380d257f9606",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/SKILL.md": {
+    "mtime": 1782250960.401609,
+    "ast_hash": "5cb7e75a236586d8ff922fc32a9e543b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/references/helpers.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "98018ddda834c5d3a45c91e3192364e4",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/references/http-testing.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "91f45a420d37d0c6276937734bb8bfa9",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/references/integration-testing.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "38a391ff672e264cb10d3515ff22a060",
+    "semantic_hash": ""
+  },
+  ".agents/skills/golang-testing/references/mocking.md": {
+    "mtime": 1782250960.4178207,
+    "ast_hash": "b6a4903e3a9b565d9296f4ce1cb22c20",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/SKILL.md": {
+    "mtime": 1782779269.6507726,
+    "ast_hash": "1aa7b5ea87df207de6a969db929ebecf",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/accessibility.md": {
+    "mtime": 1782779269.6517723,
+    "ast_hash": "0e0754b8b214e6e09c98d66753665867",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/graphics-animation.md": {
+    "mtime": 1782779269.6527717,
+    "ast_hash": "54f464a324c5992fd91e2f39168fe2bd",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/layout-system.md": {
+    "mtime": 1782779269.654775,
+    "ast_hash": "be1852090358b28f3093d21770082e4d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/metal-shader.md": {
+    "mtime": 1782779269.6557724,
+    "ast_hash": "9228b1d5e3d15034b8b1b75c87ddcd03",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/navigation-patterns.md": {
+    "mtime": 1782779269.6567717,
+    "ast_hash": "166ae7b953922b006b35fbeb8c066906",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/swift-coding-standards.md": {
+    "mtime": 1782779269.6582763,
+    "ast_hash": "d3c71d8f7e2fb2ba77002d6dc8372139",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/swiftui-design-guidelines.md": {
+    "mtime": 1782779269.6592813,
+    "ast_hash": "68a42003b8ae947cbd66bc8dd7ffff9e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/system-integration.md": {
+    "mtime": 1782779269.6602807,
+    "ast_hash": "2494fcdef1addb678c16b1ce59f21026",
+    "semantic_hash": ""
+  },
+  ".agents/skills/ios-application-dev/references/uikit-components.md": {
+    "mtime": 1782779269.661281,
+    "ast_hash": "e8ec762b6deda4019b1224827c9518a5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/mobile-android-design/SKILL.md": {
+    "mtime": 1782248465.3607004,
+    "ast_hash": "eb71623a5f94347ad16ae29829fac299",
+    "semantic_hash": ""
+  },
+  ".agents/skills/mobile-android-design/references/android-navigation.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "f91029bdaf8f4822bd9a2e1fd98289fb",
+    "semantic_hash": ""
+  },
+  ".agents/skills/mobile-android-design/references/compose-components.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "c38bc28512249fccba568aa039a860c9",
+    "semantic_hash": ""
+  },
+  ".agents/skills/mobile-android-design/references/details.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "1cd83b4718b11e57035d88da44d54d80",
+    "semantic_hash": ""
+  },
+  ".agents/skills/mobile-android-design/references/material3-theming.md": {
+    "mtime": 1782248465.3771737,
+    "ast_hash": "d3cfda07fb3ff71256e8378686c619e2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/SKILL.md": {
+    "mtime": 1782779672.6612644,
+    "ast_hash": "d10a9d8e99dcf94db2a7a8c9056d2a4b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/agents/openai.yaml": {
+    "mtime": 1782779672.6612644,
+    "ast_hash": "4e4b15f59205bb527150b295e0750f99",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/references/async-tests.md": {
+    "mtime": 1782779672.6658766,
+    "ast_hash": "44840ca970d6852ed5ae77ff61ecd28e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/references/core-rules.md": {
+    "mtime": 1782779672.6669621,
+    "ast_hash": "53a6efb44c828f92570af75c1f76e862",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/references/migrating-from-xctest.md": {
+    "mtime": 1782779672.6679702,
+    "ast_hash": "ebaef78f5f81b4b1165849e8b57aa0ea",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/references/new-features.md": {
+    "mtime": 1782779672.668971,
+    "ast_hash": "8b75bc4600738cafe7d1ac2fa9c9aca4",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/references/writing-better-tests.md": {
+    "mtime": 1782779672.6699672,
+    "ast_hash": "165438a7c5dac9df44afa1a31358afcf",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/skills/swift-testing-pro/SKILL.md": {
+    "mtime": 1782779672.6719677,
+    "ast_hash": "f57169a8c329774a57ed65f472393ef1",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/SKILL.md": {
+    "mtime": 1782779563.6943364,
+    "ast_hash": "4ae28fba4f1260a319b190ee484cddb2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/accessibility-patterns.md": {
+    "mtime": 1782779563.6963353,
+    "ast_hash": "f37e78ab610aeb2c2e45f173724c7799",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/animation-advanced.md": {
+    "mtime": 1782779563.6963353,
+    "ast_hash": "4d48dcdfd3f8a78162d57fc7e876678d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/animation-basics.md": {
+    "mtime": 1782779563.6983352,
+    "ast_hash": "c1ccde75ed54a17c41d081d2656c173b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/animation-transitions.md": {
+    "mtime": 1782779563.6993363,
+    "ast_hash": "311a4e63718d36a45991129d1d974799",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/charts-accessibility.md": {
+    "mtime": 1782779563.7003372,
+    "ast_hash": "d27ac90a0f2a8fd03705396dd97ae336",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/charts.md": {
+    "mtime": 1782779563.7018542,
+    "ast_hash": "e70a27346a77f4ac22ad61d2cbbb9264",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/focus-patterns.md": {
+    "mtime": 1782779563.7028694,
+    "ast_hash": "6dda02c254836c208d1c3b40592dd687",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/image-optimization.md": {
+    "mtime": 1782779563.7038627,
+    "ast_hash": "6dbcf5267d77da095bb5d81fcaa33b8d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/latest-apis.md": {
+    "mtime": 1782779563.7048626,
+    "ast_hash": "d70c6907e32e3a190865e83d93209f07",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/layout-best-practices.md": {
+    "mtime": 1782779563.7058618,
+    "ast_hash": "78579ea1db682703e15ae9e4448947c4",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/liquid-glass.md": {
+    "mtime": 1782779563.7068622,
+    "ast_hash": "094f3d7deabec0a88d26f51fdbdcc079",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/list-patterns.md": {
+    "mtime": 1782779563.7078621,
+    "ast_hash": "4db0f25154d2685188aa49c552542be2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/localization.md": {
+    "mtime": 1782779563.708862,
+    "ast_hash": "29e8a633fb7c9dbadbe4e45a4350f652",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/macos-scenes.md": {
+    "mtime": 1782779563.709862,
+    "ast_hash": "7a56dca38c690dfcf9e627d2dd549359",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/macos-views.md": {
+    "mtime": 1782779563.7108626,
+    "ast_hash": "eb2f9083649b6e99b0785e7a028d0d2a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/macos-window-styling.md": {
+    "mtime": 1782779563.711861,
+    "ast_hash": "18971be140cfbe16107d6cfa03c954a5",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/performance-patterns.md": {
+    "mtime": 1782779563.71286,
+    "ast_hash": "275c39e47aad64e17e48f791413a1945",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/previews.md": {
+    "mtime": 1782779563.714857,
+    "ast_hash": "5e91a3dbd34d65df88e54b25503ea10a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/scroll-patterns.md": {
+    "mtime": 1782779563.7158594,
+    "ast_hash": "6e7e65f565598274adb612aacc5d10a2",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/sheet-navigation-patterns.md": {
+    "mtime": 1782779563.716863,
+    "ast_hash": "4cff9e259f9987e8af07e8dc47f7442a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/soft-deprecation.md": {
+    "mtime": 1782779563.718381,
+    "ast_hash": "50e9fd6549336faa7940f8249b3f18ca",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/state-management.md": {
+    "mtime": 1782779563.718381,
+    "ast_hash": "19ec4f052049ade6dc5de900b4a48e54",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/text-patterns.md": {
+    "mtime": 1782779563.7203884,
+    "ast_hash": "1bd1dc1bcc51e4329cff4955ac433923",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/trace-analysis.md": {
+    "mtime": 1782779563.7213864,
+    "ast_hash": "9ca8ab7b2344c61da83bcc42e94c8f3b",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/trace-recording.md": {
+    "mtime": 1782779563.722389,
+    "ast_hash": "cecd26677ba081d5e50a279ddb9651f8",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-expert-skill/references/view-structure.md": {
+    "mtime": 1782779563.7233884,
+    "ast_hash": "2c148e9846cdfbdd9c1bde20ddb7e21f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/SKILL.md": {
+    "mtime": 1782779608.4377184,
+    "ast_hash": "2c31ded866c824692bf2daf86b40c5db",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/agents/openai.yaml": {
+    "mtime": 1782779608.4387183,
+    "ast_hash": "75b07446dfc2337e0ff9c2eccc5e2051",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/accessibility.md": {
+    "mtime": 1782779608.4417176,
+    "ast_hash": "4177840d68633e854b8f376c241558a6",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/api.md": {
+    "mtime": 1782779608.4427178,
+    "ast_hash": "25fcf87437a5a2750bd7a6c140549f6c",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/data.md": {
+    "mtime": 1782779608.443718,
+    "ast_hash": "aaca545c9b6146f430253ec69959db15",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/design.md": {
+    "mtime": 1782779608.443718,
+    "ast_hash": "f67ec6b7440825c89b010522a4a5231d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/hygiene.md": {
+    "mtime": 1782779608.4462347,
+    "ast_hash": "4b035a4932301d9c6000cd34e43a2a3d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/navigation.md": {
+    "mtime": 1782779608.4462347,
+    "ast_hash": "7051ae1d8624e6e7936c698355fbb734",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/performance.md": {
+    "mtime": 1782779608.4472382,
+    "ast_hash": "9f44f0606dfc7d9a13641a0401133bfb",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/swift.md": {
+    "mtime": 1782779608.4472382,
+    "ast_hash": "0af9234a8d4c36853285767266ab829e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/references/views.md": {
+    "mtime": 1782779608.4487529,
+    "ast_hash": "0918593a689db126130984960ecf4825",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/skills/swiftui-pro/SKILL.md": {
+    "mtime": 1782779608.450286,
+    "ast_hash": "46e26cb413e452c01c2a047a2ec64a74",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/accessibility-compliance/SKILL.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "293daa1a04a7a5e4ba74e302cd00d6c1",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/accessibility-compliance/references/aria-patterns.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "92ea0518dc0e0d472a8a8cb3daef43cf",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/accessibility-compliance/references/details.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "6dc11650df251b5d4c8889c302636b8b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/accessibility-compliance/references/mobile-accessibility.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "b30aef31e904dd8841189f1c043b85f6",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/accessibility-compliance/references/wcag-guidelines.md": {
+    "mtime": 1782251546.5188718,
+    "ast_hash": "6da4c9947b22079d9425c562d4e8270c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/android-jetpack-compose-expert/SKILL.md": {
+    "mtime": 1782251329.2382598,
+    "ast_hash": "a6e3f2b88a0213c6da9ed4b247ece4ee",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/android-kotlin/SKILL.md": {
+    "mtime": 1782249022.3048704,
+    "ast_hash": "4dd5d34b01a2ad748dbb4033ef81902b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/app-store-review/SKILL.md": {
+    "mtime": 1782779313.1112516,
+    "ast_hash": "dd5075be56539ee9c1879524ecf56496",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/app-store-review/references/privacy-manifest.md": {
+    "mtime": 1782779313.1132514,
+    "ast_hash": "2cf5def2e7a7509941125ed3370ba540",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/app-store-review/references/review-checklists.md": {
+    "mtime": 1782779313.1147547,
+    "ast_hash": "cba5bd3182f4e20289ebeb4862c50018",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-code-style/SKILL.md": {
+    "mtime": 1782249059.7198985,
+    "ast_hash": "1adf441a97c1d8ef3f54c589efe49f52",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-code-style/references/details.md": {
+    "mtime": 1782249059.7359805,
+    "ast_hash": "3a63c4ad1a705ce563c1b01139200a98",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/SKILL.md": {
+    "mtime": 1782250959.8447008,
+    "ast_hash": "be456e144dc9178938b156be90b09105",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/references/performance.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "26c687f87e1f0f5e9360f93348a11ce0",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/references/scanning.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "f40d16a2f4d41478045c179f35979f23",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/references/testing.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "6a06572fdda9961feef42a717bef37b2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-database/references/transactions.md": {
+    "mtime": 1782250959.8603437,
+    "ast_hash": "30326c8c5f1e99d5be2a0f2e08f7a6ba",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/SKILL.md": {
+    "mtime": 1782249281.999821,
+    "ast_hash": "2c42cfb47daac9172b6f0a997e802a8f",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/architecture.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "16db32e79d58ed5b8bdcf4594ca78581",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/clean-architecture.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "d94f14e4f1b96503ea6b2320687b7056",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/data-handling.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "014f1ded7ab228ba76a87f2ad2c0a71d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/ddd.md": {
+    "mtime": 1782249282.005973,
+    "ast_hash": "912ab23da9692669ea63733f0300b94b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/hexagonal-architecture.md": {
+    "mtime": 1782249282.0141459,
+    "ast_hash": "1012a73221d00e6850d4e3aa93c18607",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-design-patterns/references/resource-management.md": {
+    "mtime": 1782249282.0162325,
+    "ast_hash": "25cf9fa02caf5a570813a1f3bd7d40e2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-error-handling/SKILL.md": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "be659c3b0cce059a9eab77d237c622fc",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-error-handling/references/error-creation.md": {
+    "mtime": 1782250959.9614565,
+    "ast_hash": "ff44a86e823c810d3671366528d6ba45",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-error-handling/references/error-handling.md": {
+    "mtime": 1782250959.9695508,
+    "ast_hash": "0686dce2b104d74f029eb2128450167c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-error-handling/references/error-wrapping.md": {
+    "mtime": 1782250959.9695508,
+    "ast_hash": "5c094ba80ac0e79079bdf4f3bb3fd4dc",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/SKILL.md": {
+    "mtime": 1782250960.0585687,
+    "ast_hash": "75b4d0e1a5de99679f10f6841d2f7536",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/references/functions-methods.md": {
+    "mtime": 1782250960.067476,
+    "ast_hash": "52d708effa2a6aa02f8e16d9d19e6be8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/references/identifiers.md": {
+    "mtime": 1782250960.067476,
+    "ast_hash": "5ead055018d508e00a6cfd9707173472",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/references/packages-files.md": {
+    "mtime": 1782250960.0747051,
+    "ast_hash": "c7adbfef5c5343c576868f1d8b951998",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/references/testing.md": {
+    "mtime": 1782250960.0778277,
+    "ast_hash": "3e9f22f72c4d2c0b4e92fd11ae04beff",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-naming/references/types-errors.md": {
+    "mtime": 1782250960.0778277,
+    "ast_hash": "6194bfc2bb12fb18cd0ac339f2d1fb62",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/SKILL.md": {
+    "mtime": 1782250960.296371,
+    "ast_hash": "1c4988d7f3da78c7d0c06ba6ad7a4f92",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/architecture.md": {
+    "mtime": 1782250960.3049276,
+    "ast_hash": "3f9e8d29aead6607b01ef534ffdc9fc0",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/checklist.md": {
+    "mtime": 1782250960.3080382,
+    "ast_hash": "eb053eac3f568dcbfa1204458270e13a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/cookies.md": {
+    "mtime": 1782250960.309238,
+    "ast_hash": "7fc6b2f044c8231d0ca79bb5bcb20148",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/cryptography.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "1837dd774433f58db606ca761e507421",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/filesystem.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "e77d8aff7ab39e897680f3023a70ed26",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/injection.md": {
+    "mtime": 1782250960.3125544,
+    "ast_hash": "bf475b5942ca3cab3d9ba61a48e8d4b5",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/logging.md": {
+    "mtime": 1782250960.320622,
+    "ast_hash": "eb7dbbd1b4ca509119f94866ff14d059",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/memory-safety.md": {
+    "mtime": 1782250960.320622,
+    "ast_hash": "3b9a9c2c5d6a7cfa8e0ba031adaedc31",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/network.md": {
+    "mtime": 1782250960.3246918,
+    "ast_hash": "83835487b61653d9398c2e9e8adfef47",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/third-party.md": {
+    "mtime": 1782250960.3290687,
+    "ast_hash": "23b343840dbf39e89926c8d110517af7",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-security/references/threat-modeling.md": {
+    "mtime": 1782250960.3290687,
+    "ast_hash": "bdb7030798e332e15d8e380d257f9606",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/SKILL.md": {
+    "mtime": 1782250960.401609,
+    "ast_hash": "5cb7e75a236586d8ff922fc32a9e543b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/references/helpers.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "98018ddda834c5d3a45c91e3192364e4",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/references/http-testing.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "91f45a420d37d0c6276937734bb8bfa9",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/references/integration-testing.md": {
+    "mtime": 1782250960.4096928,
+    "ast_hash": "38a391ff672e264cb10d3515ff22a060",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/golang-testing/references/mocking.md": {
+    "mtime": 1782250960.4178207,
+    "ast_hash": "b6a4903e3a9b565d9296f4ce1cb22c20",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/SKILL.md": {
+    "mtime": 1782252241.294437,
+    "ast_hash": "2e44981722f69e3cd7838f03e9b43ef5",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/add-watch.md": {
+    "mtime": 1782251705.568282,
+    "ast_hash": "d59d027fe449f06aa03905a01184e779",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/exports.md": {
+    "mtime": 1782251705.576282,
+    "ast_hash": "9da2a2152e60a22f07f05fed5158f287",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1782251705.58165,
+    "ast_hash": "34d91a9dd60544cefe1eb0c490860f7a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1782251705.58165,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/hooks.md": {
+    "mtime": 1782251705.58165,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/query.md": {
+    "mtime": 1782251705.594174,
+    "ast_hash": "0b329f30b63b0bd89282848575c86428",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/transcribe.md": {
+    "mtime": 1782251705.598368,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/graphify/references/update.md": {
+    "mtime": 1782251705.6035595,
+    "ast_hash": "c698309979460d0f02ba616417844399",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/SKILL.md": {
+    "mtime": 1782779269.6507726,
+    "ast_hash": "1aa7b5ea87df207de6a969db929ebecf",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/accessibility.md": {
+    "mtime": 1782779269.6517723,
+    "ast_hash": "0e0754b8b214e6e09c98d66753665867",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/graphics-animation.md": {
+    "mtime": 1782779269.6527717,
+    "ast_hash": "54f464a324c5992fd91e2f39168fe2bd",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/layout-system.md": {
+    "mtime": 1782779269.654775,
+    "ast_hash": "be1852090358b28f3093d21770082e4d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/metal-shader.md": {
+    "mtime": 1782779269.6557724,
+    "ast_hash": "9228b1d5e3d15034b8b1b75c87ddcd03",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/navigation-patterns.md": {
+    "mtime": 1782779269.6567717,
+    "ast_hash": "166ae7b953922b006b35fbeb8c066906",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/swift-coding-standards.md": {
+    "mtime": 1782779269.6582763,
+    "ast_hash": "d3c71d8f7e2fb2ba77002d6dc8372139",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/swiftui-design-guidelines.md": {
+    "mtime": 1782779269.6592813,
+    "ast_hash": "68a42003b8ae947cbd66bc8dd7ffff9e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/system-integration.md": {
+    "mtime": 1782779269.6602807,
+    "ast_hash": "2494fcdef1addb678c16b1ce59f21026",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/ios-application-dev/references/uikit-components.md": {
+    "mtime": 1782779269.661281,
+    "ast_hash": "e8ec762b6deda4019b1224827c9518a5",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/mobile-android-design/SKILL.md": {
+    "mtime": 1782248465.3607004,
+    "ast_hash": "eb71623a5f94347ad16ae29829fac299",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/mobile-android-design/references/android-navigation.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "f91029bdaf8f4822bd9a2e1fd98289fb",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/mobile-android-design/references/compose-components.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "c38bc28512249fccba568aa039a860c9",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/mobile-android-design/references/details.md": {
+    "mtime": 1782248465.369112,
+    "ast_hash": "1cd83b4718b11e57035d88da44d54d80",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/mobile-android-design/references/material3-theming.md": {
+    "mtime": 1782248465.3771737,
+    "ast_hash": "d3cfda07fb3ff71256e8378686c619e2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/SKILL.md": {
+    "mtime": 1782779672.6612644,
+    "ast_hash": "d10a9d8e99dcf94db2a7a8c9056d2a4b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/agents/openai.yaml": {
+    "mtime": 1782779672.6612644,
+    "ast_hash": "4e4b15f59205bb527150b295e0750f99",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/references/async-tests.md": {
+    "mtime": 1782779672.6658766,
+    "ast_hash": "44840ca970d6852ed5ae77ff61ecd28e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/references/core-rules.md": {
+    "mtime": 1782779672.6669621,
+    "ast_hash": "53a6efb44c828f92570af75c1f76e862",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/references/migrating-from-xctest.md": {
+    "mtime": 1782779672.6679702,
+    "ast_hash": "ebaef78f5f81b4b1165849e8b57aa0ea",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/references/new-features.md": {
+    "mtime": 1782779672.668971,
+    "ast_hash": "8b75bc4600738cafe7d1ac2fa9c9aca4",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/references/writing-better-tests.md": {
+    "mtime": 1782779672.6699672,
+    "ast_hash": "165438a7c5dac9df44afa1a31358afcf",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/skills/swift-testing-pro/SKILL.md": {
+    "mtime": 1782779672.6719677,
+    "ast_hash": "f57169a8c329774a57ed65f472393ef1",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/SKILL.md": {
+    "mtime": 1782779563.6943364,
+    "ast_hash": "4ae28fba4f1260a319b190ee484cddb2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/accessibility-patterns.md": {
+    "mtime": 1782779563.6963353,
+    "ast_hash": "f37e78ab610aeb2c2e45f173724c7799",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/animation-advanced.md": {
+    "mtime": 1782779563.6963353,
+    "ast_hash": "4d48dcdfd3f8a78162d57fc7e876678d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/animation-basics.md": {
+    "mtime": 1782779563.6983352,
+    "ast_hash": "c1ccde75ed54a17c41d081d2656c173b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/animation-transitions.md": {
+    "mtime": 1782779563.6993363,
+    "ast_hash": "311a4e63718d36a45991129d1d974799",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/charts-accessibility.md": {
+    "mtime": 1782779563.7003372,
+    "ast_hash": "d27ac90a0f2a8fd03705396dd97ae336",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/charts.md": {
+    "mtime": 1782779563.7018542,
+    "ast_hash": "e70a27346a77f4ac22ad61d2cbbb9264",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/focus-patterns.md": {
+    "mtime": 1782779563.7028694,
+    "ast_hash": "6dda02c254836c208d1c3b40592dd687",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/image-optimization.md": {
+    "mtime": 1782779563.7038627,
+    "ast_hash": "6dbcf5267d77da095bb5d81fcaa33b8d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/latest-apis.md": {
+    "mtime": 1782779563.7048626,
+    "ast_hash": "d70c6907e32e3a190865e83d93209f07",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/layout-best-practices.md": {
+    "mtime": 1782779563.7058618,
+    "ast_hash": "78579ea1db682703e15ae9e4448947c4",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/liquid-glass.md": {
+    "mtime": 1782779563.7068622,
+    "ast_hash": "094f3d7deabec0a88d26f51fdbdcc079",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/list-patterns.md": {
+    "mtime": 1782779563.7078621,
+    "ast_hash": "4db0f25154d2685188aa49c552542be2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/localization.md": {
+    "mtime": 1782779563.708862,
+    "ast_hash": "29e8a633fb7c9dbadbe4e45a4350f652",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/macos-scenes.md": {
+    "mtime": 1782779563.709862,
+    "ast_hash": "7a56dca38c690dfcf9e627d2dd549359",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/macos-views.md": {
+    "mtime": 1782779563.7108626,
+    "ast_hash": "eb2f9083649b6e99b0785e7a028d0d2a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/macos-window-styling.md": {
+    "mtime": 1782779563.711861,
+    "ast_hash": "18971be140cfbe16107d6cfa03c954a5",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/performance-patterns.md": {
+    "mtime": 1782779563.71286,
+    "ast_hash": "275c39e47aad64e17e48f791413a1945",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/previews.md": {
+    "mtime": 1782779563.714857,
+    "ast_hash": "5e91a3dbd34d65df88e54b25503ea10a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/scroll-patterns.md": {
+    "mtime": 1782779563.7158594,
+    "ast_hash": "6e7e65f565598274adb612aacc5d10a2",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/sheet-navigation-patterns.md": {
+    "mtime": 1782779563.716863,
+    "ast_hash": "4cff9e259f9987e8af07e8dc47f7442a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/soft-deprecation.md": {
+    "mtime": 1782779563.718381,
+    "ast_hash": "50e9fd6549336faa7940f8249b3f18ca",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/state-management.md": {
+    "mtime": 1782779563.718381,
+    "ast_hash": "19ec4f052049ade6dc5de900b4a48e54",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/text-patterns.md": {
+    "mtime": 1782779563.7203884,
+    "ast_hash": "1bd1dc1bcc51e4329cff4955ac433923",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/trace-analysis.md": {
+    "mtime": 1782779563.7213864,
+    "ast_hash": "9ca8ab7b2344c61da83bcc42e94c8f3b",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/trace-recording.md": {
+    "mtime": 1782779563.722389,
+    "ast_hash": "cecd26677ba081d5e50a279ddb9651f8",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-expert-skill/references/view-structure.md": {
+    "mtime": 1782779563.7233884,
+    "ast_hash": "2c148e9846cdfbdd9c1bde20ddb7e21f",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/SKILL.md": {
+    "mtime": 1782779608.4377184,
+    "ast_hash": "2c31ded866c824692bf2daf86b40c5db",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/agents/openai.yaml": {
+    "mtime": 1782779608.4387183,
+    "ast_hash": "75b07446dfc2337e0ff9c2eccc5e2051",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/accessibility.md": {
+    "mtime": 1782779608.4417176,
+    "ast_hash": "4177840d68633e854b8f376c241558a6",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/api.md": {
+    "mtime": 1782779608.4427178,
+    "ast_hash": "25fcf87437a5a2750bd7a6c140549f6c",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/data.md": {
+    "mtime": 1782779608.443718,
+    "ast_hash": "aaca545c9b6146f430253ec69959db15",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/design.md": {
+    "mtime": 1782779608.443718,
+    "ast_hash": "f67ec6b7440825c89b010522a4a5231d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/hygiene.md": {
+    "mtime": 1782779608.4462347,
+    "ast_hash": "4b035a4932301d9c6000cd34e43a2a3d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/navigation.md": {
+    "mtime": 1782779608.4462347,
+    "ast_hash": "7051ae1d8624e6e7936c698355fbb734",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/performance.md": {
+    "mtime": 1782779608.4472382,
+    "ast_hash": "9f44f0606dfc7d9a13641a0401133bfb",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/swift.md": {
+    "mtime": 1782779608.4472382,
+    "ast_hash": "0af9234a8d4c36853285767266ab829e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/references/views.md": {
+    "mtime": 1782779608.4487529,
+    "ast_hash": "0918593a689db126130984960ecf4825",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/skills/swiftui-pro/SKILL.md": {
+    "mtime": 1782779608.450286,
+    "ast_hash": "46e26cb413e452c01c2a047a2ec64a74",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/action-tracker-app/design.md": {
+    "mtime": 1782600107.169829,
+    "ast_hash": "1e75dbc5a1dd70b10883c127b7eedae0",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/action-tracker-app/requirements.md": {
+    "mtime": 1782600021.4999213,
+    "ast_hash": "f974d98ae81473abc7bae0bf84e95693",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/action-tracker-app/tasks.md": {
+    "mtime": 1782600141.0586412,
+    "ast_hash": "1f2c85875f839be6c44e4d83add44996",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/action-tracker-app/ui-ux-design-spec.md": {
+    "mtime": 1782441982.3556573,
+    "ast_hash": "43f370f7f7105d8152295f57087ac0e8",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/ios-client/design.md": {
+    "mtime": 1782784696.1782594,
+    "ast_hash": "446e3295976f2a1cd98f9a977e559d08",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/ios-client/requirements.md": {
+    "mtime": 1782780223.4673314,
+    "ast_hash": "c5dc022ed24612a44bba4d0e2db49515",
+    "semantic_hash": ""
+  },
+  ".kiro/specs/ios-client/tasks.md": {
+    "mtime": 1782785582.8623462,
+    "ast_hash": "4edc877676ba090c41ae478ec6af53d6",
+    "semantic_hash": ""
+  },
+  ".kiro/steering/graphify.md": {
+    "mtime": 1782252241.30382,
+    "ast_hash": "81be1a4201e0893879433cddab9ffd20",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1782253495.507967,
+    "ast_hash": "95f334cc2c79bb9b53c1c21ab915c04b",
+    "semantic_hash": ""
+  },
+  "backend/README.md": {
+    "mtime": 1782317960.544094,
+    "ast_hash": "b9318bbaaed65f860f146ee295511021",
+    "semantic_hash": ""
+  },
+  "backend/api/oapi-codegen.yaml": {
+    "mtime": 1782307237.6502366,
+    "ast_hash": "bb6bed54b53bda08942135a03567de44",
+    "semantic_hash": ""
+  },
+  "backend/api/openapi.yaml": {
+    "mtime": 1782321883.9507153,
+    "ast_hash": "4888bf79489d0def173adbe20364d014",
+    "semantic_hash": ""
+  },
+  "design/stitch/01_share-capture.html": {
+    "mtime": 1782428755.985977,
+    "ast_hash": "2c7f0c87ef048ef4fdaf19304a5ab5d2",
+    "semantic_hash": ""
+  },
+  "design/stitch/02_games-hub.html": {
+    "mtime": 1782428757.6471643,
+    "ast_hash": "de9a4cb537f18e0513c1a1f3d561affc",
+    "semantic_hash": ""
+  },
+  "design/stitch/03_voice-journal.html": {
+    "mtime": 1782428760.6660519,
+    "ast_hash": "38eb17eda9e1034dc2b2811b6b17034d",
+    "semantic_hash": ""
+  },
+  "design/stitch/04_home-board.html": {
+    "mtime": 1782428763.738707,
+    "ast_hash": "43035ff71eca69bebc0e4ef7101ba54a",
+    "semantic_hash": ""
+  },
+  "design/stitch/05_bucket-management.html": {
+    "mtime": 1782428766.2057092,
+    "ast_hash": "967a25690007abab1e92b5782d81620f",
+    "semantic_hash": ""
+  },
+  "design/stitch/06_voice-journal-review.html": {
+    "mtime": 1782428769.1755164,
+    "ast_hash": "b21a1023f82a4d9fb741f2f2c9f0d8d5",
+    "semantic_hash": ""
+  },
+  "design/stitch/07_shopping-item-detail.html": {
+    "mtime": 1782428770.8559265,
+    "ast_hash": "c43436148abc5755d33b8cac543e6633",
+    "semantic_hash": ""
+  },
+  "design/stitch/08_create-bucket.html": {
+    "mtime": 1782428773.4593925,
+    "ast_hash": "8885f1564a53aa154be1b2341176d851",
+    "semantic_hash": ""
+  },
+  "design/stitch/09_action-plan.html": {
+    "mtime": 1782428775.2697797,
+    "ast_hash": "97b0da4e820be75fe257e35f103e5e25",
+    "semantic_hash": ""
+  },
+  "design/stitch/10_spelling-bee.html": {
+    "mtime": 1782428776.859236,
+    "ast_hash": "ac04047b692c14704227b0bcd5843c03",
+    "semantic_hash": ""
+  },
+  "design/stitch/11_word-guess.html": {
+    "mtime": 1782428780.1404257,
+    "ast_hash": "45119bc3d69502a497b18a137f02d56f",
+    "semantic_hash": ""
+  },
+  "design/stitch/12_leaderboard.html": {
+    "mtime": 1782428783.3994236,
+    "ast_hash": "72a6a6814e5849457e8969da63cfffe6",
+    "semantic_hash": ""
+  },
+  "design/stitch/13_join-organization.html": {
+    "mtime": 1782428784.9324467,
+    "ast_hash": "818061bc353205fa7cf0bc6824a9037c",
+    "semantic_hash": ""
+  },
+  "design/stitch/14_login.html": {
+    "mtime": 1782428786.608683,
+    "ast_hash": "3d66849bb20401c5038378e438afaa6d",
+    "semantic_hash": ""
+  },
+  "design/stitch/15_user-profile.html": {
+    "mtime": 1782428789.536337,
+    "ast_hash": "a38521b3018a9726c3bea91322a637cb",
+    "semantic_hash": ""
+  },
+  "docs/COVER_IMAGE_CREDITS.md": {
+    "mtime": 1782754084.6179068,
+    "ast_hash": "8385a55853e79ef657928464012777e8",
+    "semantic_hash": ""
+  },
+  "docs/SHIPPING.md": {
+    "mtime": 1782668653.8698814,
+    "ast_hash": "59ea7fb50839a0d028b3936dd71a07a3",
+    "semantic_hash": ""
+  },
+  "scripts/README.md": {
+    "mtime": 1782545485.6552477,
+    "ast_hash": "423c2efd7253faedfe6fc609e5a20873",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/action_plan_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "97b0da4e820be75fe257e35f103e5e25",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/bucket_management_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "967a25690007abab1e92b5782d81620f",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/create_bucket_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "8885f1564a53aa154be1b2341176d851",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/games_hub_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "de9a4cb537f18e0513c1a1f3d561affc",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/home_board_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "43035ff71eca69bebc0e4ef7101ba54a",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/join_organization_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "818061bc353205fa7cf0bc6824a9037c",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/leaderboard_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "72a6a6814e5849457e8969da63cfffe6",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/login_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "3d66849bb20401c5038378e438afaa6d",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/share_capture_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "2c7f0c87ef048ef4fdaf19304a5ab5d2",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/shopping_item_detail_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "c43436148abc5755d33b8cac543e6633",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/sidequest_expressive/DESIGN.md": {
+    "mtime": 1782527774.0,
+    "ast_hash": "390398b6a01256bfcc1dd4bfe9272016",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/spelling_bee_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "ac04047b692c14704227b0bcd5843c03",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/user_profile_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "a38521b3018a9726c3bea91322a637cb",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/voice_journal_dark/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "38eb17eda9e1034dc2b2811b6b17034d",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/voice_journal_review_light/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "b21a1023f82a4d9fb741f2f2c9f0d8d5",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/word_guess_dark/code.html": {
+    "mtime": 1782527774.0,
+    "ast_hash": "45119bc3d69502a497b18a137f02d56f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/assets/swift-testing-pro-icon.png": {
+    "mtime": 1782779672.6628625,
+    "ast_hash": "02304d686c004b311ce71c720b45cb8a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swift-testing-pro/assets/swift-testing-pro-icon.svg": {
+    "mtime": 1782779672.6648757,
+    "ast_hash": "d6f1b5b79531a00b890e74a738f41f4d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/assets/swiftui-pro-icon.png": {
+    "mtime": 1782779608.4397178,
+    "ast_hash": "9240af6f350bad0673b351c6bade5710",
+    "semantic_hash": ""
+  },
+  ".agents/skills/swiftui-pro/assets/swiftui-pro-icon.svg": {
+    "mtime": 1782779608.4407177,
+    "ast_hash": "7ce21d29e3111962f54c08157b61a01e",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/assets/swift-testing-pro-icon.png": {
+    "mtime": 1782779672.6628625,
+    "ast_hash": "02304d686c004b311ce71c720b45cb8a",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swift-testing-pro/assets/swift-testing-pro-icon.svg": {
+    "mtime": 1782779672.6648757,
+    "ast_hash": "d6f1b5b79531a00b890e74a738f41f4d",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/assets/swiftui-pro-icon.png": {
+    "mtime": 1782779608.4397178,
+    "ast_hash": "9240af6f350bad0673b351c6bade5710",
+    "semantic_hash": ""
+  },
+  ".kiro/skills/swiftui-pro/assets/swiftui-pro-icon.svg": {
+    "mtime": 1782779608.4407177,
+    "ast_hash": "7ce21d29e3111962f54c08157b61a01e",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_appointments.jpg": {
+    "mtime": 1782753911.9222033,
+    "ast_hash": "4142681162b54c2bc24c6b08d9ba2776",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_art.jpg": {
+    "mtime": 1782676186.7531474,
+    "ast_hash": "6347ce3a724f35b0b26dd54d6bbf182f",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_bills.jpg": {
+    "mtime": 1782753913.8983204,
+    "ast_hash": "de7b7aa57da884f906393ed4f3c36f28",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_coffee.jpg": {
+    "mtime": 1782676187.8227372,
+    "ast_hash": "3cc2669d6373a66b6dcf753e6ce8f715",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_cooking.jpg": {
+    "mtime": 1782676183.1605785,
+    "ast_hash": "1e9d2809bd4bd9c36e454e242d4cdef4",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_default.jpg": {
+    "mtime": 1782676189.2960997,
+    "ast_hash": "1882b0e83b403142ae54e9b50682fd44",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_finance.jpg": {
+    "mtime": 1782676187.536888,
+    "ast_hash": "19109b043c90d0d3faaade63f90a86ca",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_home.jpg": {
+    "mtime": 1782676186.0961545,
+    "ast_hash": "8647bf8780a90663f55e2afa1cbdc183",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_learning.jpg": {
+    "mtime": 1782676185.4065368,
+    "ast_hash": "7363d75ef071f545be7ec051bf90e882",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_movies.jpg": {
+    "mtime": 1782676188.5395734,
+    "ast_hash": "d1900d99a5ec586fa1ef4d6d69480606",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_shopping.jpg": {
+    "mtime": 1782676183.8240871,
+    "ast_hash": "dbaa26d396ddb6ceab2d9f8eeb169a69",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_travel.jpg": {
+    "mtime": 1782676182.1789215,
+    "ast_hash": "6e6b0cbe414a3847d2d1cd95774b1ad0",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_vault.jpg": {
+    "mtime": 1782753909.2498343,
+    "ast_hash": "6e7978799b05305e87de3a86134f61ce",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/drawable-nodpi/bucket_photo_wellness.jpg": {
+    "mtime": 1782676184.3919077,
+    "ast_hash": "8b1865eae577d2de9e02a294c8c6f2ff",
+    "semantic_hash": ""
+  },
+  "design/stitch/01_share-capture.png": {
+    "mtime": 1782428755.1288342,
+    "ast_hash": "c48eb8ceba42e2da36e4a2ee1347eb6f",
+    "semantic_hash": ""
+  },
+  "design/stitch/02_games-hub.png": {
+    "mtime": 1782428757.1425672,
+    "ast_hash": "cecff9d3235840639eb322f51b7fd002",
+    "semantic_hash": ""
+  },
+  "design/stitch/03_voice-journal.png": {
+    "mtime": 1782428760.1569717,
+    "ast_hash": "1c5fd40c36b1f553f7376dfc578d0a75",
+    "semantic_hash": ""
+  },
+  "design/stitch/04_home-board.png": {
+    "mtime": 1782428763.129192,
+    "ast_hash": "def214474cf88718c283b08da51933fe",
+    "semantic_hash": ""
+  },
+  "design/stitch/05_bucket-management.png": {
+    "mtime": 1782428765.7047846,
+    "ast_hash": "5ae7e68f9d97574b7ce2b5c55978a816",
+    "semantic_hash": ""
+  },
+  "design/stitch/06_voice-journal-review.png": {
+    "mtime": 1782428768.660976,
+    "ast_hash": "dad646441e6d10fe2dd9ae324b31a150",
+    "semantic_hash": ""
+  },
+  "design/stitch/07_shopping-item-detail.png": {
+    "mtime": 1782428770.3053436,
+    "ast_hash": "76a1918be2027fac82137315f6f53c24",
+    "semantic_hash": ""
+  },
+  "design/stitch/08_create-bucket.png": {
+    "mtime": 1782428772.9639163,
+    "ast_hash": "88b05454df8d54d067111f6944ed4a3d",
+    "semantic_hash": ""
+  },
+  "design/stitch/09_action-plan.png": {
+    "mtime": 1782428774.459108,
+    "ast_hash": "1d5e54a57fb1e93b767255aec8725e26",
+    "semantic_hash": ""
+  },
+  "design/stitch/10_spelling-bee.png": {
+    "mtime": 1782428776.352826,
+    "ast_hash": "458272ec58b24f6226b7aea304b68d52",
+    "semantic_hash": ""
+  },
+  "design/stitch/11_word-guess.png": {
+    "mtime": 1782428779.304766,
+    "ast_hash": "ca18b4c2497be41ccdddc4083da3cd29",
+    "semantic_hash": ""
+  },
+  "design/stitch/12_leaderboard.png": {
+    "mtime": 1782428782.662724,
+    "ast_hash": "aeeebc72999c3056d18326db1853b119",
+    "semantic_hash": ""
+  },
+  "design/stitch/13_join-organization.png": {
+    "mtime": 1782428784.4045825,
+    "ast_hash": "b1a7428e4ceb5586b2d2c93eb2d2709e",
+    "semantic_hash": ""
+  },
+  "design/stitch/14_login.png": {
+    "mtime": 1782428786.088984,
+    "ast_hash": "ec882a63e3001f911c24832279db42c5",
+    "semantic_hash": ""
+  },
+  "design/stitch/15_user-profile.png": {
+    "mtime": 1782428788.9581742,
+    "ast_hash": "162a82a7254fd95d3a3d0bf933118249",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/action_plan_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "94e7986227391706b11df8441bdf7c0f",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/bucket_management_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "139e48bed8e93b1dc53dd8ded460a2a0",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/create_bucket_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "92bf26456d4616b1debcc4d4e38f1cfa",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/games_hub_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "5d4b5c2253b8ad2688403f0eee6374f4",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/home_board_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "2963ca2c49ff1bef6ea182c4e61b89eb",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/join_organization_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "08106a07303f423267ca871c66f8bb70",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/leaderboard_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "e6e00a66037a8b7a0f9ab5b54880f92c",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/login_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "ea2351565b894e2d47de59f205e60a81",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/share_capture_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "3c63844ab5e6cfe8763bf011ff2f4fc9",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/shopping_item_detail_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "5c765f0b50f410db54cbe514700e669f",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/spelling_bee_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "ed312351fb18bfcc0381b5f34c11f51b",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/user_profile_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "95992f8e0d5daf8acc026abebfd34cca",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/voice_journal_dark/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "f5b0a2ab7b5b80d1ee263ded4e02d5a6",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/voice_journal_review_light/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "8a1e155b04b14fc94a39cb2cf3195925",
+    "semantic_hash": ""
+  },
+  "stitch_sidequest_action_hub/word_guess_dark/screen.png": {
+    "mtime": 1782527774.0,
+    "ast_hash": "28d206318c21ec6057bb60838c326c35",
+    "semantic_hash": ""
+  },
+  "app/src/main/res/raw/completion_tune.mp3": {
+    "mtime": 1782751779.1994786,
+    "ast_hash": "8feabde8726eee27c30c5b14e35ed9be",
+    "semantic_hash": ""
+  },
+  "notification/tune-1.mp3": {
+    "mtime": 1782751779.1994786,
+    "ast_hash": "8feabde8726eee27c30c5b14e35ed9be",
+    "semantic_hash": ""
+  },
+  "notification/tune-2.mp3": {
+    "mtime": 1782751692.4517899,
+    "ast_hash": "fa81158f918629f36ca70c203171329e",
+    "semantic_hash": ""
+  }
+}

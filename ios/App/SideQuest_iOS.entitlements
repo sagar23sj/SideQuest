@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Main app entitlements.
+
+  The App Group (Req 13.2, 13.4) MUST be identical to the one declared in the
+  Share Extension (ShareExtension/ShareExtension.entitlements) and to
+  AppGroup.identifier in SideQuestKit. This is what shares the SQLite store
+  between the two processes (Req 4.10).
+
+  Notification, background-processing, and Keychain-access-group entitlements
+  (Req 7, 10.4, 13.4) are added by tasks 13, 15, and 16.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.sidequest.shared</string>
+	</array>
+	<!--
+	  Push-notification capability (Req 7, 13.4). SideQuest delivers local
+	  reminders (which need no entitlement) and supports push; `aps-environment`
+	  is the capability key. Xcode promotes `development` to `production` when
+	  exporting an App Store distribution build.
+	-->
+	<key>aps-environment</key>
+	<string>development</string>
+	<!--
+	  Shared Keychain access group (Req 10.4, 13.4). Scopes the auth tokens so
+	  both the main app and the Share Extension can read them; matches
+	  AppGroup.keychainAccessGroup, team-prefixed at runtime by the OS. Used by
+	  the default KeychainTokenStore.
+	-->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.sidequest.shared</string>
+	</array>
+</dict>
+</plist>
