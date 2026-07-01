@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,14 +14,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sidequest.R
+import com.sidequest.ui.components.BrandLogo
 import com.sidequest.ui.components.PillButton
 import com.sidequest.ui.components.SecondaryPillButton
 
@@ -56,10 +55,17 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     onAuthenticated: () -> Unit = {},
     onSkip: () -> Unit = {},
+    viewModel: LoginViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var signUp by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Navigate onward once authentication (or account creation) succeeds.
+    androidx.compose.runtime.LaunchedEffect(uiState.success) {
+        if (uiState.success) onAuthenticated()
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -78,30 +84,10 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Logo lockup.
-                Row(
+                BrandLogo(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(RoundedCornerShape(14.dp))
-                            .background(MaterialTheme.colorScheme.primary),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Bolt,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                        )
-                    }
-                    Text(
-                        text = "SideQuest",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
+                    markSize = 40.dp,
+                )
 
                 Column(
                     modifier = Modifier
@@ -125,7 +111,7 @@ fun LoginScreen(
 
                 OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = { email = it; viewModel.onInputChanged() },
                     label = { Text(stringResource(R.string.login_email_label)) },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
@@ -136,7 +122,7 @@ fun LoginScreen(
                 )
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { password = it; viewModel.onInputChanged() },
                     label = { Text(stringResource(R.string.login_password_label)) },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
@@ -144,18 +130,39 @@ fun LoginScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 20.dp),
+                        .padding(bottom = 12.dp),
                 )
+
+                // Inline error (offline, invalid credentials, email in use, etc.).
+                if (uiState.errorMessage != null) {
+                    Text(
+                        text = uiState.errorMessage!!,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                    )
+                }
 
                 PillButton(
                     text = stringResource(
                         if (signUp) R.string.login_sign_up else R.string.login_sign_in,
                     ),
-                    onClick = onAuthenticated,
-                    enabled = email.isNotBlank() && password.isNotBlank(),
+                    onClick = { viewModel.submit(email, password, signUp) },
+                    enabled = email.isNotBlank() && password.isNotBlank() && !uiState.loading,
                     icon = Icons.Filled.Mail,
                     modifier = Modifier.fillMaxWidth(),
                 )
+
+                if (uiState.loading) {
+                    androidx.compose.material3.CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .size(28.dp),
+                    )
+                }
 
                 TextButton(
                     onClick = { signUp = !signUp },

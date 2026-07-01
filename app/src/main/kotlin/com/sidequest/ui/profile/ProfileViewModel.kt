@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userPreferences: UserPreferences,
+    private val tokenStore: com.sidequest.data.auth.TokenStore,
     @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
 
@@ -42,6 +43,10 @@ class ProfileViewModel @Inject constructor(
     val useSystemColors: StateFlow<Boolean> = userPreferences.useSystemColors
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), userPreferences.useSystemColors.value)
 
+    /** The signed-in account email, or null when anonymous (device backup only). */
+    val signedInEmail: StateFlow<String?> = userPreferences.signedInEmail
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), userPreferences.signedInEmail.value)
+
     /** Whether to show the first-run "what should we call you?" prompt. */
     val shouldPromptForName: Boolean
         get() = !userPreferences.hasSeenNamePrompt
@@ -50,6 +55,17 @@ class ProfileViewModel @Inject constructor(
 
     /** Toggles whether dynamic/system colors override the brand theme. */
     fun setUseSystemColors(enabled: Boolean) = userPreferences.setUseSystemColors(enabled)
+
+    /**
+     * Signs out: clears the stored JWT pair and the signed-in email. Local
+     * planner data is untouched (it stays scoped to the stable local account);
+     * the app keeps working offline and will re-provision a silent device backup
+     * account on the next backup pass.
+     */
+    fun signOut() {
+        tokenStore.clear()
+        userPreferences.setSignedInEmail(null)
+    }
 
     /** Picks one of the built-in [AVATAR_PRESETS] as the avatar. */
     fun setAvatarPreset(index: Int) = userPreferences.setAvatarRef(avatarRefForPreset(index))

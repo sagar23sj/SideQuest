@@ -34,6 +34,8 @@ import hilt_aggregated_deps._com_sidequest_data_sync_BackupWorker_HiltModule;
 import hilt_aggregated_deps._com_sidequest_data_sync_SyncModule;
 import hilt_aggregated_deps._com_sidequest_data_transcription_TranscriptionModule;
 import hilt_aggregated_deps._com_sidequest_di_DispatchersModule;
+import hilt_aggregated_deps._com_sidequest_ui_auth_LoginViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._com_sidequest_ui_auth_LoginViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_sidequest_ui_board_BoardViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_sidequest_ui_board_BoardViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_sidequest_ui_bucket_BucketDetailViewModel_HiltModules_BindsModule;
@@ -116,6 +118,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_sidequest_data_sync_SyncModule.class,
         _com_sidequest_data_transcription_TranscriptionModule.class,
         _com_sidequest_di_DispatchersModule.class,
+        _com_sidequest_ui_auth_LoginViewModel_HiltModules_BindsModule.class,
+        _com_sidequest_ui_auth_LoginViewModel_HiltModules_KeyModule.class,
         _com_sidequest_ui_board_BoardViewModel_HiltModules_BindsModule.class,
         _com_sidequest_ui_board_BoardViewModel_HiltModules_KeyModule.class,
         _com_sidequest_ui_bucket_BucketDetailViewModel_HiltModules_BindsModule.class,

@@ -48,14 +48,21 @@ android {
 
     buildTypes {
         debug {
-            // Local backend reached from the Android emulator. 10.0.2.2 is the
-            // emulator's alias for the host machine's loopback (the Go server
-            // listens on 127.0.0.1:8080 on the host). On a physical device,
-            // replace with the host's LAN IP.
+            // Local backend base URL. Defaults to 10.0.2.2 (the Android
+            // emulator's alias for the host's loopback). For a physical device,
+            // override without editing this file:
+            //   * same Wi-Fi:  -Psidequest.apiBaseUrl=http://<host-LAN-IP>:8080/
+            //   * adb reverse: run `adb reverse tcp:8080 tcp:8080` then use
+            //                  -Psidequest.apiBaseUrl=http://localhost:8080/
+            // The value can also be set in gradle.properties as
+            // sidequest.apiBaseUrl. Debug cleartext is allowed to any host via
+            // the src/debug network-security config.
+            val debugApiBaseUrl = (project.findProperty("sidequest.apiBaseUrl") as String?)
+                ?: "http://10.0.2.2:8080/"
             buildConfigField(
                 "String",
                 "API_BASE_URL",
-                "\"http://10.0.2.2:8080/\"",
+                "\"$debugApiBaseUrl\"",
             )
         }
         release {

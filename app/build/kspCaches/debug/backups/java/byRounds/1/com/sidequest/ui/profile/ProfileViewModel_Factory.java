@@ -1,6 +1,7 @@
 package com.sidequest.ui.profile;
 
 import android.content.Context;
+import com.sidequest.data.auth.TokenStore;
 import com.sidequest.data.local.UserPreferences;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -27,25 +28,29 @@ import javax.inject.Provider;
 public final class ProfileViewModel_Factory implements Factory<ProfileViewModel> {
   private final Provider<UserPreferences> userPreferencesProvider;
 
+  private final Provider<TokenStore> tokenStoreProvider;
+
   private final Provider<Context> appContextProvider;
 
   public ProfileViewModel_Factory(Provider<UserPreferences> userPreferencesProvider,
-      Provider<Context> appContextProvider) {
+      Provider<TokenStore> tokenStoreProvider, Provider<Context> appContextProvider) {
     this.userPreferencesProvider = userPreferencesProvider;
+    this.tokenStoreProvider = tokenStoreProvider;
     this.appContextProvider = appContextProvider;
   }
 
   @Override
   public ProfileViewModel get() {
-    return newInstance(userPreferencesProvider.get(), appContextProvider.get());
+    return newInstance(userPreferencesProvider.get(), tokenStoreProvider.get(), appContextProvider.get());
   }
 
   public static ProfileViewModel_Factory create(Provider<UserPreferences> userPreferencesProvider,
-      Provider<Context> appContextProvider) {
-    return new ProfileViewModel_Factory(userPreferencesProvider, appContextProvider);
+      Provider<TokenStore> tokenStoreProvider, Provider<Context> appContextProvider) {
+    return new ProfileViewModel_Factory(userPreferencesProvider, tokenStoreProvider, appContextProvider);
   }
 
-  public static ProfileViewModel newInstance(UserPreferences userPreferences, Context appContext) {
-    return new ProfileViewModel(userPreferences, appContext);
+  public static ProfileViewModel newInstance(UserPreferences userPreferences, TokenStore tokenStore,
+      Context appContext) {
+    return new ProfileViewModel(userPreferences, tokenStore, appContext);
   }
 }

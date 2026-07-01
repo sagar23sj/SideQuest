@@ -16,6 +16,7 @@ drawable bucket_photo_shopping
 drawable bucket_photo_travel
 drawable bucket_photo_vault
 drawable bucket_photo_wellness
+drawable ic_brand_mark
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_launcher_monochrome
@@ -195,6 +196,7 @@ string plan_title
 string plan_undo_complete
 string profile_account_label
 string profile_avatar_dialog_title
+string profile_backup_nudge
 string profile_buckets
 string profile_buckets_subtitle
 string profile_change_photo

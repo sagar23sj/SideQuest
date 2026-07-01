@@ -15,6 +15,7 @@ import com.sidequest.data.sync.BackupWorker_HiltModule;
 import com.sidequest.data.sync.SyncModule;
 import com.sidequest.data.transcription.TranscriptionModule;
 import com.sidequest.di.DispatchersModule;
+import com.sidequest.ui.auth.LoginViewModel_HiltModules;
 import com.sidequest.ui.board.BoardViewModel_HiltModules;
 import com.sidequest.ui.bucket.BucketDetailViewModel_HiltModules;
 import com.sidequest.ui.bucket.BucketManagementViewModel_HiltModules;
@@ -201,6 +202,7 @@ public final class SideQuestApp_HiltComponents {
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           ItemDetailViewModel_HiltModules.KeyModule.class,
+          LoginViewModel_HiltModules.KeyModule.class,
           NotificationPermissionViewModel_HiltModules.KeyModule.class,
           ProfileViewModel_HiltModules.KeyModule.class,
           ReminderSettingsViewModel_HiltModules.KeyModule.class,
@@ -252,6 +254,7 @@ public final class SideQuestApp_HiltComponents {
           CreateBucketViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           ItemDetailViewModel_HiltModules.BindsModule.class,
+          LoginViewModel_HiltModules.BindsModule.class,
           NotificationPermissionViewModel_HiltModules.BindsModule.class,
           ProfileViewModel_HiltModules.BindsModule.class,
           ReminderSettingsViewModel_HiltModules.BindsModule.class,

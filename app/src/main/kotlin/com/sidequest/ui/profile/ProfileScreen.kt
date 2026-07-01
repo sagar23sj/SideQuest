@@ -71,6 +71,7 @@ fun ProfileScreen(
     val useSystemColors by viewModel.useSystemColors.collectAsStateWithLifecycle()
     val displayName by viewModel.displayName.collectAsStateWithLifecycle()
     val avatarRef by viewModel.avatarRef.collectAsStateWithLifecycle()
+    val signedInEmail by viewModel.signedInEmail.collectAsStateWithLifecycle()
     var showNameDialog by remember { mutableStateOf(false) }
     var showAvatarPicker by remember { mutableStateOf(false) }
 
@@ -153,6 +154,7 @@ fun ProfileScreen(
             ProfileHero(
                 displayName = displayName,
                 avatarRef = avatarRef,
+                signedInEmail = signedInEmail,
                 onEditName = { showNameDialog = true },
                 onChangePhoto = { showAvatarPicker = true },
             )
@@ -202,12 +204,28 @@ fun ProfileScreen(
                 )
             }
 
-            SecondaryPillButton(
-                text = stringResource(R.string.login_sign_in),
-                onClick = onSignIn,
-                icon = Icons.AutoMirrored.Filled.Login,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            if (signedInEmail == null) {
+                // Encourage signing in so data survives reinstall / clear-data.
+                Text(
+                    text = stringResource(R.string.profile_backup_nudge),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                SecondaryPillButton(
+                    text = stringResource(R.string.login_sign_in),
+                    onClick = onSignIn,
+                    icon = Icons.AutoMirrored.Filled.Login,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else {
+                SecondaryPillButton(
+                    text = stringResource(R.string.profile_sign_out),
+                    onClick = viewModel::signOut,
+                    icon = Icons.AutoMirrored.Filled.Login,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }
@@ -216,6 +234,7 @@ fun ProfileScreen(
 private fun ProfileHero(
     displayName: String?,
     avatarRef: String?,
+    signedInEmail: String?,
     onEditName: () -> Unit,
     onChangePhoto: () -> Unit,
 ) {
@@ -281,7 +300,7 @@ private fun ProfileHero(
             }
         }
         Text(
-            text = stringResource(R.string.profile_signed_out),
+            text = signedInEmail ?: stringResource(R.string.profile_signed_out),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

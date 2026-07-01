@@ -302,6 +302,7 @@
     <string name="profile_title">Profile</string>
     <string name="profile_account_label">Account</string>
     <string name="profile_signed_out">Signed in offline (local account)</string>
+    <string name="profile_backup_nudge">Your quests live on this device. Sign in to back them up so they\'re restored if you reinstall or clear app data.</string>
     <string name="profile_organization_label">Guild</string>
     <string name="profile_no_organization">Not in a guild yet</string>
     <string name="profile_local_subtitle">Adventurer</string>

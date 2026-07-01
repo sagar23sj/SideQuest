@@ -36,6 +36,15 @@ class UserPreferences @Inject constructor(
     /** Whether to use the device's dynamic (Material You) colors over the brand. */
     val useSystemColors: StateFlow<Boolean> = _useSystemColors.asStateFlow()
 
+    private val _signedInEmail = MutableStateFlow(prefs.getString(KEY_SIGNED_IN_EMAIL, null))
+    /**
+     * The email of the credentialed (signed-in) account, or null when the user
+     * is anonymous / only backed by the silent device account. Distinguishes a
+     * "real" sign-in from the always-present device backup identity so the UI
+     * can encourage signing in and show account status.
+     */
+    val signedInEmail: StateFlow<String?> = _signedInEmail.asStateFlow()
+
     /** Whether the user has been asked for their name at least once. */
     val hasSeenNamePrompt: Boolean
         get() = prefs.getBoolean(KEY_NAME_PROMPTED, false)
@@ -50,6 +59,12 @@ class UserPreferences @Inject constructor(
     fun setUseSystemColors(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_SYSTEM_COLORS, enabled).apply()
         _useSystemColors.value = enabled
+    }
+
+    /** Records the [email] of the signed-in account (null clears it on sign-out). */
+    fun setSignedInEmail(email: String?) {
+        prefs.edit().putString(KEY_SIGNED_IN_EMAIL, email).apply()
+        _signedInEmail.value = email
     }
 
     /** Stores the local file [path] of the player's profile photo. */
@@ -68,6 +83,7 @@ class UserPreferences @Inject constructor(
         const val KEY_AVATAR = "avatar_ref"
         const val KEY_NAME_PROMPTED = "name_prompted"
         const val KEY_SYSTEM_COLORS = "use_system_colors"
+        const val KEY_SIGNED_IN_EMAIL = "signed_in_email"
         const val MAX_NAME_LENGTH = 40
     }
 }

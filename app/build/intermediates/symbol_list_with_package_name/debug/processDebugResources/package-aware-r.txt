@@ -96,6 +96,7 @@ drawable bucket_photo_shopping
 drawable bucket_photo_travel
 drawable bucket_photo_vault
 drawable bucket_photo_wellness
+drawable ic_brand_mark
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -472,6 +473,7 @@ string plan_title
 string plan_undo_complete
 string profile_account_label
 string profile_avatar_dialog_title
+string profile_backup_nudge
 string profile_buckets
 string profile_buckets_subtitle
 string profile_change_photo
