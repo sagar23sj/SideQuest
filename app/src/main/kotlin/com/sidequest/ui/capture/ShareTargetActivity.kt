@@ -56,6 +56,9 @@ class ShareTargetActivity : ComponentActivity() {
 
     private val viewModel: CaptureViewModel by viewModels()
 
+    @javax.inject.Inject
+    lateinit var userPreferences: com.sidequest.data.local.UserPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -68,7 +71,8 @@ class ShareTargetActivity : ComponentActivity() {
         }
 
         setContent {
-            SideQuestTheme {
+            val useSystemColors by userPreferences.useSystemColors.collectAsStateWithLifecycle()
+            SideQuestTheme(dynamicColor = useSystemColors) {
                 val state by viewModel.uiState.collectAsStateWithLifecycle()
                 CaptureScreen(
                     state = state,

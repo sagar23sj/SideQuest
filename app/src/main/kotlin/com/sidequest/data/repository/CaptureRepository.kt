@@ -59,26 +59,29 @@ class CaptureRepository(
     private val taskReminderScheduler: TaskReminderScheduler,
     private val clock: () -> Long,
     private val idGenerator: () -> String,
+    private val copyMedia: (String) -> String? = { null },
 ) {
 
     /**
-     * Hilt-visible constructor. Hilt can only supply the injectable DAOs, the
-     * [PreviewEnqueuer], and the [TaskReminderScheduler], so it delegates to the
-     * primary constructor with the real wall-clock and UUID generators. Tests
-     * use the primary constructor to inject deterministic [clock]/[idGenerator]
-     * functions and fakes.
+     * Hilt-visible constructor. Hilt supplies the DAOs, the [PreviewEnqueuer],
+     * the [TaskReminderScheduler], and the app [android.content.Context] (used to
+     * copy shared media into app-internal storage). Tests use the primary
+     * constructor to inject deterministic [clock]/[idGenerator] and a fake
+     * [copyMedia].
      */
     @Inject
     constructor(
         actionItemDao: ActionItemDao,
         previewEnqueuer: PreviewEnqueuer,
         taskReminderScheduler: TaskReminderScheduler,
+        @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     ) : this(
         actionItemDao = actionItemDao,
         previewEnqueuer = previewEnqueuer,
         taskReminderScheduler = taskReminderScheduler,
         clock = System::currentTimeMillis,
         idGenerator = { UUID.randomUUID().toString() },
+        copyMedia = { uriString -> copyMediaToStorage(context, uriString) },
     )
 
     /**
@@ -126,8 +129,21 @@ class CaptureRepository(
         timeframe: Timeframe,
     ): ActionItem {
         val nowMs = clock()
+
+        // Copy shared media (image/video) out of the transient content:// URI
+        // into app-internal storage so it survives the URI grant lapsing, app
+        // restarts, and reinstalls — then store that stable path. Falls back to
+        // the original reference if the copy fails.
+        val isMedia = draft.contentType == ContentType.IMAGE ||
+            draft.contentType == ContentType.VIDEO_REF
+        val effectiveDraft = if (isMedia && !draft.sourceContent.isNullOrBlank()) {
+            draft.copy(sourceContent = copyMedia(draft.sourceContent!!) ?: draft.sourceContent)
+        } else {
+            draft
+        }
+
         val base = CaptureOperations.buildActionItem(
-            draft = draft,
+            draft = effectiveDraft,
             bucketId = bucketId,
             timeframe = timeframe,
             id = idGenerator(),
@@ -142,11 +158,11 @@ class CaptureRepository(
 
         actionItemDao.upsert(item.toEntity())
 
-        // Off the critical path: schedule preview enrichment for LINK items with
-        // a URL. This only enqueues work; capture returns the item immediately
-        // without waiting on the network (Req 1a.5).
+        // Off the critical path: schedule preview enrichment for LINK items. The
+        // source may hold several newline-joined links, so enqueue the first URL
+        // for preview (Req 1a.5).
         if (item.contentType == ContentType.LINK) {
-            item.sourceContent?.takeIf { it.isNotBlank() }?.let { url ->
+            com.sidequest.domain.capture.firstUrlOrNull(item.sourceContent)?.let { url ->
                 previewEnqueuer.enqueue(actionItemId = item.id, url = url)
             }
         }
@@ -207,5 +223,26 @@ class CaptureRepository(
     private companion object {
         /** Cap on a derived title length so a long share does not become the title. */
         const val MAX_TITLE_LENGTH = 100
+
+        /**
+         * Copies the content at [uriString] into the app's internal `media`
+         * directory and returns the absolute file path, or null on failure (the
+         * caller then keeps the original reference). This frees the item from the
+         * transient share-time URI grant.
+         */
+        fun copyMediaToStorage(context: android.content.Context, uriString: String): String? =
+            runCatching {
+                val uri = android.net.Uri.parse(uriString)
+                val dir = java.io.File(context.filesDir, "media").apply { mkdirs() }
+                val ext = context.contentResolver.getType(uri)
+                    ?.substringAfter('/', "")
+                    ?.takeIf { it.isNotBlank() }
+                    ?: "bin"
+                val dest = java.io.File(dir, "media_${UUID.randomUUID()}.$ext")
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    dest.outputStream().use { output -> input.copyTo(output) }
+                } ?: return@runCatching null
+                dest.absolutePath
+            }.getOrNull()
     }
 }

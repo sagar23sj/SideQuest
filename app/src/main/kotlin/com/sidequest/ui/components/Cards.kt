@@ -219,6 +219,11 @@ fun RichTaskCard(
         val scope = rememberCoroutineScope()
         val progress = remember { Animatable(0f) }
         val shape = RoundedCornerShape(28.dp)
+        // Read the latest completed flag without restarting the gesture when it
+        // flips. Keying pointerInput on `completed` used to cancel + restart the
+        // detector mid-hold, letting one continuous press complete *then* undo
+        // (confetti fired once, the item reverted) — the intermittent bug.
+        val completedState = androidx.compose.runtime.rememberUpdatedState(completed)
 
         Box(
             modifier = modifier
@@ -229,7 +234,7 @@ fun RichTaskCard(
                     scaleY = s
                 }
                 .clip(shape)
-                .pointerInput(completed) {
+                .pointerInput(Unit) {
                     detectTapGestures(
                         onPress = {
                             val job = scope.launch {
@@ -240,7 +245,7 @@ fun RichTaskCard(
                             job.cancel()
                             if (progress.value >= 1f) {
                                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                if (completed) onUndo?.invoke() else onHoldComplete()
+                                if (completedState.value) onUndo?.invoke() else onHoldComplete()
                                 scope.launch { progress.animateTo(0f, tween(220)) }
                             } else {
                                 scope.launch { progress.animateTo(0f, tween(180)) }
@@ -385,6 +390,7 @@ fun TaskPosterCard(
     val scope = rememberCoroutineScope()
     val progress = remember { Animatable(0f) }
     val shape = RoundedCornerShape(20.dp)
+    val completedState = androidx.compose.runtime.rememberUpdatedState(completed)
     val border = if (completed) {
         BorderStroke(2.dp, CompleteGreen)
     } else {
@@ -400,7 +406,7 @@ fun TaskPosterCard(
             }
             .clip(shape)
             .border(border, shape)
-            .pointerInput(completed) {
+            .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
                         val job = scope.launch {
@@ -411,7 +417,7 @@ fun TaskPosterCard(
                         job.cancel()
                         if (progress.value >= 1f) {
                             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            if (completed) onUndo() else onHoldComplete()
+                            if (completedState.value) onUndo() else onHoldComplete()
                             scope.launch { progress.animateTo(0f, tween(220)) }
                         } else {
                             scope.launch { progress.animateTo(0f, tween(180)) }

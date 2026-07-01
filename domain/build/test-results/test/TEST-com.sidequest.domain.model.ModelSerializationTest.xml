@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.model.ModelSerializationTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.07">
+<testsuite name="com.sidequest.domain.model.ModelSerializationTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:24" hostname="INLPF5TK6XC" time="0.115">
   <properties/>
-  <testcase name="ContentType.LINK round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.011"/>
+  <testcase name="ContentType.LINK round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.018"/>
   <testcase name="ContentType.TEXT round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
   <testcase name="ContentType.IMAGE round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
-  <testcase name="ContentType.VIDEO_REF round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
-  <testcase name="all ContentType variants are covered" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
-  <testcase name="Timeframe.Today round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.012"/>
-  <testcase name="Timeframe.WithinADay round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
-  <testcase name="Timeframe.WithinAWeek round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
-  <testcase name="Timeframe.SpecificDate round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.022"/>
-  <testcase name="Timeframe.SpecificDate serializes the date as an ISO-8601 string" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
-  <testcase name="ActionItem with a link preview and SpecificDate round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.005"/>
-  <testcase name="ActionItem TEXT variant with each Timeframe round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.002"/>
-  <testcase name="VoiceJournalEntry freshly captured (no transcript) round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.003"/>
-  <testcase name="VoiceJournalEntry with transcript and extracted ids round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
-  <testcase name="VoiceJournalEntry with failed transcription round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
+  <testcase name="ContentType.VIDEO_REF round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
+  <testcase name="all ContentType variants are covered" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
+  <testcase name="Timeframe.Today round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.013"/>
+  <testcase name="Timeframe.WithinADay round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
+  <testcase name="Timeframe.WithinAWeek round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.0"/>
+  <testcase name="Timeframe.SpecificDate round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.042"/>
+  <testcase name="Timeframe.SpecificDate serializes the date as an ISO-8601 string" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
+  <testcase name="ActionItem with a link preview and SpecificDate round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.008"/>
+  <testcase name="ActionItem TEXT variant with each Timeframe round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.003"/>
+  <testcase name="VoiceJournalEntry freshly captured (no transcript) round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.005"/>
+  <testcase name="VoiceJournalEntry with transcript and extracted ids round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.001"/>
+  <testcase name="VoiceJournalEntry with failed transcription round-trips through JSON" classname="com.sidequest.domain.model.ModelSerializationTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

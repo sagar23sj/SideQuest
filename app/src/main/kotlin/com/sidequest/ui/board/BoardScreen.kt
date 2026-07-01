@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
@@ -126,6 +128,9 @@ fun BoardContent(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
+            bottomBar = {
+                NewQuestBar(onClick = onAddTask)
+            },
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -167,6 +172,40 @@ fun BoardContent(
     }
 }
 
+/**
+ * The bottom "New Quest" call-to-action bar: a single full-width button pinned
+ * at the bottom as part of the layout (not floating), so it's thumb-reachable
+ * and never covers the scrolling buckets/tasks. Capture from the OS share sheet
+ * remains the primary path; this is the in-app entry.
+ */
+@Composable
+private fun NewQuestBar(onClick: () -> Unit) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shadowElevation = 10.dp,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        com.sidequest.ui.components.GradientPillButton(
+            text = stringResource(R.string.board_new_quest),
+            onClick = onClick,
+            startColor = MaterialTheme.colorScheme.primary,
+            endColor = MaterialTheme.colorScheme.surfaceTint,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            icon = Icons.Filled.Add,
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+        )
+    }
+}
+
+/**
+ * The primary capture action lives in a bottom-right extended FAB (see the
+ * board Scaffold) so it's reachable one-handed; this top-bar variant was
+ * removed in favor of that.
+ */
 @Composable
 private fun AvatarButton(onClick: () -> Unit, avatarRef: String? = null, avatarName: String? = null) {
     val desc = stringResource(R.string.profile_title)
@@ -215,15 +254,18 @@ private fun ReadyBoard(
     onOpenBucket: (String) -> Unit,
     onOpenStats: () -> Unit,
     contentPadding: PaddingValues,
+    listState: androidx.compose.foundation.lazy.LazyListState =
+        androidx.compose.foundation.lazy.rememberLazyListState(),
 ) {
     val totalItems = board.groups.sumOf { it.items.size }
     val progress = if (totalItems == 0) 0f else board.completionCount.toFloat() / totalItems
 
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
             .padding(contentPadding),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 120.dp),
+        contentPadding = PaddingValues(top = 2.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         item(key = "progress-hero") {
@@ -430,16 +472,18 @@ private fun BucketShelf(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 openItems.forEach { boardItem ->
-                    TaskPoster(
-                        boardItem = boardItem,
-                        bucketName = bucketName,
-                        onOpenItem = onOpenItem,
-                        onComplete = onComplete,
-                        onUndo = onUndo,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(180.dp),
-                    )
+                    androidx.compose.runtime.key(boardItem.item.id) {
+                        TaskPoster(
+                            boardItem = boardItem,
+                            bucketName = bucketName,
+                            onOpenItem = onOpenItem,
+                            onComplete = onComplete,
+                            onUndo = onUndo,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(180.dp),
+                        )
+                    }
                 }
             }
         } else {
@@ -464,8 +508,8 @@ private fun BucketShelf(
     }
 }
 
-/** Below this many tasks, a shelf fills the row instead of scrolling. */
-private const val FILL_SHELF_THRESHOLD = 3
+/** At/below this many tasks a shelf fills the row; 3+ use uniform fixed cards. */
+private const val FILL_SHELF_THRESHOLD = 2
 
 /**
  * A single board poster: resolves the item's display (title, thumbnail, status)

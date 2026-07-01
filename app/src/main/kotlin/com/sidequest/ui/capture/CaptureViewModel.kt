@@ -84,12 +84,17 @@ class CaptureViewModel(
                     // becomes the description, the first URL within it becomes
                     // the link, and the user always names the quest themselves.
                     val fullText = if (isTextual) draft.sourceContent.orEmpty() else ""
-                    val link = com.sidequest.domain.capture.firstUrlOrNull(fullText).orEmpty()
+                    val links = com.sidequest.domain.capture.allUrls(fullText)
+                    // Prose with links removed: a "only a link" share leaves an
+                    // empty description; a "text, no links" share keeps the full
+                    // text; a mix keeps the prose and surfaces links separately.
+                    val description = com.sidequest.domain.capture.stripUrls(fullText)
                     _uiState.value = CaptureUiState.Categorizing(
                         draft = draft,
                         title = "",
-                        description = fullText,
-                        link = link,
+                        description = description,
+                        link = links.firstOrNull().orEmpty(),
+                        links = links,
                     )
                     observeBuckets(accountId)
                 }
@@ -230,11 +235,15 @@ class CaptureViewModel(
 
         updateCategorizing { it.copy(isSaving = true) }
         viewModelScope.launch {
-            // Fold the edited name/description/link into the draft. A non-blank
-            // link makes the item a clickable LINK; plain text is stored as the
-            // description (no redundant source); media keeps its original type.
-            val link = state.link.trim()
-            val hasLink = link.isNotBlank()
+            // Assemble the links to store: the (editable) primary link first,
+            // then any additional links detected in the shared text, deduped.
+            // For LINK items they're newline-joined in sourceContent so the
+            // detail screen can render every link as clickable; the first is the
+            // one we fetch a preview for.
+            val primaryLink = state.link.trim()
+            val extraLinks = state.links.drop(1).filter { it.isNotBlank() && it != primaryLink }
+            val allLinks = (listOfNotNull(primaryLink.takeIf { it.isNotBlank() }) + extraLinks).distinct()
+            val hasLink = allLinks.isNotEmpty()
             val original = state.draft
             val isMedia = original.contentType == com.sidequest.domain.model.ContentType.IMAGE ||
                 original.contentType == com.sidequest.domain.model.ContentType.VIDEO_REF
@@ -248,7 +257,7 @@ class CaptureViewModel(
                 },
                 sourceContent = when {
                     isMedia -> original.sourceContent
-                    hasLink -> link
+                    hasLink -> allLinks.joinToString("\n")
                     else -> null
                 },
             )

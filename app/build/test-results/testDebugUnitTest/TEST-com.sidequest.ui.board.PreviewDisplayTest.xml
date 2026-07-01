@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.ui.board.PreviewDisplayTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:05:07" hostname="INLPF5TK6XC" time="0.018">
+<testsuite name="com.sidequest.ui.board.PreviewDisplayTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-06-30T22:15:58" hostname="INLPF5TK6XC" time="0.071">
   <properties/>
-  <testcase name="a link item with a resolved preview displays the preview title and thumbnail" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.004"/>
+  <testcase name="a link item with a resolved preview displays the preview title and thumbnail" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.051"/>
   <testcase name="a resolved preview with a blank title falls back to the item title but keeps the thumbnail" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.001"/>
-  <testcase name="a resolved preview with no thumbnail still shows the preview title without a thumbnail" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.0"/>
-  <testcase name="an unresolved preview link item shows the raw link instead of a preview" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.008"/>
-  <testcase name="a link item with no preview shows the raw link" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.0"/>
+  <testcase name="a resolved preview with no thumbnail still shows the preview title without a thumbnail" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.001"/>
+  <testcase name="an unresolved preview link item shows the raw link instead of a preview" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.005"/>
+  <testcase name="a link item with no preview shows the raw link" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.001"/>
+  <testcase name="an image item never surfaces its file path; it shows the description" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.001"/>
+  <testcase name="an image item with no description shows no subtitle (never the file path)" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.0"/>
+  <testcase name="a video item with no description shows no subtitle (never the file path)" classname="com.sidequest.ui.board.PreviewDisplayTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

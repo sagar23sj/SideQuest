@@ -59,6 +59,7 @@ fun Bucket.toEntity(): BucketEntity = BucketEntity(
     inProgressColor = inProgressColor,
     completedColor = completedColor,
     imageRef = imageRef,
+    position = position,
     sync = sync,
 )
 
@@ -70,6 +71,7 @@ fun BucketEntity.toDomain(): Bucket = Bucket(
     inProgressColor = inProgressColor,
     completedColor = completedColor,
     imageRef = imageRef,
+    position = position,
     sync = sync,
 )
 

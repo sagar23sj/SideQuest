@@ -36,6 +36,7 @@ object DatabaseModule {
             SideQuestDatabase.MIGRATION_2_3,
             SideQuestDatabase.MIGRATION_3_4,
             SideQuestDatabase.MIGRATION_4_5,
+            SideQuestDatabase.MIGRATION_5_6,
         )
             .build()
 

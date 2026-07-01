@@ -83,6 +83,7 @@ import com.sidequest.ui.capture.CaptureViewModel;
 import com.sidequest.ui.capture.CaptureViewModel_HiltModules;
 import com.sidequest.ui.capture.CurrentAccountProvider;
 import com.sidequest.ui.capture.ShareTargetActivity;
+import com.sidequest.ui.capture.ShareTargetActivity_MembersInjector;
 import com.sidequest.ui.detail.ItemDetailViewModel;
 import com.sidequest.ui.detail.ItemDetailViewModel_HiltModules;
 import com.sidequest.ui.profile.ProfileViewModel;
@@ -453,10 +454,12 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @Override
     public void injectMainActivity(MainActivity mainActivity) {
+      injectMainActivity2(mainActivity);
     }
 
     @Override
     public void injectShareTargetActivity(ShareTargetActivity shareTargetActivity) {
+      injectShareTargetActivity2(shareTargetActivity);
     }
 
     @Override
@@ -484,37 +487,44 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
     }
 
+    private MainActivity injectMainActivity2(MainActivity instance) {
+      MainActivity_MembersInjector.injectUserPreferences(instance, singletonCImpl.userPreferencesProvider.get());
+      return instance;
+    }
+
+    private ShareTargetActivity injectShareTargetActivity2(ShareTargetActivity instance2) {
+      ShareTargetActivity_MembersInjector.injectUserPreferences(instance2, singletonCImpl.userPreferencesProvider.get());
+      return instance2;
+    }
+
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
-
-      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
 
       static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
       static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
 
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+
+      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
+
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
+      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
+
+      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
+
+      static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
+
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+
       static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
 
       static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
 
-      static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
-
-      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
-
-      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
-
-      static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
-
-      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
-
-      static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
-
       @KeepFieldType
-      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
-
-      @KeepFieldType
-      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
 
       @KeepFieldType
       CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
@@ -523,28 +533,31 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
 
       @KeepFieldType
-      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
-
-      @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
-
-      @KeepFieldType
-      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
-
-      @KeepFieldType
       VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
-
-      @KeepFieldType
-      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
 
       @KeepFieldType
       VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
 
       @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
 
       @KeepFieldType
       NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
+
+      @KeepFieldType
+      BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
+
+      @KeepFieldType
+      StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
+
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+
+      @KeepFieldType
+      ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
     }
   }
 
@@ -620,44 +633,29 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
-
-      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
-
-      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
-
-      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
-
-      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
-
       static String com_sidequest_ui_reminder_NotificationPermissionViewModel = "com.sidequest.ui.reminder.NotificationPermissionViewModel";
 
       static String com_sidequest_ui_stats_StatsViewModel = "com.sidequest.ui.stats.StatsViewModel";
 
+      static String com_sidequest_ui_bucket_BucketDetailViewModel = "com.sidequest.ui.bucket.BucketDetailViewModel";
+
+      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
+
+      static String com_sidequest_ui_board_BoardViewModel = "com.sidequest.ui.board.BoardViewModel";
+
       static String com_sidequest_ui_profile_ProfileViewModel = "com.sidequest.ui.profile.ProfileViewModel";
+
+      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
+
+      static String com_sidequest_ui_voice_VoiceJournalViewModel = "com.sidequest.ui.voice.VoiceJournalViewModel";
+
+      static String com_sidequest_ui_capture_CaptureViewModel = "com.sidequest.ui.capture.CaptureViewModel";
 
       static String com_sidequest_ui_bucket_BucketManagementViewModel = "com.sidequest.ui.bucket.BucketManagementViewModel";
 
       static String com_sidequest_ui_voice_VoiceReviewViewModel = "com.sidequest.ui.voice.VoiceReviewViewModel";
 
-      static String com_sidequest_ui_bucket_CreateBucketViewModel = "com.sidequest.ui.bucket.CreateBucketViewModel";
-
-      static String com_sidequest_ui_reminder_ReminderSettingsViewModel = "com.sidequest.ui.reminder.ReminderSettingsViewModel";
-
-      @KeepFieldType
-      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
-
-      @KeepFieldType
-      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
-
-      @KeepFieldType
-      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
-
-      @KeepFieldType
-      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
-
-      @KeepFieldType
-      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+      static String com_sidequest_ui_detail_ItemDetailViewModel = "com.sidequest.ui.detail.ItemDetailViewModel";
 
       @KeepFieldType
       NotificationPermissionViewModel com_sidequest_ui_reminder_NotificationPermissionViewModel2;
@@ -666,7 +664,25 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       StatsViewModel com_sidequest_ui_stats_StatsViewModel2;
 
       @KeepFieldType
+      BucketDetailViewModel com_sidequest_ui_bucket_BucketDetailViewModel2;
+
+      @KeepFieldType
+      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
+
+      @KeepFieldType
+      BoardViewModel com_sidequest_ui_board_BoardViewModel2;
+
+      @KeepFieldType
       ProfileViewModel com_sidequest_ui_profile_ProfileViewModel2;
+
+      @KeepFieldType
+      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+
+      @KeepFieldType
+      VoiceJournalViewModel com_sidequest_ui_voice_VoiceJournalViewModel2;
+
+      @KeepFieldType
+      CaptureViewModel com_sidequest_ui_capture_CaptureViewModel2;
 
       @KeepFieldType
       BucketManagementViewModel com_sidequest_ui_bucket_BucketManagementViewModel2;
@@ -675,10 +691,7 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
       VoiceReviewViewModel com_sidequest_ui_voice_VoiceReviewViewModel2;
 
       @KeepFieldType
-      CreateBucketViewModel com_sidequest_ui_bucket_CreateBucketViewModel2;
-
-      @KeepFieldType
-      ReminderSettingsViewModel com_sidequest_ui_reminder_ReminderSettingsViewModel2;
+      ItemDetailViewModel com_sidequest_ui_detail_ItemDetailViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -870,19 +883,19 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
 
     private Provider<TaskReminderNotifier> taskReminderNotifierProvider;
 
-    private Provider<BoardRepository> boardRepositoryProvider;
-
-    private Provider<BucketRepository> bucketRepositoryProvider;
+    private Provider<UserPreferences> userPreferencesProvider;
 
     private Provider<WorkManager> provideWorkManagerProvider;
 
     private Provider<WorkManagerPreviewEnqueuer> workManagerPreviewEnqueuerProvider;
 
+    private Provider<BoardRepository> boardRepositoryProvider;
+
+    private Provider<BucketRepository> bucketRepositoryProvider;
+
     private Provider<CaptureRepository> captureRepositoryProvider;
 
     private Provider<ActionPlanRepository> actionPlanRepositoryProvider;
-
-    private Provider<UserPreferences> userPreferencesProvider;
 
     private Provider<WorkManagerReminderScheduler> workManagerReminderSchedulerProvider;
 
@@ -961,13 +974,13 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
     private void initialize2(final ApplicationContextModule applicationContextModuleParam) {
       this.taskReminderSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<TaskReminderScheduler>(singletonCImpl, 24));
       this.taskReminderNotifierProvider = DoubleCheck.provider(new SwitchingProvider<TaskReminderNotifier>(singletonCImpl, 25));
-      this.boardRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BoardRepository>(singletonCImpl, 26));
-      this.bucketRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BucketRepository>(singletonCImpl, 27));
-      this.provideWorkManagerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManager>(singletonCImpl, 30));
-      this.workManagerPreviewEnqueuerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManagerPreviewEnqueuer>(singletonCImpl, 29));
-      this.captureRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CaptureRepository>(singletonCImpl, 28));
-      this.actionPlanRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ActionPlanRepository>(singletonCImpl, 31));
-      this.userPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<UserPreferences>(singletonCImpl, 32));
+      this.userPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<UserPreferences>(singletonCImpl, 26));
+      this.provideWorkManagerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManager>(singletonCImpl, 29));
+      this.workManagerPreviewEnqueuerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManagerPreviewEnqueuer>(singletonCImpl, 28));
+      this.boardRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BoardRepository>(singletonCImpl, 27));
+      this.bucketRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<BucketRepository>(singletonCImpl, 30));
+      this.captureRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<CaptureRepository>(singletonCImpl, 31));
+      this.actionPlanRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<ActionPlanRepository>(singletonCImpl, 32));
       this.workManagerReminderSchedulerProvider = DoubleCheck.provider(new SwitchingProvider<WorkManagerReminderScheduler>(singletonCImpl, 33));
       this.mediaRecorderAudioRecorderProvider = DoubleCheck.provider(new SwitchingProvider<MediaRecorderAudioRecorder>(singletonCImpl, 35));
       this.provideTranscriptionProxyApiProvider = DoubleCheck.provider(new SwitchingProvider<TranscriptionProxyApi>(singletonCImpl, 37));
@@ -1130,26 +1143,26 @@ public final class DaggerSideQuestApp_HiltComponents_SingletonC {
           case 25: // com.sidequest.data.reminder.TaskReminderNotifier 
           return (T) new TaskReminderNotifier(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 26: // com.sidequest.data.repository.BoardRepository 
-          return (T) new BoardRepository(singletonCImpl.actionItemDao(), singletonCImpl.bucketDao(), singletonCImpl.taskReminderSchedulerProvider.get());
+          case 26: // com.sidequest.data.local.UserPreferences 
+          return (T) new UserPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 27: // com.sidequest.data.repository.BucketRepository 
-          return (T) new BucketRepository(singletonCImpl.bucketDao(), singletonCImpl.actionItemDao());
+          case 27: // com.sidequest.data.repository.BoardRepository 
+          return (T) new BoardRepository(singletonCImpl.actionItemDao(), singletonCImpl.bucketDao(), singletonCImpl.taskReminderSchedulerProvider.get(), singletonCImpl.workManagerPreviewEnqueuerProvider.get());
 
-          case 28: // com.sidequest.data.repository.CaptureRepository 
-          return (T) new CaptureRepository(singletonCImpl.actionItemDao(), singletonCImpl.workManagerPreviewEnqueuerProvider.get(), singletonCImpl.taskReminderSchedulerProvider.get());
-
-          case 29: // com.sidequest.data.preview.WorkManagerPreviewEnqueuer 
+          case 28: // com.sidequest.data.preview.WorkManagerPreviewEnqueuer 
           return (T) new WorkManagerPreviewEnqueuer(singletonCImpl.provideWorkManagerProvider.get());
 
-          case 30: // androidx.work.WorkManager 
+          case 29: // androidx.work.WorkManager 
           return (T) PreviewModule_Companion_ProvideWorkManagerFactory.provideWorkManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 31: // com.sidequest.data.repository.ActionPlanRepository 
-          return (T) new ActionPlanRepository(singletonCImpl.actionPlanDao(), singletonCImpl.boardRepositoryProvider.get());
+          case 30: // com.sidequest.data.repository.BucketRepository 
+          return (T) new BucketRepository(singletonCImpl.bucketDao(), singletonCImpl.actionItemDao());
 
-          case 32: // com.sidequest.data.local.UserPreferences 
-          return (T) new UserPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          case 31: // com.sidequest.data.repository.CaptureRepository 
+          return (T) new CaptureRepository(singletonCImpl.actionItemDao(), singletonCImpl.workManagerPreviewEnqueuerProvider.get(), singletonCImpl.taskReminderSchedulerProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 32: // com.sidequest.data.repository.ActionPlanRepository 
+          return (T) new ActionPlanRepository(singletonCImpl.actionPlanDao(), singletonCImpl.boardRepositoryProvider.get());
 
           case 33: // com.sidequest.data.reminder.WorkManagerReminderScheduler 
           return (T) new WorkManagerReminderScheduler(singletonCImpl.provideWorkManagerProvider.get(), singletonCImpl.provideClockProvider.get());

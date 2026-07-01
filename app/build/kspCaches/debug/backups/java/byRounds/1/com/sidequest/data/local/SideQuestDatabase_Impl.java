@@ -46,14 +46,14 @@ public final class SideQuestDatabase_Impl extends SideQuestDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(5) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(6) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `action_items` (`id` TEXT NOT NULL, `accountId` TEXT NOT NULL, `bucketId` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `contentType` TEXT NOT NULL, `sourceContent` TEXT, `preview` TEXT, `timeframe` TEXT NOT NULL, `status` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `reminder` TEXT, `updatedAt` INTEGER NOT NULL, `version` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_action_items_accountId` ON `action_items` (`accountId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_action_items_bucketId` ON `action_items` (`bucketId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_action_items_createdAt` ON `action_items` (`createdAt`)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `buckets` (`id` TEXT NOT NULL, `accountId` TEXT NOT NULL, `name` TEXT NOT NULL, `notStartedColor` TEXT NOT NULL, `inProgressColor` TEXT NOT NULL, `completedColor` TEXT NOT NULL, `imageRef` TEXT, `updatedAt` INTEGER NOT NULL, `version` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `buckets` (`id` TEXT NOT NULL, `accountId` TEXT NOT NULL, `name` TEXT NOT NULL, `notStartedColor` TEXT NOT NULL, `inProgressColor` TEXT NOT NULL, `completedColor` TEXT NOT NULL, `imageRef` TEXT, `position` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, `version` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_buckets_accountId` ON `buckets` (`accountId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `action_plans` (`id` TEXT NOT NULL, `actionItemId` TEXT NOT NULL, `subActions` TEXT NOT NULL, `updatedAt` INTEGER NOT NULL, `version` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_action_plans_actionItemId` ON `action_plans` (`actionItemId`)");
@@ -61,7 +61,7 @@ public final class SideQuestDatabase_Impl extends SideQuestDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_voice_journal_entries_accountId` ON `voice_journal_entries` (`accountId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_voice_journal_entries_createdAt` ON `voice_journal_entries` (`createdAt`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '43002a8290195fdbeea5389f39c3a27b')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6dbc9c5e9ad0a1d90aedb604e0a9eb76')");
       }
 
       @Override
@@ -142,7 +142,7 @@ public final class SideQuestDatabase_Impl extends SideQuestDatabase {
                   + " Expected:\n" + _infoActionItems + "\n"
                   + " Found:\n" + _existingActionItems);
         }
-        final HashMap<String, TableInfo.Column> _columnsBuckets = new HashMap<String, TableInfo.Column>(11);
+        final HashMap<String, TableInfo.Column> _columnsBuckets = new HashMap<String, TableInfo.Column>(12);
         _columnsBuckets.put("id", new TableInfo.Column("id", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("accountId", new TableInfo.Column("accountId", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -150,6 +150,7 @@ public final class SideQuestDatabase_Impl extends SideQuestDatabase {
         _columnsBuckets.put("inProgressColor", new TableInfo.Column("inProgressColor", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("completedColor", new TableInfo.Column("completedColor", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("imageRef", new TableInfo.Column("imageRef", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsBuckets.put("position", new TableInfo.Column("position", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("updatedAt", new TableInfo.Column("updatedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("version", new TableInfo.Column("version", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsBuckets.put("deleted", new TableInfo.Column("deleted", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -207,7 +208,7 @@ public final class SideQuestDatabase_Impl extends SideQuestDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "43002a8290195fdbeea5389f39c3a27b", "ffeebeaa08b7c98cca76dd41002c13ae");
+    }, "6dbc9c5e9ad0a1d90aedb604e0a9eb76", "bb69e591d4b8a9d23ef758fd03968fdc");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

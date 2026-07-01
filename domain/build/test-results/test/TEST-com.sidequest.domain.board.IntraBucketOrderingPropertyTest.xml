@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.board.IntraBucketOrderingPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:17" hostname="INLPF5TK6XC" time="0.014">
+<testsuite name="com.sidequest.domain.board.IntraBucketOrderingPropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:23" hostname="INLPF5TK6XC" time="0.024">
   <properties/>
-  <testcase name="Property 9: each bucket group is sorted in non-decreasing createdAt order" classname="com.sidequest.domain.board.IntraBucketOrderingPropertyTest" time="0.014"/>
+  <testcase name="Property 9: each bucket group is sorted in non-decreasing createdAt order" classname="com.sidequest.domain.board.IntraBucketOrderingPropertyTest" time="0.024"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

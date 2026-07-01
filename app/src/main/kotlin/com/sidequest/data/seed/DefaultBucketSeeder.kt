@@ -31,7 +31,7 @@ class DefaultBucketSeeder @Inject constructor(
     suspend fun seedIfEmpty() {
         if (bucketDao.getByAccount(accountId).isNotEmpty()) return
         val now = System.currentTimeMillis()
-        val buckets = DEFAULT_BUCKETS.map { spec ->
+        val buckets = DEFAULT_BUCKETS.mapIndexed { index, spec ->
             Bucket(
                 id = UUID.randomUUID().toString(),
                 accountId = accountId,
@@ -39,6 +39,7 @@ class DefaultBucketSeeder @Inject constructor(
                 notStartedColor = spec.notStartedColor,
                 inProgressColor = spec.inProgressColor,
                 completedColor = spec.completedColor,
+                position = index,
                 sync = SyncMeta(
                     updatedAt = now,
                     version = 1,

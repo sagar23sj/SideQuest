@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.capture.FirstUrlTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.027">
+<testsuite name="com.sidequest.domain.capture.FirstUrlTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:24" hostname="INLPF5TK6XC" time="0.034">
   <properties/>
-  <testcase name="extracts the URL from a sentence-style share" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.021"/>
+  <testcase name="extracts the URL from a sentence-style share" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.025"/>
   <testcase name="returns a bare URL unchanged" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.001"/>
-  <testcase name="trims trailing punctuation that clings to a URL in prose" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.0"/>
-  <testcase name="returns the first URL when several are present" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.0"/>
-  <testcase name="returns null when there is no URL" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.0"/>
-  <testcase name="returns null for blank or null input" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.0"/>
+  <testcase name="trims trailing punctuation that clings to a URL in prose" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.001"/>
+  <testcase name="returns the first URL when several are present" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.001"/>
+  <testcase name="returns null when there is no URL" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.001"/>
+  <testcase name="returns null for blank or null input" classname="com.sidequest.domain.capture.FirstUrlTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

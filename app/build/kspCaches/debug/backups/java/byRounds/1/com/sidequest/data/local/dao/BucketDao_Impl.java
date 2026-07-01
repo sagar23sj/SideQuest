@@ -54,7 +54,7 @@ public final class BucketDao_Impl implements BucketDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `buckets` (`id`,`accountId`,`name`,`notStartedColor`,`inProgressColor`,`completedColor`,`imageRef`,`updatedAt`,`version`,`deleted`,`dirty`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `buckets` (`id`,`accountId`,`name`,`notStartedColor`,`inProgressColor`,`completedColor`,`imageRef`,`position`,`updatedAt`,`version`,`deleted`,`dirty`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -71,13 +71,14 @@ public final class BucketDao_Impl implements BucketDao {
         } else {
           statement.bindString(7, entity.getImageRef());
         }
+        statement.bindLong(8, entity.getPosition());
         final SyncMeta _tmpSync = entity.getSync();
-        statement.bindLong(8, _tmpSync.getUpdatedAt());
-        statement.bindLong(9, _tmpSync.getVersion());
+        statement.bindLong(9, _tmpSync.getUpdatedAt());
+        statement.bindLong(10, _tmpSync.getVersion());
         final int _tmp = _tmpSync.getDeleted() ? 1 : 0;
-        statement.bindLong(10, _tmp);
+        statement.bindLong(11, _tmp);
         final int _tmp_1 = _tmpSync.getDirty() ? 1 : 0;
-        statement.bindLong(11, _tmp_1);
+        statement.bindLong(12, _tmp_1);
       }
     };
     this.__deletionAdapterOfBucketEntity = new EntityDeletionOrUpdateAdapter<BucketEntity>(__db) {
@@ -97,7 +98,7 @@ public final class BucketDao_Impl implements BucketDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `buckets` SET `id` = ?,`accountId` = ?,`name` = ?,`notStartedColor` = ?,`inProgressColor` = ?,`completedColor` = ?,`imageRef` = ?,`updatedAt` = ?,`version` = ?,`deleted` = ?,`dirty` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `buckets` SET `id` = ?,`accountId` = ?,`name` = ?,`notStartedColor` = ?,`inProgressColor` = ?,`completedColor` = ?,`imageRef` = ?,`position` = ?,`updatedAt` = ?,`version` = ?,`deleted` = ?,`dirty` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -114,14 +115,15 @@ public final class BucketDao_Impl implements BucketDao {
         } else {
           statement.bindString(7, entity.getImageRef());
         }
+        statement.bindLong(8, entity.getPosition());
         final SyncMeta _tmpSync = entity.getSync();
-        statement.bindLong(8, _tmpSync.getUpdatedAt());
-        statement.bindLong(9, _tmpSync.getVersion());
+        statement.bindLong(9, _tmpSync.getUpdatedAt());
+        statement.bindLong(10, _tmpSync.getVersion());
         final int _tmp = _tmpSync.getDeleted() ? 1 : 0;
-        statement.bindLong(10, _tmp);
+        statement.bindLong(11, _tmp);
         final int _tmp_1 = _tmpSync.getDirty() ? 1 : 0;
-        statement.bindLong(11, _tmp_1);
-        statement.bindString(12, entity.getId());
+        statement.bindLong(12, _tmp_1);
+        statement.bindString(13, entity.getId());
       }
     };
     this.__preparedStmtOfDeleteById = new SharedSQLiteStatement(__db) {
@@ -144,7 +146,7 @@ public final class BucketDao_Impl implements BucketDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT INTO `buckets` (`id`,`accountId`,`name`,`notStartedColor`,`inProgressColor`,`completedColor`,`imageRef`,`updatedAt`,`version`,`deleted`,`dirty`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT INTO `buckets` (`id`,`accountId`,`name`,`notStartedColor`,`inProgressColor`,`completedColor`,`imageRef`,`position`,`updatedAt`,`version`,`deleted`,`dirty`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -161,19 +163,20 @@ public final class BucketDao_Impl implements BucketDao {
         } else {
           statement.bindString(7, entity.getImageRef());
         }
+        statement.bindLong(8, entity.getPosition());
         final SyncMeta _tmpSync = entity.getSync();
-        statement.bindLong(8, _tmpSync.getUpdatedAt());
-        statement.bindLong(9, _tmpSync.getVersion());
+        statement.bindLong(9, _tmpSync.getUpdatedAt());
+        statement.bindLong(10, _tmpSync.getVersion());
         final int _tmp = _tmpSync.getDeleted() ? 1 : 0;
-        statement.bindLong(10, _tmp);
+        statement.bindLong(11, _tmp);
         final int _tmp_1 = _tmpSync.getDirty() ? 1 : 0;
-        statement.bindLong(11, _tmp_1);
+        statement.bindLong(12, _tmp_1);
       }
     }, new EntityDeletionOrUpdateAdapter<BucketEntity>(__db) {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE `buckets` SET `id` = ?,`accountId` = ?,`name` = ?,`notStartedColor` = ?,`inProgressColor` = ?,`completedColor` = ?,`imageRef` = ?,`updatedAt` = ?,`version` = ?,`deleted` = ?,`dirty` = ? WHERE `id` = ?";
+        return "UPDATE `buckets` SET `id` = ?,`accountId` = ?,`name` = ?,`notStartedColor` = ?,`inProgressColor` = ?,`completedColor` = ?,`imageRef` = ?,`position` = ?,`updatedAt` = ?,`version` = ?,`deleted` = ?,`dirty` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -190,14 +193,15 @@ public final class BucketDao_Impl implements BucketDao {
         } else {
           statement.bindString(7, entity.getImageRef());
         }
+        statement.bindLong(8, entity.getPosition());
         final SyncMeta _tmpSync = entity.getSync();
-        statement.bindLong(8, _tmpSync.getUpdatedAt());
-        statement.bindLong(9, _tmpSync.getVersion());
+        statement.bindLong(9, _tmpSync.getUpdatedAt());
+        statement.bindLong(10, _tmpSync.getVersion());
         final int _tmp = _tmpSync.getDeleted() ? 1 : 0;
-        statement.bindLong(10, _tmp);
+        statement.bindLong(11, _tmp);
         final int _tmp_1 = _tmpSync.getDirty() ? 1 : 0;
-        statement.bindLong(11, _tmp_1);
-        statement.bindString(12, entity.getId());
+        statement.bindLong(12, _tmp_1);
+        statement.bindString(13, entity.getId());
       }
     });
   }
@@ -377,6 +381,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -402,6 +407,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -416,7 +423,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
             _result.add(_item);
           }
           return _result;
@@ -451,6 +458,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -476,6 +484,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -490,7 +500,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
             _result.add(_item);
           }
           return _result;
@@ -525,6 +535,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -549,6 +560,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -563,7 +576,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _result = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _result = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
           } else {
             _result = null;
           }
@@ -600,6 +613,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -624,6 +638,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -638,7 +654,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _result = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _result = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
           } else {
             _result = null;
           }
@@ -672,6 +688,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -697,6 +714,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -711,7 +730,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
             _result.add(_item);
           }
           return _result;
@@ -741,6 +760,7 @@ public final class BucketDao_Impl implements BucketDao {
           final int _cursorIndexOfInProgressColor = CursorUtil.getColumnIndexOrThrow(_cursor, "inProgressColor");
           final int _cursorIndexOfCompletedColor = CursorUtil.getColumnIndexOrThrow(_cursor, "completedColor");
           final int _cursorIndexOfImageRef = CursorUtil.getColumnIndexOrThrow(_cursor, "imageRef");
+          final int _cursorIndexOfPosition = CursorUtil.getColumnIndexOrThrow(_cursor, "position");
           final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updatedAt");
           final int _cursorIndexOfVersion = CursorUtil.getColumnIndexOrThrow(_cursor, "version");
           final int _cursorIndexOfDeleted = CursorUtil.getColumnIndexOrThrow(_cursor, "deleted");
@@ -766,6 +786,8 @@ public final class BucketDao_Impl implements BucketDao {
             } else {
               _tmpImageRef = _cursor.getString(_cursorIndexOfImageRef);
             }
+            final int _tmpPosition;
+            _tmpPosition = _cursor.getInt(_cursorIndexOfPosition);
             final SyncMeta _tmpSync;
             final long _tmpUpdatedAt;
             _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
@@ -780,7 +802,7 @@ public final class BucketDao_Impl implements BucketDao {
             _tmp_1 = _cursor.getInt(_cursorIndexOfDirty);
             _tmpDirty = _tmp_1 != 0;
             _tmpSync = new SyncMeta(_tmpUpdatedAt,_tmpVersion,_tmpDeleted,_tmpDirty);
-            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpSync);
+            _item = new BucketEntity(_tmpId,_tmpAccountId,_tmpName,_tmpNotStartedColor,_tmpInProgressColor,_tmpCompletedColor,_tmpImageRef,_tmpPosition,_tmpSync);
             _result.add(_item);
           }
           return _result;

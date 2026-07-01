@@ -20,6 +20,7 @@
     <string name="capture_close">Close</string>
     <string name="capture_confirm">Save</string>
     <string name="capture_add_to_actions">Add to my actions</string>
+    <string name="detail_video_play">Play video</string>
     <string name="capture_select_bucket">Bucket</string>
     <string name="capture_no_buckets">No buckets yet. Create a bucket first to save shared content.</string>
     <string name="capture_new_bucket">New bucket</string>
@@ -61,6 +62,12 @@
     <string name="plan_checklist_title">Checklist</string>
     <string name="plan_add_checklist">Add a checklist</string>
     <string name="plan_progress_label">%1$d / %2$d completed</string>
+    <string name="detail_edit">Edit</string>
+    <string name="detail_edit_title">Edit details</string>
+    <string name="detail_edit_name_label">Title</string>
+    <string name="detail_edit_description_label">Description</string>
+    <string name="detail_edit_link_label">Link (one per line)</string>
+    <string name="detail_edit_save">Save</string>
     <string name="plan_progress_desc">%1$d of %2$d sub-actions completed</string>
     <string name="plan_add_sub_action_label">New step</string>
     <string name="plan_add_sub_action">Add</string>
@@ -135,6 +142,7 @@
     <string name="nav_voice">Voice</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_insights">Insights</string>
+    <string name="board_new_quest">New Quest</string>
     <string name="action_back">Back</string>
     <string name="profile_avatar_dialog_title">Pick an avatar</string>
     <string name="profile_choose_photo">Use a photo</string>
@@ -154,6 +162,9 @@
     <string name="buckets_shopping_enabled">Shopping features enabled</string>
     <string name="buckets_rename">Rename</string>
     <string name="buckets_edit">Edit</string>
+    <string name="buckets_reorder_desc">Long-press and drag to reorder %1$s</string>
+    <string name="buckets_move_up">Move up</string>
+    <string name="buckets_move_down">Move down</string>
     <string name="buckets_delete">Delete</string>
     <string name="buckets_overflow_desc">More options for bucket %1$s</string>
     <string name="buckets_delete_dialog_title">Delete \"%1$s\"?</string>

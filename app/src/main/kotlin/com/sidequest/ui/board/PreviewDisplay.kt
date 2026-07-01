@@ -45,13 +45,26 @@ fun previewDisplay(boardItem: BoardItem): PreviewDisplay {
     val showResolvedPreview =
         item.contentType == ContentType.LINK && preview != null && preview.resolved
 
+    // For media items (image/video) the source content is a local file path or
+    // content:// URI — never human-readable — so it must never be shown as a
+    // subtitle. The user's description (if any) is the only meaningful caption.
+    val isMedia = item.contentType == ContentType.IMAGE ||
+        item.contentType == ContentType.VIDEO_REF
+    if (isMedia) {
+        return PreviewDisplay(
+            title = item.title,
+            thumbnailUrl = null,
+            rawSource = item.description?.takeIf { it.isNotBlank() },
+        )
+    }
+
     if (showResolvedPreview && preview != null) {
         val thumbnailUrl = preview.thumbnailUrl?.takeIf { it.isNotBlank() }
-        // The user-entered name is always the headline. The link's own page
-        // title (or its URL) becomes the supporting subtitle — link metadata is
-        // additional info, never a replacement for the name the user chose.
-        val subtitle = preview.title?.takeIf { it.isNotBlank() }
-            ?: item.sourceContent?.takeIf { it.isNotBlank() }
+        // The user-entered name is always the headline. The user's own
+        // description is the preferred subtitle; otherwise the link's page title
+        // — link metadata is additional info, never a replacement for the name.
+        val subtitle = item.description?.takeIf { it.isNotBlank() }
+            ?: preview.title?.takeIf { it.isNotBlank() }
         return PreviewDisplay(
             title = item.title,
             thumbnailUrl = thumbnailUrl,
@@ -59,9 +72,12 @@ fun previewDisplay(boardItem: BoardItem): PreviewDisplay {
         )
     }
 
+    // No resolved preview: prefer the user's description over the raw source
+    // (a URL or text), so the row reads naturally instead of dumping a link.
     return PreviewDisplay(
         title = item.title,
         thumbnailUrl = null,
-        rawSource = item.sourceContent?.takeIf { it.isNotBlank() },
+        rawSource = item.description?.takeIf { it.isNotBlank() }
+            ?: item.sourceContent?.takeIf { it.isNotBlank() },
     )
 }

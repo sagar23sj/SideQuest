@@ -39,6 +39,9 @@ import kotlinx.coroutines.delay
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @javax.inject.Inject
+    lateinit var userPreferences: com.sidequest.data.local.UserPreferences
+
     // The task id to deep-link to when launched from a reminder notification
     // (Req 6.5). A StateFlow so a tap while the app is already running
     // (onNewIntent) re-triggers navigation.
@@ -49,7 +52,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         deepLinkItemId.value = intent?.getStringExtra(EXTRA_OPEN_ITEM_ID)
         setContent {
-            SideQuestTheme {
+            val useSystemColors by userPreferences.useSystemColors.collectAsStateWithLifecycle()
+            SideQuestTheme(dynamicColor = useSystemColors) {
                 SideQuestRoot(
                     deepLinkItemId = deepLinkItemId,
                     onDeepLinkHandled = { deepLinkItemId.value = null },

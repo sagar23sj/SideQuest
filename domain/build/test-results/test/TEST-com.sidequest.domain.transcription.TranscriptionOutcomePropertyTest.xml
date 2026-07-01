@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.transcription.TranscriptionOutcomePropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.012">
+<testsuite name="com.sidequest.domain.transcription.TranscriptionOutcomePropertyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:25" hostname="INLPF5TK6XC" time="0.03">
   <properties/>
-  <testcase name="Property 20: transcription outcomes are stored correctly" classname="com.sidequest.domain.transcription.TranscriptionOutcomePropertyTest" time="0.012"/>
+  <testcase name="Property 20: transcription outcomes are stored correctly" classname="com.sidequest.domain.transcription.TranscriptionOutcomePropertyTest" time="0.03"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

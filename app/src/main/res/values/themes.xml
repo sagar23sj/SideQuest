@@ -13,4 +13,19 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
+
+    <!--
+      Translucent variant for the share/capture activity. The window is
+      transparent and non-opaque so the activity behind it (the board) stays
+      visible; the Compose ModalBottomSheet provides its own dim scrim and the
+      slide-up animation, so the capture form reads as a modal over the app
+      rather than a separate blank screen. backgroundDimEnabled is off to avoid
+      double-dimming on top of the sheet's scrim.
+    -->
+    <style name="Theme.SideQuest.Transparent" parent="Theme.SideQuest">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>

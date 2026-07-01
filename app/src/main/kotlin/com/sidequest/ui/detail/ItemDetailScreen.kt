@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +21,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +38,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -104,6 +111,7 @@ fun ItemDetailScreen(
             },
             onUndoComplete = viewModel::onUndoComplete,
             onSetReminder = viewModel::onSetReminder,
+            onEditDetails = viewModel::onEditDetails,
             onNavigateBack = onNavigateBack,
         )
         com.sidequest.ui.components.ConfettiOverlay(controller = confetti)
@@ -122,6 +130,7 @@ fun ItemDetailContent(
     onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
     modifier: Modifier = Modifier,
+    onEditDetails: (title: String, description: String?, linkText: String?) -> Unit = { _, _, _ -> },
     onNavigateBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -155,6 +164,7 @@ fun ItemDetailContent(
                 onMarkParentComplete = onMarkParentComplete,
                 onUndoComplete = onUndoComplete,
                 onSetReminder = onSetReminder,
+                onEditDetails = onEditDetails,
                 contentPadding = innerPadding,
             )
         }
@@ -183,6 +193,7 @@ private fun ReadyPlan(
     onMarkParentComplete: () -> Unit,
     onUndoComplete: () -> Unit,
     onSetReminder: (com.sidequest.domain.model.TaskReminder?) -> Unit,
+    onEditDetails: (title: String, description: String?, linkText: String?) -> Unit,
     contentPadding: PaddingValues,
 ) {
     val subActions = state.subActions
@@ -201,6 +212,7 @@ private fun ReadyPlan(
                 item = state.item,
                 bucketName = state.bucketName,
                 bucketImageRef = state.bucketImageRef,
+                onEditDetails = onEditDetails,
             )
         }
 
@@ -389,14 +401,27 @@ private fun ItemHeaderCard(
     item: com.sidequest.domain.model.ActionItem?,
     bucketName: String?,
     bucketImageRef: String?,
+    onEditDetails: (title: String, description: String?, linkText: String?) -> Unit = { _, _, _ -> },
 ) {
     if (item == null) return
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val preview = item.preview
+    var showEditDialog by remember { mutableStateOf(false) }
     val statusLabel = when (item.status) {
         com.sidequest.domain.model.ActionStatus.NOT_STARTED -> stringResource(R.string.status_not_started)
         com.sidequest.domain.model.ActionStatus.IN_PROGRESS -> stringResource(R.string.status_in_progress)
         com.sidequest.domain.model.ActionStatus.COMPLETED -> stringResource(R.string.status_completed)
+    }
+
+    if (showEditDialog) {
+        EditDetailsDialog(
+            item = item,
+            onConfirm = { title, description, linkText ->
+                onEditDetails(title, description, linkText)
+                showEditDialog = false
+            },
+            onDismiss = { showEditDialog = false },
+        )
     }
 
     SoftCard(modifier = Modifier.fillMaxWidth()) {
@@ -420,6 +445,7 @@ private fun ItemHeaderCard(
             ) {
                 // Bucket chip + status.
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
@@ -441,6 +467,31 @@ private fun ItemHeaderCard(
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    // Edit the task's title, description, and link.
+                    Surface(
+                        onClick = { showEditDialog = true },
+                        shape = RoundedCornerShape(50),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Text(
+                                text = stringResource(R.string.detail_edit),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+                    }
                 }
 
                 Text(
@@ -458,11 +509,47 @@ private fun ItemHeaderCard(
                     )
                 }
 
-                // Link preview / source link.
-                val link = preview?.rawUrl ?: item.sourceContent
-                if (!link.isNullOrBlank() && link.startsWith("http")) {
+                // Stored image (copied into app storage at capture).
+                if (item.contentType == com.sidequest.domain.model.ContentType.IMAGE &&
+                    !item.sourceContent.isNullOrBlank()
+                ) {
+                    val src = item.sourceContent!!
+                    coil.compose.AsyncImage(
+                        model = if (src.startsWith("content:") || src.startsWith("http")) {
+                            src
+                        } else {
+                            java.io.File(src)
+                        },
+                        contentDescription = null,
+                        contentScale = androidx.compose.ui.layout.ContentScale.Fit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp)),
+                    )
+                }
+
+                // Stored video (copied into app storage at capture): show a
+                // poster frame with a play overlay; tapping opens the device's
+                // video player via a FileProvider grant.
+                if (item.contentType == com.sidequest.domain.model.ContentType.VIDEO_REF &&
+                    !item.sourceContent.isNullOrBlank()
+                ) {
+                    StoredVideo(path = item.sourceContent!!)
+                }
+
+                // Links: every detected URL is clickable. The first carries the
+                // fetched preview (caption/thumbnail); the rest are compact rows.
+                val allLinks = item.sourceContent
+                    ?.lineSequence()
+                    ?.map { it.trim() }
+                    ?.filter { it.startsWith("http") }
+                    ?.toList()
+                    .orEmpty()
+
+                if (allLinks.isNotEmpty()) {
+                    val primary = preview?.rawUrl?.takeIf { it.startsWith("http") } ?: allLinks.first()
                     Surface(
-                        onClick = { runCatching { uriHandler.openUri(link) } },
+                        onClick = { runCatching { uriHandler.openUri(primary) } },
                         shape = RoundedCornerShape(16.dp),
                         color = MaterialTheme.colorScheme.surfaceContainerHigh,
                         modifier = Modifier.fillMaxWidth(),
@@ -487,7 +574,7 @@ private fun ItemHeaderCard(
                                 )
                             }
                             Text(
-                                text = link,
+                                text = primary,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -495,8 +582,39 @@ private fun ItemHeaderCard(
                             )
                         }
                     }
-                } else if (!item.sourceContent.isNullOrBlank()) {
-                    // Plain text content.
+                    // Additional links beyond the previewed one.
+                    allLinks.filter { it != primary }.forEach { url ->
+                        Surface(
+                            onClick = { runCatching { uriHandler.openUri(url) } },
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Link,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Text(
+                                    text = url,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    }
+                } else if (item.contentType == com.sidequest.domain.model.ContentType.TEXT &&
+                    !item.sourceContent.isNullOrBlank()
+                ) {
+                    // Plain text content (legacy items that stored text here).
                     Text(
                         text = item.sourceContent!!,
                         style = MaterialTheme.typography.bodyMedium,
@@ -777,4 +895,171 @@ private fun ReminderPickers(
             }
         }
     }
+}
+
+/**
+ * Renders a captured video stored at [path] (an internal-storage file): a poster
+ * frame extracted off the main thread with a play overlay. Tapping launches the
+ * device's video player via a [androidx.core.content.FileProvider] grant so the
+ * internal file can be read by the external app.
+ */
+@Composable
+private fun StoredVideo(path: String) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    // Decode a single poster frame off the main thread. Re-runs only if the
+    // path changes. Null until decoded (or if decoding fails).
+    val poster by androidx.compose.runtime.produceState<androidx.compose.ui.graphics.ImageBitmap?>(
+        initialValue = null,
+        key1 = path,
+    ) {
+        value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            runCatching {
+                val retriever = android.media.MediaMetadataRetriever()
+                try {
+                    retriever.setDataSource(path)
+                    retriever.getFrameAtTime(0)?.asImageBitmap()
+                } finally {
+                    retriever.release()
+                }
+            }.getOrNull()
+        }
+    }
+
+    Surface(
+        onClick = { openVideoExternally(context, path) },
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            val frame = poster
+            if (frame != null) {
+                androidx.compose.foundation.Image(
+                    bitmap = frame,
+                    contentDescription = stringResource(R.string.detail_video_play),
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+            // Scrim + play icon so the affordance reads even over a bright frame.
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(percent = 50))
+                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.45f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = null,
+                    tint = androidx.compose.ui.graphics.Color.White,
+                    modifier = Modifier.size(40.dp),
+                )            }
+        }
+    }
+}
+
+/**
+ * Opens the captured video at [path] in the device's default player by handing
+ * out a temporary read grant through [androidx.core.content.FileProvider].
+ */
+private fun openVideoExternally(context: android.content.Context, path: String) {
+    runCatching {
+        val file = java.io.File(path)
+        val uri = androidx.core.content.FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            file,
+        )
+        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "video/*")
+            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(intent)
+    }
+}
+
+/**
+ * A dialog to edit an item's title, description, and (for non-media items)
+ * link(s). Media items (image/video) hide the link field since their source is
+ * a stored file, not a URL. Multiple links are edited one per line.
+ */
+@Composable
+private fun EditDetailsDialog(
+    item: com.sidequest.domain.model.ActionItem,
+    onConfirm: (title: String, description: String?, linkText: String?) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val isMedia = item.contentType == com.sidequest.domain.model.ContentType.IMAGE ||
+        item.contentType == com.sidequest.domain.model.ContentType.VIDEO_REF
+
+    // Prefill the link field with the stored links (LINK items keep them
+    // newline-joined in sourceContent); non-link, non-media items start empty.
+    val initialLinks = if (!isMedia && item.contentType == com.sidequest.domain.model.ContentType.LINK) {
+        item.sourceContent
+            ?.lineSequence()
+            ?.map { it.trim() }
+            ?.filter { it.startsWith("http") }
+            ?.joinToString("\n")
+            .orEmpty()
+    } else {
+        ""
+    }
+
+    var title by remember { mutableStateOf(item.title) }
+    var description by remember { mutableStateOf(item.description.orEmpty()) }
+    var linkText by remember { mutableStateOf(initialLinks) }
+
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.detail_edit_title)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.detail_edit_name_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text(stringResource(R.string.detail_edit_description_label)) },
+                    minLines = 2,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                if (!isMedia) {
+                    OutlinedTextField(
+                        value = linkText,
+                        onValueChange = { linkText = it },
+                        label = { Text(stringResource(R.string.detail_edit_link_label)) },
+                        minLines = 1,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(title, description, if (isMedia) null else linkText) },
+            ) {
+                Text(stringResource(R.string.detail_edit_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.create_bucket_cancel))
+            }
+        },
+    )
 }

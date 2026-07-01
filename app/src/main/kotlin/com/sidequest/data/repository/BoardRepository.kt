@@ -53,6 +53,7 @@ class BoardRepository(
     private val actionItemDao: ActionItemDao,
     private val bucketDao: BucketDao,
     private val taskReminderScheduler: TaskReminderScheduler,
+    private val previewEnqueuer: com.sidequest.data.preview.PreviewEnqueuer,
     private val clock: () -> Long,
 ) {
 
@@ -66,10 +67,12 @@ class BoardRepository(
         actionItemDao: ActionItemDao,
         bucketDao: BucketDao,
         taskReminderScheduler: TaskReminderScheduler,
+        previewEnqueuer: com.sidequest.data.preview.PreviewEnqueuer,
     ) : this(
         actionItemDao = actionItemDao,
         bucketDao = bucketDao,
         taskReminderScheduler = taskReminderScheduler,
+        previewEnqueuer = previewEnqueuer,
         clock = System::currentTimeMillis,
     )
 
@@ -92,13 +95,13 @@ class BoardRepository(
                 items = itemEntities.toActionItems(),
                 buckets = bucketEntities.toBuckets(),
             )
-            // Order buckets dynamically by how much they're used (content
-            // volume, then recency), falling back to the curated default order
-            // for a brand-new user whose buckets are all empty.
+            // Stable, user-controllable bucket order (curated defaults, then
+            // custom buckets oldest-first; manual reorder overrides via
+            // position). No usage-based reshuffling.
             board.copy(
-                groups = BoardOrdering.orderByActivity(
+                groups = BoardOrdering.orderGroups(
                     groups = board.groups,
-                    defaultOrder = DEFAULT_BUCKETS.map { it.name },
+                    curatedOrder = DEFAULT_BUCKETS.map { it.name },
                 ),
             )
         }
@@ -163,6 +166,79 @@ class BoardRepository(
         }
         actionItemDao.upsert(updated.toEntity())
         taskReminderScheduler.schedule(updated)
+        return updated
+    }
+
+    /**
+     * Edits the user-facing details of the item [itemId]: its [title],
+     * [description], and — for non-media items — the associated link(s) parsed
+     * from [linkText]. Returns the updated item, or null when no live item
+     * exists.
+     *
+     * Rules mirror the capture flow:
+     * - A blank [title] is ignored (the previous title is kept) so an item can
+     *   never lose its name.
+     * - For IMAGE / VIDEO_REF items the stored media reference and content type
+     *   are preserved untouched; only title/description change.
+     * - For text/link items the content type is recomputed from [linkText]: any
+     *   URLs found make it a LINK (stored newline-joined in sourceContent),
+     *   otherwise it becomes TEXT with no source content. When the primary link
+     *   changes, the stale preview is cleared and a fresh preview fetch is
+     *   enqueued so the board/detail thumbnail re-enriches.
+     */
+    suspend fun updateDetails(
+        itemId: String,
+        title: String,
+        description: String?,
+        linkText: String?,
+    ): com.sidequest.domain.model.ActionItem? {
+        val current = actionItemDao.getById(itemId)?.takeIf { !it.sync.deleted }?.toDomain()
+            ?: return null
+
+        val isMedia = current.contentType == com.sidequest.domain.model.ContentType.IMAGE ||
+            current.contentType == com.sidequest.domain.model.ContentType.VIDEO_REF
+
+        val newTitle = title.trim().ifBlank { current.title }
+        val newDescription = description?.trim()?.ifBlank { null }
+
+        val links = if (isMedia) emptyList() else com.sidequest.domain.capture.allUrls(linkText)
+        val newContentType = when {
+            isMedia -> current.contentType
+            links.isNotEmpty() -> com.sidequest.domain.model.ContentType.LINK
+            else -> com.sidequest.domain.model.ContentType.TEXT
+        }
+        val newSourceContent = when {
+            isMedia -> current.sourceContent
+            links.isNotEmpty() -> links.joinToString("\n")
+            else -> null
+        }
+
+        // Detect whether the primary link changed so we only re-enrich (and drop
+        // the old preview) when it actually did.
+        val oldPrimary = current.sourceContent
+            ?.lineSequence()?.map { it.trim() }?.firstOrNull { it.startsWith("http") }
+        val newPrimary = links.firstOrNull()
+        val primaryLinkChanged = !isMedia && oldPrimary != newPrimary
+
+        val updated = current.copy(
+            title = newTitle,
+            description = newDescription,
+            contentType = newContentType,
+            sourceContent = newSourceContent,
+            preview = if (primaryLinkChanged) null else current.preview,
+            sync = current.sync.copy(
+                updatedAt = clock(),
+                version = current.sync.version + 1,
+                dirty = true,
+            ),
+        )
+
+        actionItemDao.upsert(updated.toEntity())
+
+        // Re-enqueue preview enrichment when a link item's primary link changed.
+        if (newContentType == com.sidequest.domain.model.ContentType.LINK && primaryLinkChanged) {
+            newPrimary?.let { previewEnqueuer.enqueue(actionItemId = itemId, url = it) }
+        }
         return updated
     }
 }

@@ -128,4 +128,49 @@ class PreviewDisplayTest : StringSpec({
         display.hasThumbnail shouldBe false
         display.rawSource shouldBe "https://example.com/article"
     }
+
+    "an image item never surfaces its file path; it shows the description" {
+        val display = previewDisplay(
+            boardItem(
+                linkItem(
+                    contentType = ContentType.IMAGE,
+                    sourceContent = "/data/user/0/com.sidequest/files/media/media_abc.jpg",
+                    preview = null,
+                ).copy(description = "Sunset at the beach"),
+            ),
+        )
+
+        display.hasThumbnail shouldBe false
+        display.rawSource shouldBe "Sunset at the beach"
+    }
+
+    "an image item with no description shows no subtitle (never the file path)" {
+        val display = previewDisplay(
+            boardItem(
+                linkItem(
+                    contentType = ContentType.IMAGE,
+                    sourceContent = "/data/user/0/com.sidequest/files/media/media_abc.jpg",
+                    preview = null,
+                ),
+            ),
+        )
+
+        display.hasThumbnail shouldBe false
+        display.rawSource shouldBe null
+    }
+
+    "a video item with no description shows no subtitle (never the file path)" {
+        val display = previewDisplay(
+            boardItem(
+                linkItem(
+                    contentType = ContentType.VIDEO_REF,
+                    sourceContent = "/data/user/0/com.sidequest/files/media/media_xyz.mp4",
+                    preview = null,
+                ),
+            ),
+        )
+
+        display.hasThumbnail shouldBe false
+        display.rawSource shouldBe null
+    }
 })

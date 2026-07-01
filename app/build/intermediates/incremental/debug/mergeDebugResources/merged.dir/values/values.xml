@@ -124,6 +124,7 @@
     <string name="board_hold_to_complete_desc">Press and hold to mark this quest done</string>
     <string name="board_link_thumbnail_desc">Link preview thumbnail (%1$s)</string>
     <string name="board_loading">Loading your board…</string>
+    <string name="board_new_quest">New Quest</string>
     <string name="board_status_indicator_desc">Status: %1$s. Tap to change.</string>
     <string name="board_title">Action Board</string>
     <string name="board_undo_complete_desc">Tap to mark this quest not done</string>
@@ -145,9 +146,12 @@
     <string name="buckets_item_count">%1$d items</string>
     <string name="buckets_item_count_one">1 item</string>
     <string name="buckets_item_count_other">%1$d items</string>
+    <string name="buckets_move_down">Move down</string>
+    <string name="buckets_move_up">Move up</string>
     <string name="buckets_overflow_desc">More options for bucket %1$s</string>
     <string name="buckets_reassign_target">Move to</string>
     <string name="buckets_rename">Rename</string>
+    <string name="buckets_reorder_desc">Long-press and drag to reorder %1$s</string>
     <string name="buckets_shopping_enabled">Shopping features enabled</string>
     <string name="buckets_title">Buckets</string>
     <string name="call_notification_answer_action">Answer</string>
@@ -198,6 +202,13 @@
     <string name="create_bucket_title">New bucket</string>
     <string name="default_error_message">"Invalid input"</string>
     <string name="default_popup_window_title" ns1:ignore="ExtraTranslation">"Pop-Up Window"</string>
+    <string name="detail_edit">Edit</string>
+    <string name="detail_edit_description_label">Description</string>
+    <string name="detail_edit_link_label">Link (one per line)</string>
+    <string name="detail_edit_name_label">Title</string>
+    <string name="detail_edit_save">Save</string>
+    <string name="detail_edit_title">Edit details</string>
+    <string name="detail_video_play">Play video</string>
     <string name="dropdown_menu">"Dropdown menu"</string>
     <string name="edit_bucket_title">Edit bucket</string>
     <string name="games_completed_today">Completed today</string>
@@ -507,6 +518,12 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+    <style name="Theme.SideQuest.Transparent" parent="Theme.SideQuest">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     <style name="Widget.Compat.NotificationActionContainer" parent=""/>
     <style name="Widget.Compat.NotificationActionText" parent=""/>

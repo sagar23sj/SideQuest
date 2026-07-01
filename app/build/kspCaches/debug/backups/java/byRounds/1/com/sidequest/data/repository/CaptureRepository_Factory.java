@@ -1,5 +1,6 @@
 package com.sidequest.data.repository;
 
+import android.content.Context;
 import com.sidequest.data.local.dao.ActionItemDao;
 import com.sidequest.data.preview.PreviewEnqueuer;
 import com.sidequest.data.reminder.TaskReminderScheduler;
@@ -11,7 +12,7 @@ import javax.annotation.processing.Generated;
 import javax.inject.Provider;
 
 @ScopeMetadata("javax.inject.Singleton")
-@QualifierMetadata
+@QualifierMetadata("dagger.hilt.android.qualifiers.ApplicationContext")
 @DaggerGenerated
 @Generated(
     value = "dagger.internal.codegen.ComponentProcessor",
@@ -32,27 +33,33 @@ public final class CaptureRepository_Factory implements Factory<CaptureRepositor
 
   private final Provider<TaskReminderScheduler> taskReminderSchedulerProvider;
 
+  private final Provider<Context> contextProvider;
+
   public CaptureRepository_Factory(Provider<ActionItemDao> actionItemDaoProvider,
       Provider<PreviewEnqueuer> previewEnqueuerProvider,
-      Provider<TaskReminderScheduler> taskReminderSchedulerProvider) {
+      Provider<TaskReminderScheduler> taskReminderSchedulerProvider,
+      Provider<Context> contextProvider) {
     this.actionItemDaoProvider = actionItemDaoProvider;
     this.previewEnqueuerProvider = previewEnqueuerProvider;
     this.taskReminderSchedulerProvider = taskReminderSchedulerProvider;
+    this.contextProvider = contextProvider;
   }
 
   @Override
   public CaptureRepository get() {
-    return newInstance(actionItemDaoProvider.get(), previewEnqueuerProvider.get(), taskReminderSchedulerProvider.get());
+    return newInstance(actionItemDaoProvider.get(), previewEnqueuerProvider.get(), taskReminderSchedulerProvider.get(), contextProvider.get());
   }
 
   public static CaptureRepository_Factory create(Provider<ActionItemDao> actionItemDaoProvider,
       Provider<PreviewEnqueuer> previewEnqueuerProvider,
-      Provider<TaskReminderScheduler> taskReminderSchedulerProvider) {
-    return new CaptureRepository_Factory(actionItemDaoProvider, previewEnqueuerProvider, taskReminderSchedulerProvider);
+      Provider<TaskReminderScheduler> taskReminderSchedulerProvider,
+      Provider<Context> contextProvider) {
+    return new CaptureRepository_Factory(actionItemDaoProvider, previewEnqueuerProvider, taskReminderSchedulerProvider, contextProvider);
   }
 
   public static CaptureRepository newInstance(ActionItemDao actionItemDao,
-      PreviewEnqueuer previewEnqueuer, TaskReminderScheduler taskReminderScheduler) {
-    return new CaptureRepository(actionItemDao, previewEnqueuer, taskReminderScheduler);
+      PreviewEnqueuer previewEnqueuer, TaskReminderScheduler taskReminderScheduler,
+      Context context) {
+    return new CaptureRepository(actionItemDao, previewEnqueuer, taskReminderScheduler, context);
   }
 }

@@ -66,3 +66,31 @@ fun firstUrlOrNull(text: String?): String? {
     return raw.trimEnd('.', ',', ';', ':', '!', '?', ')', ']', '}', '"', '\'', '>')
         .takeIf { it.isNotBlank() }
 }
+
+/** Trailing punctuation that commonly clings to a URL in prose. */
+private const val URL_TRAILING = ".,;:!?)]}\"'>"
+
+/**
+ * Extracts every `http(s)://` URL from [text], in order, trimming trailing
+ * punctuation and de-duplicating. Returns an empty list when there are none.
+ */
+fun allUrls(text: String?): List<String> {
+    if (text.isNullOrBlank()) return emptyList()
+    return URL_REGEX.findAll(text)
+        .map { it.value.trimEnd(*URL_TRAILING.toCharArray()) }
+        .filter { it.isNotBlank() }
+        .distinct()
+        .toList()
+}
+
+/**
+ * Returns [text] with every URL removed and surrounding whitespace collapsed, so
+ * the remaining prose can be used as a description. Text that is only links (and
+ * whitespace) yields an empty string.
+ */
+fun stripUrls(text: String?): String {
+    if (text.isNullOrBlank()) return ""
+    return text.replace(URL_REGEX, " ")
+        .replace(Regex("\\s+"), " ")
+        .trim()
+}

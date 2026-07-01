@@ -242,6 +242,7 @@ string board_empty
 string board_hold_to_complete_desc
 string board_link_thumbnail_desc
 string board_loading
+string board_new_quest
 string board_status_indicator_desc
 string board_title
 string board_undo_complete_desc
@@ -263,9 +264,12 @@ string buckets_empty
 string buckets_item_count
 string buckets_item_count_one
 string buckets_item_count_other
+string buckets_move_down
+string buckets_move_up
 string buckets_overflow_desc
 string buckets_reassign_target
 string buckets_rename
+string buckets_reorder_desc
 string buckets_shopping_enabled
 string buckets_title
 string call_notification_answer_action
@@ -316,6 +320,13 @@ string create_bucket_shopping_label
 string create_bucket_title
 string default_error_message
 string default_popup_window_title
+string detail_edit
+string detail_edit_description_label
+string detail_edit_link_label
+string detail_edit_name_label
+string detail_edit_save
+string detail_edit_title
+string detail_video_play
 string dropdown_menu
 string edit_bucket_title
 string games_completed_today
@@ -592,6 +603,7 @@ style TextAppearance_Compat_Notification_Line2
 style TextAppearance_Compat_Notification_Time
 style TextAppearance_Compat_Notification_Title
 style Theme_SideQuest
+style Theme_SideQuest_Transparent
 style Widget_Compat_NotificationActionContainer
 style Widget_Compat_NotificationActionText
 styleable ActivityNavigator android_name action data dataPattern targetPackage
@@ -615,4 +627,5 @@ styleable NavInclude graph
 styleable Navigator android_label android_id route
 styleable StateListDrawable android_dither android_visible android_variablePadding android_constantSize android_enterFadeDuration android_exitFadeDuration
 styleable StateListDrawableItem android_drawable
+xml file_paths
 xml network_security_config

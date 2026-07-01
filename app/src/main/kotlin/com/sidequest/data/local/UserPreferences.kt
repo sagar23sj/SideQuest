@@ -32,6 +32,10 @@ class UserPreferences @Inject constructor(
     /** Local file path of the chosen profile photo, or null when not set. */
     val avatarRef: StateFlow<String?> = _avatarRef.asStateFlow()
 
+    private val _useSystemColors = MutableStateFlow(prefs.getBoolean(KEY_SYSTEM_COLORS, false))
+    /** Whether to use the device's dynamic (Material You) colors over the brand. */
+    val useSystemColors: StateFlow<Boolean> = _useSystemColors.asStateFlow()
+
     /** Whether the user has been asked for their name at least once. */
     val hasSeenNamePrompt: Boolean
         get() = prefs.getBoolean(KEY_NAME_PROMPTED, false)
@@ -40,6 +44,12 @@ class UserPreferences @Inject constructor(
         val trimmed = name.trim().take(MAX_NAME_LENGTH)
         prefs.edit().putString(KEY_NAME, trimmed).putBoolean(KEY_NAME_PROMPTED, true).apply()
         _displayName.value = trimmed
+    }
+
+    /** Persists whether dynamic/system colors should override the brand theme. */
+    fun setUseSystemColors(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_SYSTEM_COLORS, enabled).apply()
+        _useSystemColors.value = enabled
     }
 
     /** Stores the local file [path] of the player's profile photo. */
@@ -57,6 +67,7 @@ class UserPreferences @Inject constructor(
         const val KEY_NAME = "display_name"
         const val KEY_AVATAR = "avatar_ref"
         const val KEY_NAME_PROMPTED = "name_prompted"
+        const val KEY_SYSTEM_COLORS = "use_system_colors"
         const val MAX_NAME_LENGTH = 40
     }
 }

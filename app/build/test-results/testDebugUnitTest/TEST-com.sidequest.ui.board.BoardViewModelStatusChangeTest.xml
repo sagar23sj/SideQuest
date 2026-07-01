@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.ui.board.BoardViewModelStatusChangeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:05:06" hostname="INLPF5TK6XC" time="0.303">
-  <properties/>
-  <testcase name="onStatusChange persists the new status for the tapped item" classname="com.sidequest.ui.board.BoardViewModelStatusChangeTest" time="0.281"/>
-  <testcase name="onStatusChange forwards each distinct status selection to the repository" classname="com.sidequest.ui.board.BoardViewModelStatusChangeTest" time="0.02"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

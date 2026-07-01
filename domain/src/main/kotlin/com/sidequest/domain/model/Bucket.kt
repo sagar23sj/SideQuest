@@ -23,5 +23,13 @@ data class Bucket(
      * from the bucket [name].
      */
     val imageRef: String? = null,
+    /**
+     * Display order within the account. Lower comes first. Curated default
+     * buckets are seeded with ascending positions; user-created buckets are
+     * appended, and the user can reorder them. Defaults to 0 so older
+     * serialized buckets remain valid (ordering then falls back to the curated
+     * order, then name).
+     */
+    val position: Int = 0,
     val sync: SyncMeta,
 )

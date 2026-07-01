@@ -147,6 +147,19 @@ class ItemDetailViewModel @Inject constructor(
     }
 
     /**
+     * Edits the current item's title, description, and link(s). Delegates to
+     * [BoardRepository.updateDetails] and refreshes so the header reflects the
+     * change (the plan flow doesn't re-emit on item-only edits).
+     */
+    fun onEditDetails(title: String, description: String?, linkText: String?) {
+        val id = actionItemId.value ?: return
+        viewModelScope.launch {
+            boardRepository.updateDetails(id, title, description, linkText)
+            refresh.value += 1
+        }
+    }
+
+    /**
      * Marks the parent Action_Item completed (Req 9.4) in response to the
      * all-sub-actions-done prompt.
      */

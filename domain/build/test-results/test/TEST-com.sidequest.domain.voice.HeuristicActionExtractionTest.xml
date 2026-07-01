@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.voice.HeuristicActionExtractionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.021">
+<testsuite name="com.sidequest.domain.voice.HeuristicActionExtractionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:25" hostname="INLPF5TK6XC" time="0.052">
   <properties/>
-  <testcase name="a blank transcript yields no candidates" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.002"/>
-  <testcase name="lead-ins are stripped and clauses split into separate, title-cased actions" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.002"/>
-  <testcase name="clauses opening with an action verb are kept even without a lead-in" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.0"/>
+  <testcase name="a blank transcript yields no candidates" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.007"/>
+  <testcase name="lead-ins are stripped and clauses split into separate, title-cased actions" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.006"/>
+  <testcase name="clauses opening with an action verb are kept even without a lead-in" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.001"/>
   <testcase name="duplicate actions are de-duplicated" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.0"/>
   <testcase name="a domain keyword suggests a bucket" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.001"/>
-  <testcase name="a non-task transcript still offers the first sentence as a single candidate" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.011"/>
-  <testcase name="the number of candidates is capped" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.002"/>
+  <testcase name="a non-task transcript still offers the first sentence as a single candidate" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.027"/>
+  <testcase name="the number of candidates is capped" classname="com.sidequest.domain.voice.HeuristicActionExtractionTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

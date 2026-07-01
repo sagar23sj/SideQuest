@@ -74,8 +74,8 @@ class PreviewSeeder @Inject constructor(
      * The default starter buckets, each with a distinct three-color status
      * palette drawn from the SideQuest tonal scheme so the board reads clearly.
      */
-    private fun defaultBuckets(): List<Bucket> = DEFAULT_BUCKETS.map { spec ->
-        bucket(spec.name, spec.notStartedColor, spec.inProgressColor, spec.completedColor)
+    private fun defaultBuckets(): List<Bucket> = DEFAULT_BUCKETS.mapIndexed { index, spec ->
+        bucket(spec.name, spec.notStartedColor, spec.inProgressColor, spec.completedColor, index)
     }
 
     private fun bucket(
@@ -83,6 +83,7 @@ class PreviewSeeder @Inject constructor(
         notStarted: String,
         inProgress: String,
         completed: String,
+        position: Int = 0,
     ): Bucket = Bucket(
         id = UUID.randomUUID().toString(),
         accountId = accountId,
@@ -90,6 +91,7 @@ class PreviewSeeder @Inject constructor(
         notStartedColor = notStarted,
         inProgressColor = inProgress,
         completedColor = completed,
+        position = position,
         sync = cleanSync(),
     )
 

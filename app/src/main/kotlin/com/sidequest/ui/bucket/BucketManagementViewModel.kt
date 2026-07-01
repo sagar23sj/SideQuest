@@ -85,6 +85,27 @@ class BucketManagementViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Moves the bucket at [fromIndex] to [toIndex] in the displayed order and
+     * persists the new order (Req: user-controllable bucket order). No-op for
+     * out-of-range indices.
+     */
+    fun moveBucket(fromIndex: Int, toIndex: Int) {
+        val current = uiState.value.buckets
+        if (fromIndex !in current.indices || toIndex !in current.indices || fromIndex == toIndex) return
+        val reordered = current.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
+        viewModelScope.launch {
+            bucketRepository.reorderBuckets(reordered.map { it.id })
+        }
+    }
+
+    /** Persists an explicit new bucket order (used by drag-and-drop reordering). */
+    fun reorder(orderedBucketIds: List<String>) {
+        viewModelScope.launch {
+            bucketRepository.reorderBuckets(orderedBucketIds)
+        }
+    }
+
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L
     }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.domain.sync.ConflictResolutionPropertyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-29T19:01:18" hostname="INLPF5TK6XC" time="0.029">
+<testsuite name="com.sidequest.domain.sync.ConflictResolutionPropertyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-30T21:03:24" hostname="INLPF5TK6XC" time="0.078">
   <properties/>
-  <testcase name="Property 32: the winner has the greater updatedAt" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.008"/>
-  <testcase name="Property 32: resolution is order-independent (commutative)" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.005"/>
-  <testcase name="Property 32: resolution is deterministic (repeatable)" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.008"/>
-  <testcase name="Property 32: winner and loser are exactly the two inputs" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.006"/>
+  <testcase name="Property 32: the winner has the greater updatedAt" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.022"/>
+  <testcase name="Property 32: resolution is order-independent (commutative)" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.018"/>
+  <testcase name="Property 32: resolution is deterministic (repeatable)" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.021"/>
+  <testcase name="Property 32: winner and loser are exactly the two inputs" classname="com.sidequest.domain.sync.ConflictResolutionPropertyTest" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

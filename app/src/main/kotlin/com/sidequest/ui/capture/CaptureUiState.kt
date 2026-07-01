@@ -78,6 +78,8 @@ sealed interface CaptureUiState {
         val description: String = "",
         /** Optional link; prefilled with a shared URL, editable for manual tasks. */
         val link: String = "",
+        /** All URLs detected in the shared text (first is the primary/previewed). */
+        val links: List<String> = emptyList(),
     ) : CaptureUiState {
 
         /** True when a name, a bucket, and a fully-specified timeframe are set. */

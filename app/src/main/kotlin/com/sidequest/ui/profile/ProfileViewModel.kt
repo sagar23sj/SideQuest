@@ -38,11 +38,18 @@ class ProfileViewModel @Inject constructor(
     val avatarRef: StateFlow<String?> = userPreferences.avatarRef
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), userPreferences.avatarRef.value)
 
+    /** Whether dynamic (Material You) colors override the brand theme. */
+    val useSystemColors: StateFlow<Boolean> = userPreferences.useSystemColors
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), userPreferences.useSystemColors.value)
+
     /** Whether to show the first-run "what should we call you?" prompt. */
     val shouldPromptForName: Boolean
         get() = !userPreferences.hasSeenNamePrompt
 
     fun setDisplayName(name: String) = userPreferences.setDisplayName(name)
+
+    /** Toggles whether dynamic/system colors override the brand theme. */
+    fun setUseSystemColors(enabled: Boolean) = userPreferences.setUseSystemColors(enabled)
 
     /** Picks one of the built-in [AVATAR_PRESETS] as the avatar. */
     fun setAvatarPreset(index: Int) = userPreferences.setAvatarRef(avatarRefForPreset(index))

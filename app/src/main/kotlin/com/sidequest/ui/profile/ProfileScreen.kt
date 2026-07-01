@@ -68,7 +68,7 @@ fun ProfileScreen(
     onSignIn: () -> Unit = {},
     viewModel: ProfileViewModel = androidx.hilt.navigation.compose.hiltViewModel(),
 ) {
-    var useSystemColors by remember { mutableStateOf(false) }
+    val useSystemColors by viewModel.useSystemColors.collectAsStateWithLifecycle()
     val displayName by viewModel.displayName.collectAsStateWithLifecycle()
     val avatarRef by viewModel.avatarRef.collectAsStateWithLifecycle()
     var showNameDialog by remember { mutableStateOf(false) }
@@ -197,7 +197,7 @@ fun ProfileScreen(
                     iconContainer = MaterialTheme.colorScheme.surfaceContainerHighest,
                     onIconContainer = MaterialTheme.colorScheme.onSurfaceVariant,
                     trailing = {
-                        Switch(checked = useSystemColors, onCheckedChange = { useSystemColors = it })
+                        Switch(checked = useSystemColors, onCheckedChange = viewModel::setUseSystemColors)
                     },
                 )
             }

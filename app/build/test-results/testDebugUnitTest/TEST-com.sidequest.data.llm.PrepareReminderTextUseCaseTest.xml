@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.sidequest.data.llm.PrepareReminderTextUseCaseTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-06-29T18:05:03" hostname="INLPF5TK6XC" time="1.937">
-  <properties/>
-  <testcase name="preparing a reminder requests LLM text for the relevant items" classname="com.sidequest.data.llm.PrepareReminderTextUseCaseTest" time="1.897"/>
-  <testcase name="preparing a reminder falls back to default text when the LLM is unavailable" classname="com.sidequest.data.llm.PrepareReminderTextUseCaseTest" time="0.016"/>
-  <testcase name="preparing a reminder yields non-blank text even with a blank default" classname="com.sidequest.data.llm.PrepareReminderTextUseCaseTest" time="0.015"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

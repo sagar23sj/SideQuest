@@ -6,6 +6,8 @@ import com.sidequest.data.local.entity.toActionItems
 import com.sidequest.data.local.entity.toBuckets
 import com.sidequest.data.local.entity.toDomain
 import com.sidequest.data.local.entity.toEntity
+import com.sidequest.data.seed.DEFAULT_BUCKETS
+import com.sidequest.domain.board.BoardOrdering
 import com.sidequest.domain.bucket.BucketDeletionOutcome
 import com.sidequest.domain.bucket.BucketDeletionStrategy
 import com.sidequest.domain.bucket.BucketOperations
@@ -88,7 +90,9 @@ class BucketRepository(
      * manual refresh.
      */
     fun observeBuckets(accountId: String): Flow<List<Bucket>> =
-        bucketDao.observeByAccount(accountId).map { it.toBuckets() }
+        bucketDao.observeByAccount(accountId).map {
+            BoardOrdering.orderBuckets(it.toBuckets(), DEFAULT_BUCKETS.map { spec -> spec.name })
+        }
 
     /**
      * Observes the live item count per bucket for [accountId], keyed by bucket
@@ -123,6 +127,9 @@ class BucketRepository(
             inProgressColor = inProgressColor,
             completedColor = completedColor,
             imageRef = imageRef,
+            // Append after all existing buckets so new ones land at the end of
+            // the list (oldest-created first among custom buckets).
+            position = (existing.maxOfOrNull { it.position } ?: -1) + 1,
             sync = SyncMeta(
                 updatedAt = now,
                 version = 1,
@@ -154,6 +161,29 @@ class BucketRepository(
             ),
         )
         bucketDao.upsert(updated)
+    }
+
+    /**
+     * Persists a user-chosen bucket order: assigns each id in [orderedBucketIds]
+     * its index as the new [Bucket.position], bumping sync metadata so the order
+     * propagates. Ids with an unchanged position are skipped. This is the single
+     * source of the order shown on the board and the capture picker.
+     */
+    suspend fun reorderBuckets(orderedBucketIds: List<String>) {
+        orderedBucketIds.forEachIndexed { index, id ->
+            val current = bucketDao.getById(id)?.takeIf { !it.sync.deleted } ?: return@forEachIndexed
+            if (current.position == index) return@forEachIndexed
+            bucketDao.upsert(
+                current.copy(
+                    position = index,
+                    sync = current.sync.copy(
+                        updatedAt = clock(),
+                        version = current.sync.version + 1,
+                        dirty = true,
+                    ),
+                ),
+            )
+        }
     }
 
     /**

@@ -35,7 +35,7 @@ import com.sidequest.data.local.entity.VoiceJournalEntryEntity
         ActionPlanEntity::class,
         VoiceJournalEntryEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -219,6 +219,19 @@ abstract class SideQuestDatabase : RoomDatabase() {
         val MIGRATION_4_5: Migration = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `buckets` ADD COLUMN `imageRef` TEXT")
+            }
+        }
+
+        /**
+         * Adds the `position` column to `buckets` for an explicit, user-
+         * controllable display order (Req: stable curated order + manual
+         * reorder). Defaults to 0 so existing buckets keep ordering via the
+         * curated-order/name fallback until they're (re)seeded or reordered.
+         * Additive `ALTER TABLE ADD COLUMN` with a NOT NULL default is safe.
+         */
+        val MIGRATION_5_6: Migration = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `buckets` ADD COLUMN `position` INTEGER NOT NULL DEFAULT 0")
             }
         }
     }

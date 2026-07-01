@@ -59,7 +59,7 @@
             android:exported="true"
             android:excludeFromRecents="true"
             android:label="@string/share_target_label"
-            android:theme="@style/Theme.SideQuest">
+            android:theme="@style/Theme.SideQuest.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -90,6 +90,19 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!-- Grants temporary read access to captured media (stored in internal
+             storage) so an external viewer/player can open a shared image or
+             video on tap (Req 1.x media capture). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
